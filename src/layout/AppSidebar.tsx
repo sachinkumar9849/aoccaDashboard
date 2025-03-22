@@ -53,6 +53,16 @@ const navItems: NavItem[] = [
     subItems: [{ name: "Blog List", path: "/blog-list", pro: false },{ name: "Blog Add", path: "/blog-add", pro: false }],
   },
   {
+    name: "Video",
+    icon: <ListIcon />,
+    subItems: [{ name: "Video List", path: "/video-list", pro: false },{ name: "Video Add", path: "/video-add", pro: false }],
+  },
+  {
+    name: "Services",
+    icon: <ListIcon />,
+    subItems: [{ name: "Services List", path: "/services-list", pro: false },{ name: "Services Add", path: "/services-add", pro: false }],
+  },
+  {
     icon: <UserCircleIcon />,
     name: "User Profile",
     path: "/profile",
@@ -328,7 +338,7 @@ const AppSidebar: React.FC = () => {
             <>
               <Image
                 className="dark:hidden"
-                src="/images/logo/logo.svg"
+                src="/images/logo/logo.png"
                 alt="Logo"
                 width={150}
                 height={40}
