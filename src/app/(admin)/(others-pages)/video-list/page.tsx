@@ -6,10 +6,11 @@ import StudentTable from "@/components/student/StudentTable";
 const StudentList = () => {
 
   return (
-    <ComponentCard title="Blog List">
+    <ComponentCard title="Video List">
           <StudentTable />
         </ComponentCard>
   )
 }
 
 export default StudentList
+

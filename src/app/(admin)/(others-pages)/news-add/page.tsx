@@ -7,7 +7,7 @@ import ImageUpload from "@/components/form/form-elements/ImageUpload";
 import TextArea from "@/components/form/input/TextArea";
 
 const StudentList = () => {
-  
+
 
   return (
     <ComponentCard title="Blog Add">
