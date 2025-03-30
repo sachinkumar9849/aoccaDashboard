@@ -85,17 +85,17 @@ const navItems: NavItem[] = [
   //   icon: <TableIcon />,
   //   subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
   // },
-  {
-    name: "Pages",
-    icon: <PageIcon />,
-    subItems: [
-      { name: "Blank Page", path: "/blank", pro: false },
-      { name: "404 Error", path: "/error-404", pro: false },
+  // {
+  //   name: "Pages",
+  //   icon: <PageIcon />,
+  //   subItems: [
+  //     { name: "Blank Page", path: "/blank", pro: false },
+  //     { name: "404 Error", path: "/error-404", pro: false },
 
-    ],
+  //   ],
 
 
-  },
+  // },
 ];
 
 const othersItems: NavItem[] = [
@@ -125,6 +125,17 @@ const othersItems: NavItem[] = [
     subItems: [
       { name: "Sign In", path: "/signin", pro: false },
       { name: "Sign Up", path: "/signup", pro: false },
+    ],
+  },
+  {
+    icon: <PlugInIcon />,
+    name: "Site Setting",
+    subItems: [
+      { name: "Seo Details", path: "/seo-details", pro: false },
+      { name: "Social Media Link", path: "/social-media", pro: false },
+      { name: "Site Setting", path: "/site-setting", pro: false },
+      { name: "Home Page Setting", path: "/home-page-setting", pro: false },
+      { name: "Site Images", path: "/site-images", pro: false },
     ],
   },
   {
