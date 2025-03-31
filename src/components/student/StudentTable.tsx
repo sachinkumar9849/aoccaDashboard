@@ -1,102 +1,119 @@
-"use client";
-import React from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
-import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
-import Image from "next/image";
+import React from 'react'
+import LeadTracking from '../common/LeadTracking'
+import CurrentStatus from '../common/leads/CurrentStatus'
 
-interface Order {
-  id: number;
-  user: {
-    image: string;
-    name: string;
-    role: string;
-  };
-}
-
-// Sample table data
-const tableData: Order[] = [
-  {
-    id: 1,
-    user: {
-      image: "/images/user/user-17.jpg",
-      name: "Sachin kumar jha",
-      role: "Nepal Topper In Ca Final",
-    },
-  },
-];
-
-export default function StudentTable() {
-  // Action Handlers
-  const handleEdit = (id: number) => alert(`Edit student with ID: ${id}`);
-  const handleDelete = (id: number) => alert(`Delete student with ID: ${id}`);
-  const handleView = (id: number) => alert(`View student with ID: ${id}`);
-
+const StudentTable = () => {
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-      <div className="max-w-full overflow-x-auto">
-        <div className="min-w-[1102px]">
-          <Table>
-            {/* Table Header */}
-            <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
-              <TableRow>
-                <TableCell className="px-5 py-3 font-medium text-gray-500 text-start">Student Image</TableCell>
-                <TableCell className="px-5 py-3 font-medium text-gray-500 text-start">Student Name</TableCell>
-                <TableCell className="px-5 py-3 font-medium text-gray-500 text-start">Student Status</TableCell>
-                <TableCell className="px-5 py-3 font-medium text-gray-500 text-start">Action</TableCell>
-              </TableRow>
-            </TableHeader>
+    <div>
+      <div className="relative overflow-x-auto">
+        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="p-4">
+                <div className="flex items-center">
+                  <input
+                    id="checkbox-all-search"
+                    type="checkbox"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label htmlFor="checkbox-all-search" className="sr-only">
+                    checkbox
+                  </label>
+                </div>
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Lead
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Email
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Source
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Phone
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Date
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Address
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Current Status
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <td className="w-4 p-4">
+                <div className="flex items-center">
+                  <input
+                    id="checkbox-table-search-1"
+                    type="checkbox"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label htmlFor="checkbox-table-search-1" className="sr-only">
+                    checkbox
+                  </label>
+                </div>
+              </td>
+              <th
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                Apple MacBook Pro 17"
+              </th>
+              <td className="px-6 py-4">Silver</td>
+              <td className="px-6 py-4">Laptop</td>
+              <td className="px-6 py-4">Yes</td>
+              <td className="px-6 py-4">Yes</td>
+              <td className="px-6 py-4">$2999</td>
+              <td className="px-6 py-4">
 
-            {/* Table Body */}
-            <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {tableData.map((order) => (
-                <TableRow key={order.id}>
-                  {/* Student Image */}
-                  <TableCell className="px-5 py-4 sm:px-6 text-start">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 overflow-hidden rounded-full">
-                        <Image
-                          width={40}
-                          height={40}
-                          src={order.user.image}
-                          alt={order.user.name}
-                        />
-                      </div>
-                    </div>
-                  </TableCell>
+                <CurrentStatus />
+              </td>
+              <td className="flex items-center px-6 py-4 space-x-3">
+                <a
+                  href="#"
+                  className="font-medium text-blue-600 dark:text-blue-500 hover:text-blue-800 dark:hover:text-blue-400"
+                  title="View"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </a>
+                <a
+                  href="#"
+                  className="font-medium text-yellow-600 dark:text-yellow-500 hover:text-yellow-800 dark:hover:text-yellow-400"
+                  title="Edit"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                </a>
+                <a
+                  href="#"
+                  className="font-medium text-red-600 dark:text-red-500 hover:text-red-800 dark:hover:text-red-400"
+                  title="Delete"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </a>
+              </td>
+            </tr>
 
-                  {/* Student Name */}
-                  <TableCell className="px-4 py-3 text-gray-500 text-start">{order.user.name}</TableCell>
-
-                  {/* Student Status */}
-                  <TableCell className="px-4 py-3 text-gray-500 text-start">{order.user.role}</TableCell>
-
-                  {/* Action Icons */}
-                  <TableCell className="px-4 py-3 text-gray-500 text-start flex gap-4">
-                    <FaEye
-                      className="cursor-pointer text-blue-500 hover:text-blue-700"
-                      onClick={() => handleView(order.id)}
-                    />
-                    <FaEdit
-                      className="cursor-pointer text-green-500 hover:text-green-700 mx-4"
-                      onClick={() => handleEdit(order.id)}
-                    />
-                    <FaTrash
-                      className="cursor-pointer text-red-500 hover:text-red-700"
-                      onClick={() => handleDelete(order.id)}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+          </tbody>
+        </table>
       </div>
+
     </div>
-  );
+  )
 }
+
+export default StudentTable
