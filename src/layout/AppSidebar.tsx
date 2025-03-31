@@ -35,9 +35,9 @@ const navItems: NavItem[] = [
     path: "/about",
   },
   {
-    name: "Student",
+    name: "Student Management",
     icon: <ListIcon />,
-    subItems: [{ name: "Student List", path: "/student-list", pro: false }, { name: "Student Add", path: "/student-add", pro: false }],
+    subItems: [{ name: "Student List", path: "/student-list", pro: false }, { name: "Leads", path: "/leads", pro: false }],
   },
   {
     name: "Team",
