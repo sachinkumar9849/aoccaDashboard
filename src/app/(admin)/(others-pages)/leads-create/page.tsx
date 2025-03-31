@@ -48,7 +48,7 @@ const StudentList = () => {
             <div className="col-span-1">
               <CurrentStatusSelect />
             </div>
-       
+
           </div>
         </div>
       </ComponentCard>
@@ -56,21 +56,30 @@ const StudentList = () => {
         <div className="space-y-6">
           <div className="grid grid-cols-3 gap-4">
             <div className="col-span-1">
-            <StudentInquiryManagement/>
+              <StudentInquiryManagement />
             </div>
             <div className="col-span-1">
-        
-        <LeadTracking/>
-       </div>
-       <div className="col-span-1">
-       <Label>Lea Priority</Label>
-         <TaggingDropdown/>
-       </div>
-            
+
+              <LeadTracking />
+            </div>
+            <div className="col-span-1">
+              <Label>Lea Priority</Label>
+              <TaggingDropdown />
+            </div>
+            <div className="col-span-3">
+            <a
+              href="https://tailadmin.com/pricing"
+              target="_blank"
+              rel="nofollow"
+              className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600"
+            >
+              CREATE LEAD
+            </a>
+          </div>
           </div>
         </div>
       </ComponentCard>
-     
+
 
     </>
   )

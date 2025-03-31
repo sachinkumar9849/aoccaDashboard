@@ -134,12 +134,9 @@ const CurrentStatus: React.FC = () => {
   const [selectedValue, setSelectedValue] = useState<string>('');
 
   const options: Option[] = [
-    { value: 'apple', label: 'New'},
-    { value: 'banana', label: 'Follow-up'},
-    { value: 'Website', label: 'Interested '},
-    { value: 'Social', label: 'Converted'},
-    { value: 'Interested', label: 'Not Interested'},
-    { value: 'Canceled', label: 'Canceled'},
+    { value: 'apple', label: 'Active'},
+    { value: 'banana', label: 'Pending'},
+    
   ];
 
   return (

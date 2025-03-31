@@ -8,7 +8,7 @@ const StudentList = () => {
   
 
   return (
-    <ComponentCard title="Services List">
+    <ComponentCard title="Leads">
       
          <StudentTable />
       
