@@ -68,4 +68,5 @@ const ViewDetail = () => {
     )
 }
 
+
 export default ViewDetail
