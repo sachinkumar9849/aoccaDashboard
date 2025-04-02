@@ -4,13 +4,11 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-
-
 import CurrentStatus from '../common/leads/CurrentStatus'
 import Note from './Note'
+import NoteAction from './NoteAction';
 
 const StudentTable = () => {
   return (
@@ -156,11 +154,18 @@ const StudentTable = () => {
                   </Dialog>
 
                 </a>
+
+
+
+                
+             
+                <NoteAction/>
            
              
                 
                 
               </td>
+             
             </tr>
          
 

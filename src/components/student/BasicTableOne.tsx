@@ -9,13 +9,6 @@ import {
 
 import Badge from "../ui/badge/Badge";
 import Image from "next/image";
-// Import FontAwesome components
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { 
-  faPenToSquare, 
-  faTrash, 
-  faEye 
-} from "@fortawesome/free-solid-svg-icons";
 
 interface Order {
   id: number;
@@ -25,11 +18,14 @@ interface Order {
     role: string;
   };
   projectName: string;
-  address: string;
+  team: {
+    images: string[];
+  };
   status: string;
+  budget: string;
 }
 
-// Define the table data using the interface (removed budget field)
+// Define the table data using the interface
 const tableData: Order[] = [
   {
     id: 1,
@@ -38,8 +34,15 @@ const tableData: Order[] = [
       name: "Lindsey Curtis",
       role: "Web Designer",
     },
-    projectName: "01-2102031",
-    address: "Kathmandu Nepal",
+    projectName: "Agency Website",
+    team: {
+      images: [
+        "/images/user/user-22.jpg",
+        "/images/user/user-23.jpg",
+        "/images/user/user-24.jpg",
+      ],
+    },
+    budget: "3.9K",
     status: "Active",
   },
   {
@@ -49,8 +52,11 @@ const tableData: Order[] = [
       name: "Kaiya George",
       role: "Project Manager",
     },
-    projectName: "01-2102031",
-    address: "Kathmandu Nepal",
+    projectName: "Technology",
+    team: {
+      images: ["/images/user/user-25.jpg", "/images/user/user-26.jpg"],
+    },
+    budget: "24.9K",
     status: "Pending",
   },
   {
@@ -60,8 +66,11 @@ const tableData: Order[] = [
       name: "Zain Geidt",
       role: "Content Writing",
     },
-    projectName: "01-2102031",
-    address: "Kathmandu Nepal",
+    projectName: "Blog Writing",
+    team: {
+      images: ["/images/user/user-27.jpg"],
+    },
+    budget: "12.7K",
     status: "Active",
   },
   {
@@ -71,10 +80,35 @@ const tableData: Order[] = [
       name: "Abram Schleifer",
       role: "Digital Marketer",
     },
-    projectName: "01-2102031",
-    address: "Kathmandu Nepal",
+    projectName: "Social Media",
+    team: {
+      images: [
+        "/images/user/user-28.jpg",
+        "/images/user/user-29.jpg",
+        "/images/user/user-30.jpg",
+      ],
+    },
+    budget: "2.8K",
     status: "Cancel",
-  }
+  },
+  {
+    id: 5,
+    user: {
+      image: "/images/user/user-21.jpg",
+      name: "Carla George",
+      role: "Front-end Developer",
+    },
+    projectName: "Website",
+    team: {
+      images: [
+        "/images/user/user-31.jpg",
+        "/images/user/user-32.jpg",
+        "/images/user/user-33.jpg",
+      ],
+    },
+    budget: "4.5K",
+    status: "Active",
+  },
 ];
 
 export default function BasicTableOne() {
@@ -90,21 +124,20 @@ export default function BasicTableOne() {
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Full Name
+                  User
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                 Phone Number
+                  Project Name
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                 Address
+                  Team
                 </TableCell>
-               
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
@@ -115,7 +148,7 @@ export default function BasicTableOne() {
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Action
+                  Budget
                 </TableCell>
               </TableRow>
             </TableHeader>
@@ -148,7 +181,22 @@ export default function BasicTableOne() {
                     {order.projectName}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {order.address}
+                    <div className="flex -space-x-2">
+                      {order.team.images.map((teamImage, index) => (
+                        <div
+                          key={index}
+                          className="w-6 h-6 overflow-hidden border-2 border-white rounded-full dark:border-gray-900"
+                        >
+                          <Image
+                            width={24}
+                            height={24}
+                            src={teamImage}
+                            alt={`Team member ${index + 1}`}
+                            className="w-full"
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     <Badge
@@ -165,17 +213,7 @@ export default function BasicTableOne() {
                     </Badge>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    <div className="flex gap-2">
-                      <button className="p-1 text-blue-500 hover:text-blue-700 transition-colors" onClick={() => console.log(`Edit ${order.id}`)}>
-                        <FontAwesomeIcon icon={faPenToSquare} />
-                      </button>
-                      <button className="p-1 text-red-500 hover:text-red-700 transition-colors" onClick={() => console.log(`Delete ${order.id}`)}>
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
-                      <button className="p-1 text-green-500 hover:text-green-700 transition-colors" onClick={() => console.log(`View ${order.id}`)}>
-                        <FontAwesomeIcon icon={faEye} />
-                      </button>
-                    </div>
+                    {order.budget}
                   </TableCell>
                 </TableRow>
               ))}

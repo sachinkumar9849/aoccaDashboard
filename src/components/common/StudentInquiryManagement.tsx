@@ -137,7 +137,7 @@ const StudentInquiryManagement: React.FC = () => {
     { value: 'apple', label: 'Phone'},
     { value: 'banana', label: 'Physical Visit'},
     { value: 'Website', label: 'Website '},
-    { value: 'Social', label: 'Social'},
+    { value: 'Social', label: 'Whatsapp'},
   ];
 
   return (

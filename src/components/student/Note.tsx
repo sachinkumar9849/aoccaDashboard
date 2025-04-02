@@ -5,9 +5,8 @@ import {
   faPencil, 
   faPrint, 
   faClock, 
-  faBox, 
-  faCircleExclamation, 
-  faTrash 
+  faTrash ,
+
 } from "@fortawesome/free-solid-svg-icons";
 import {
     DropdownMenu,
@@ -18,7 +17,7 @@ import {
 
 const Note = () => {
     return (
-        <div className="p-4">
+        <div className="p-2">
             <DropdownMenu>
                 <DropdownMenuTrigger>
                     <div className="cursor-pointer border border-gray-300 w-8 h-8 flex items-center justify-center rounded-full">
@@ -41,19 +40,20 @@ const Note = () => {
                         <span className="text-gray-700 font-medium">Remind</span>
                     </DropdownMenuItem>
                     
-                    <div className="border-t border-gray-200 my-1"></div>
+                    {/* <div className="border-t border-gray-200 my-1"></div> */}
                     
-                    <DropdownMenuItem className="flex items-center gap-3 py-3 px-4 hover:bg-gray-100 cursor-pointer">
+                    {/* <DropdownMenuItem className="flex items-center gap-3 py-3 px-4 hover:bg-gray-100 cursor-pointer">
                         <FontAwesomeIcon icon={faBox} className="text-gray-600" />
                         <span className="text-gray-700 font-medium">Archive</span>
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                     
-                    <DropdownMenuItem className="flex items-center gap-3 py-3 px-4 hover:bg-gray-100 cursor-pointer">
+                    {/* <DropdownMenuItem className="flex items-center gap-3 py-3 px-4 hover:bg-gray-100 cursor-pointer">
                         <FontAwesomeIcon icon={faCircleExclamation} className="text-gray-600" />
+                        
                         <span className="text-gray-700 font-medium">Report Spam</span>
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                     
-                    <div className="border-t border-gray-200 my-1"></div>
+                    {/* <div className="border-t border-gray-200 my-1"></div> */}
                     
                     <DropdownMenuItem className="flex items-center gap-3 py-3 px-4 hover:bg-gray-100 cursor-pointer">
                         <FontAwesomeIcon icon={faTrash} className="text-gray-600" />

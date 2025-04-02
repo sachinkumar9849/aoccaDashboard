@@ -1,13 +1,13 @@
 "use client";
 import React from "react";
 import ComponentCard from "@/components/common/ComponentCard";
-import StudentTable from "@/components/student/StudentTable";
+import BasicTableOne from "@/components/tables/BasicTableOne";
 
 const StudentList = () => {
 
   return (
     <ComponentCard title="Blog List">
-          <StudentTable />
+           <BasicTableOne />
         </ComponentCard>
   )
 }

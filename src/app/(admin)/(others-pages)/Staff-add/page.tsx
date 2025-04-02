@@ -1,28 +1,24 @@
-
-
-
-
 "use client";
 import React from "react";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
-import ImageUpload from "@/components/form/form-elements/ImageUpload";
+import ImageUploader from "@/components/ImageUploader";
 
 
 const StudentList = () => {
 
 
   return (
-    <ComponentCard title="Video Add">
+    <ComponentCard title="Staff Add">
       <div className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <div className="col-span-1">
-            <Label>Student Name</Label>
+            <Label>Staff Name</Label>
             <Input type="text" />
           </div>
           <div className="col-span-1">
-            <Label>Student Status
+            <Label>Staff Status
             </Label>
             <Input type="text" />
           </div>
@@ -30,7 +26,7 @@ const StudentList = () => {
          
         
           <div className="col-span-2">
-            <ImageUpload />
+            <ImageUploader />
           </div>
           <div className="col-span-2">
             <a

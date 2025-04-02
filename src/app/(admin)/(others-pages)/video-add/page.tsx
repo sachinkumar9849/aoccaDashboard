@@ -3,7 +3,7 @@ import React from "react";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
-import ImageUpload from "@/components/form/form-elements/ImageUpload";
+import ImageUploader from "@/components/ImageUploader";
 
 const StudentList = () => {
 
@@ -24,7 +24,7 @@ const StudentList = () => {
          
         
           <div className="col-span-2">
-            <ImageUpload />
+            <ImageUploader />
           </div>
           <div className="col-span-2">
             <a

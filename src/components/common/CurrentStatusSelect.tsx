@@ -136,6 +136,7 @@ const CurrentStatusSelect: React.FC = () => {
   const options: Option[] = [
     { value: 'apple', label: 'Active' },
     { value: 'banana', label: 'Pending' },
+    { value: 'Waiting', label: 'Waiting for result ' },
   ];
 
   return (

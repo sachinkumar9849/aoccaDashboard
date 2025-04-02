@@ -18,7 +18,7 @@ const StudentList = () => {
         <div className="space-y-6">
           <div className="grid grid-cols-4 gap-4">
             <div className="col-span-1">
-              <Label> Name</Label>
+              <Label>Full Name</Label>
               <Input type="text" />
             </div>
             <div className="col-span-1">
