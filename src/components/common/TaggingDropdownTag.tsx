@@ -1,29 +1,33 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const TaggingDropdown = () => {
+interface Tag {
+  id: number;
+  name: string;
+}
+
+const TaggingDropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [inputValue, setInputValue] = useState('');
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Sample tag options
-  const tagOptions = [
+  const tagOptions: Tag[] = [
     { id: 1, name: 'Hot' },
     { id: 2, name: 'Warm' },
     { id: 3, name: 'Cold' },
-   
   ];
 
   // Filter options based on input
   const filteredOptions = tagOptions.filter(
     tag => tag.name.toLowerCase().includes(inputValue.toLowerCase()) &&
-    !selectedTags.some(selectedTag => selectedTag.id === tag.id)
+      !selectedTags.some(selectedTag => selectedTag.id === tag.id)
   );
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -35,19 +39,19 @@ const TaggingDropdown = () => {
   }, []);
 
   // Select a tag
-  const selectTag = (tag) => {
+  const selectTag = (tag: Tag) => {
     setSelectedTags([...selectedTags, tag]);
     setInputValue('');
     setIsOpen(false);
   };
 
   // Remove a tag
-  const removeTag = (tagId) => {
+  const removeTag = (tagId: number) => {
     setSelectedTags(selectedTags.filter(tag => tag.id !== tagId));
   };
 
   return (
-    <div className="">
+    <div>
       <div className="relative" ref={dropdownRef}>
         {/* Input field with tags */}
         <div 
@@ -55,7 +59,7 @@ const TaggingDropdown = () => {
           onClick={() => setIsOpen(true)}
         >
           {selectedTags.map(tag => (
-            <div key={tag.id} className="flex items-center bg-blue-100 text-blue-800 rounded-md m-1">
+            <div key={tag.id} className="flex items-center bg-blue-100 text-blue-800 rounded-md m-1 px-2 py-1">
               <span>{tag.name}</span>
               <button 
                 onClick={(e) => {
