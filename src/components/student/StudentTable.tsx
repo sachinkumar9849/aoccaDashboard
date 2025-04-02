@@ -32,7 +32,7 @@ const StudentTable = () => {
                 </div>
               </th>
               <th scope="col" className="px-6 py-3">
-                Lead
+                Full Name
               </th>
               <th scope="col" className="px-6 py-3">
                 Email
@@ -40,9 +40,7 @@ const StudentTable = () => {
               <th scope="col" className="px-6 py-3">
                 Source
               </th>
-              <th scope="col" className="px-6 py-3">
-                Phone
-              </th>
+             
               <th scope="col" className="px-6 py-3">
                 Date
               </th>
@@ -80,7 +78,7 @@ const StudentTable = () => {
               <td className="px-6 py-4">sachin@gmail.com</td>
               <td className="px-6 py-4">Facbook</td>
               <td className="px-6 py-4">9834804385</td>
-              <td className="px-6 py-4">9834804385</td>
+           
               <td className="px-6 py-4">$2999</td>
               <td className="px-6 py-4">
 
