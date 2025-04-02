@@ -1,102 +1,97 @@
-"use client";
-import React from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
-import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
-import Image from "next/image";
+import React from 'react'
 
-interface Order {
-  id: number;
-  user: {
-    image: string;
-    name: string;
-    role: string;
-  };
-}
+import CurrentStatus from '../common/leads/CurrentStatus'
+import Note from './Note'
+import NoteAction from './NoteAction';
+import ViewDetail from './ViewDetail';
 
-// Sample table data
-const tableData: Order[] = [
-  {
-    id: 1,
-    user: {
-      image: "/images/user/user-17.jpg",
-      name: "Sachin kumar jha",
-      role: "Nepal Topper In Ca Final",
-    },
-  },
-];
-
-export default function StudentTable() {
-  // Action Handlers
-  const handleEdit = (id: number) => alert(`Edit student with ID: ${id}`);
-  const handleDelete = (id: number) => alert(`Delete student with ID: ${id}`);
-  const handleView = (id: number) => alert(`View student with ID: ${id}`);
-
+const StudentTable = () => {
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-      <div className="max-w-full overflow-x-auto">
-        <div className="min-w-[1102px]">
-          <Table>
-            {/* Table Header */}
-            <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
-              <TableRow>
-                <TableCell className="px-5 py-3 font-medium text-gray-500 text-start">Student Image</TableCell>
-                <TableCell className="px-5 py-3 font-medium text-gray-500 text-start">Student Name</TableCell>
-                <TableCell className="px-5 py-3 font-medium text-gray-500 text-start">Student Status</TableCell>
-                <TableCell className="px-5 py-3 font-medium text-gray-500 text-start">Action</TableCell>
-              </TableRow>
-            </TableHeader>
+    <div>
+      <div className="relative overflow-x-auto">
+        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="p-4">
+                <div className="flex items-center">
+                  <input
+                    id="checkbox-all-search"
+                    type="checkbox"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label htmlFor="checkbox-all-search" className="sr-only">
+                    checkbox
+                  </label>
+                </div>
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Full Name
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Date
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Email
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Source
+              </th>
 
-            {/* Table Body */}
-            <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {tableData.map((order) => (
-                <TableRow key={order.id}>
-                  {/* Student Image */}
-                  <TableCell className="px-5 py-4 sm:px-6 text-start">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 overflow-hidden rounded-full">
-                        <Image
-                          width={40}
-                          height={40}
-                          src={order.user.image}
-                          alt={order.user.name}
-                        />
-                      </div>
-                    </div>
-                  </TableCell>
 
-                  {/* Student Name */}
-                  <TableCell className="px-4 py-3 text-gray-500 text-start">{order.user.name}</TableCell>
+              <th scope="col" className="px-6 py-3">
+                Address
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Current Status
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <td className="w-4 p-4">
+                <div className="flex items-center">
+                  <input
+                    id="checkbox-table-search-1"
+                    type="checkbox"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label htmlFor="checkbox-table-search-1" className="sr-only">
+                    checkbox
+                  </label>
+                </div>
+              </td>
+              <th
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                Sachin kumar
+              </th>
+              <td className="px-6 py-4">01/12/2025</td>
+              <td className="px-6 py-4">sachin@gmail.com</td>
+              <td className="px-6 py-4">9834804385</td>
 
-                  {/* Student Status */}
-                  <TableCell className="px-4 py-3 text-gray-500 text-start">{order.user.role}</TableCell>
+              <td className="px-6 py-4">$2999</td>
+              <td className="px-6 py-4">
 
-                  {/* Action Icons */}
-                  <TableCell className="px-4 py-3 text-gray-500 text-start flex gap-4">
-                    <FaEye
-                      className="cursor-pointer text-blue-500 hover:text-blue-700"
-                      onClick={() => handleView(order.id)}
-                    />
-                    <FaEdit
-                      className="cursor-pointer text-green-500 hover:text-green-700 mx-4"
-                      onClick={() => handleEdit(order.id)}
-                    />
-                    <FaTrash
-                      className="cursor-pointer text-red-500 hover:text-red-700"
-                      onClick={() => handleDelete(order.id)}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+                <CurrentStatus />
+              </td>
+              <td className="flex items-center px-6 py-4 space-x-3">
+                <Note />
+            
+               <ViewDetail/>  
+               
+                <NoteAction />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+
     </div>
-  );
+  )
 }
+
+export default StudentTable

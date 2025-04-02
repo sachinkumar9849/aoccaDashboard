@@ -35,14 +35,14 @@ const navItems: NavItem[] = [
     path: "/about",
   },
   {
-    name: "Student",
+    name: "Student Management",
     icon: <ListIcon />,
-    subItems: [{ name: "Student List", path: "/student-list", pro: false }, { name: "Student Add", path: "/student-add", pro: false }],
+    subItems: [{ name: "Leads", path: "/leads", pro: false }, { name: "Leads Create", path: "/leads-create", pro: false }],
   },
   {
-    name: "Team",
+    name: "Staff Members",
     icon: <ListIcon />,
-    subItems: [{ name: "Team List", path: "/team-list", pro: false }, { name: "Team Add", path: "/team-add", pro: false }],
+    subItems: [{ name: "Staff List", path: "/staff-list", pro: false }, { name: "Staff Add", path: "/staff-add", pro: false }],
   },
   {
     name: "News",

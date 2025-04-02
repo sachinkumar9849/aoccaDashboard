@@ -8,10 +8,10 @@ const StudentList = () => {
   
 
   return (
-    <ComponentCard title="Services List">
-      <div className="space-y-6">
+    <ComponentCard title="Leads">
+      
          <StudentTable />
-      </div>
+      
     </ComponentCard>
   )
 }

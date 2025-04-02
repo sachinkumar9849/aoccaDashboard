@@ -1,226 +1,128 @@
-import React from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
+import React from 'react';
+import { Edit, Trash, Eye } from 'lucide-react';
 
-import Badge from "../ui/badge/Badge";
-import Image from "next/image";
+// Define TypeScript interfaces
+type StatusType = 'Active' | 'Pending' | 'Cancel';
 
-interface Order {
+interface User {
   id: number;
-  user: {
-    image: string;
-    name: string;
-    role: string;
-  };
-  projectName: string;
-  team: {
-    images: string[];
-  };
-  status: string;
-  budget: string;
+  name: string;
+  role: string;
+  phone: string;
+  address: string;
+  status: StatusType;
+  avatar: string;
 }
 
-// Define the table data using the interface
-const tableData: Order[] = [
-  {
-    id: 1,
-    user: {
-      image: "/images/user/user-17.jpg",
-      name: "Lindsey Curtis",
-      role: "Web Designer",
+const UserTable: React.FC = () => {
+  const users: User[] = [
+    { 
+      id: 1, 
+      name: 'Lindsey Curtis', 
+      role: 'Web Designer', 
+      phone: '01-2102031', 
+      address: 'Kathmandu Nepal', 
+      status: 'Active',
+      avatar: 'https://www.svgrepo.com/show/384676/account-avatar-profile-user-6.svg'
     },
-    projectName: "Agency Website",
-    team: {
-      images: [
-        "/images/user/user-22.jpg",
-        "/images/user/user-23.jpg",
-        "/images/user/user-24.jpg",
-      ],
+    { 
+      id: 2, 
+      name: 'Kaiya George', 
+      role: 'Project Manager', 
+      phone: '01-2102031', 
+      address: 'Kathmandu Nepal', 
+      status: 'Pending',
+      avatar: 'https://www.svgrepo.com/show/384676/account-avatar-profile-user-6.svg'
     },
-    budget: "3.9K",
-    status: "Active",
-  },
-  {
-    id: 2,
-    user: {
-      image: "/images/user/user-18.jpg",
-      name: "Kaiya George",
-      role: "Project Manager",
+    { 
+      id: 3, 
+      name: 'Zain Geidt', 
+      role: 'Content Writing', 
+      phone: '01-2102031', 
+      address: 'Kathmandu Nepal', 
+      status: 'Active',
+      avatar: 'https://www.svgrepo.com/show/384676/account-avatar-profile-user-6.svg'
     },
-    projectName: "Technology",
-    team: {
-      images: ["/images/user/user-25.jpg", "/images/user/user-26.jpg"],
-    },
-    budget: "24.9K",
-    status: "Pending",
-  },
-  {
-    id: 3,
-    user: {
-      image: "/images/user/user-17.jpg",
-      name: "Zain Geidt",
-      role: "Content Writing",
-    },
-    projectName: "Blog Writing",
-    team: {
-      images: ["/images/user/user-27.jpg"],
-    },
-    budget: "12.7K",
-    status: "Active",
-  },
-  {
-    id: 4,
-    user: {
-      image: "/images/user/user-20.jpg",
-      name: "Abram Schleifer",
-      role: "Digital Marketer",
-    },
-    projectName: "Social Media",
-    team: {
-      images: [
-        "/images/user/user-28.jpg",
-        "/images/user/user-29.jpg",
-        "/images/user/user-30.jpg",
-      ],
-    },
-    budget: "2.8K",
-    status: "Cancel",
-  },
-  {
-    id: 5,
-    user: {
-      image: "/images/user/user-21.jpg",
-      name: "Carla George",
-      role: "Front-end Developer",
-    },
-    projectName: "Website",
-    team: {
-      images: [
-        "/images/user/user-31.jpg",
-        "/images/user/user-32.jpg",
-        "/images/user/user-33.jpg",
-      ],
-    },
-    budget: "4.5K",
-    status: "Active",
-  },
-];
+    { 
+      id: 4, 
+      name: 'Abram Schleifer', 
+      role: 'Digital Marketer', 
+      phone: '01-2102031', 
+      address: 'Kathmandu Nepal', 
+      status: 'Cancel',
+      avatar: 'https://www.svgrepo.com/show/384676/account-avatar-profile-user-6.svg'
+    }
+  ];
 
-export default function BasicTableOne() {
+  const getStatusColor = (status: StatusType): string => {
+    switch(status) {
+      case 'Active':
+        return 'text-green-600 bg-green-100';
+      case 'Pending':
+        return 'text-orange-600 bg-orange-100';
+      case 'Cancel':
+        return 'text-red-600 bg-red-100';
+      default:
+        return 'text-gray-600 bg-gray-100';
+    }
+  };
+
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-      <div className="max-w-full overflow-x-auto">
-        <div className="min-w-[1102px]">
-          <Table>
-            {/* Table Header */}
-            <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
-              <TableRow>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  User
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Project Name
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Team
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Status
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  Budget
-                </TableCell>
-              </TableRow>
-            </TableHeader>
-
-            {/* Table Body */}
-            <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {tableData.map((order) => (
-                <TableRow key={order.id}>
-                  <TableCell className="px-5 py-4 sm:px-6 text-start">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 overflow-hidden rounded-full">
-                        <Image
-                          width={40}
-                          height={40}
-                          src={order.user.image}
-                          alt={order.user.name}
-                        />
-                      </div>
-                      <div>
-                        <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                          {order.user.name}
-                        </span>
-                        <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-                          {order.user.role}
-                        </span>
-                      </div>
+    <div className="w-full p-4 bg-white rounded-lg shadow-sm">
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b">
+              <th className="py-4 px-6 text-left text-sm font-medium text-gray-600">Full Name</th>
+              <th className="py-4 px-6 text-left text-sm font-medium text-gray-600">Phone Number</th>
+              <th className="py-4 px-6 text-left text-sm font-medium text-gray-600">Address</th>
+              <th className="py-4 px-6 text-left text-sm font-medium text-gray-600">Status</th>
+              <th className="py-4 px-6 text-left text-sm font-medium text-gray-600">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user.id} className="border-b hover:bg-gray-50">
+                <td className="py-4 px-6">
+                  <div className="flex items-center gap-3">
+                    <img 
+                      src={user.avatar} 
+                      alt={user.name}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                    <div>
+                      <p className="font-medium text-gray-800">{user.name}</p>
+                      <p className="text-sm text-gray-500">{user.role}</p>
                     </div>
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {order.projectName}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    <div className="flex -space-x-2">
-                      {order.team.images.map((teamImage, index) => (
-                        <div
-                          key={index}
-                          className="w-6 h-6 overflow-hidden border-2 border-white rounded-full dark:border-gray-900"
-                        >
-                          <Image
-                            width={24}
-                            height={24}
-                            src={teamImage}
-                            alt={`Team member ${index + 1}`}
-                            className="w-full"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    <Badge
-                      size="sm"
-                      color={
-                        order.status === "Active"
-                          ? "success"
-                          : order.status === "Pending"
-                          ? "warning"
-                          : "error"
-                      }
-                    >
-                      {order.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    {order.budget}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+                  </div>
+                </td>
+                <td className="py-4 px-6 text-gray-700">{user.phone}</td>
+                <td className="py-4 px-6 text-gray-700">{user.address}</td>
+                <td className="py-4 px-6">
+                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(user.status)}`}>
+                    {user.status}
+                  </span>
+                </td>
+                <td className="py-4 px-6">
+                  <div className="flex gap-2">
+                    <button className="p-1 text-blue-500 hover:text-blue-700">
+                      <Edit size={18} />
+                    </button>
+                    <button className="p-1 text-red-500 hover:text-red-700">
+                      <Trash size={18} />
+                    </button>
+                    <button className="p-1 text-green-500 hover:text-green-700">
+                      <Eye size={18} />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
-}
+};
+
+export default UserTable;
