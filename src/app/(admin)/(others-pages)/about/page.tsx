@@ -17,7 +17,24 @@ const About = () => {
             <Input type="text" />
           </div>
           <div className="col-span-1">
-            <Label>Sub Heading
+            <Label>Slug
+            </Label>
+            <Input type="text" />
+          </div>
+
+
+          <div className="col-span-1">
+            <Label>Meta Title
+            </Label>
+            <Input type="text" />
+          </div>
+          <div className="col-span-1">
+            <Label>Meta Description
+            </Label>
+            <Input type="text" />
+          </div>
+          <div className="col-span-1">
+            <Label>Meta Keyword
             </Label>
             <Input type="text" />
           </div>
@@ -26,16 +43,11 @@ const About = () => {
             </Label>
             <TextArea />
           </div>
-          <div className="col-span-1">
 
-
-          </div>
           <div className="col-span-1">
             <ImageUploader />
           </div>
-          <div className="col-span-1">
-            <ImageUploader />
-          </div>
+
           <div className="col-span-2">
             <a
               href="https://tailadmin.com/pricing"

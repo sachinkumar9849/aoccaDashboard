@@ -69,6 +69,11 @@ const navItems: NavItem[] = [
     icon: <ListIcon />,
     subItems: [{ name: "Services List", path: "/services-list", pro: false }, { name: "Services Add", path: "/services-add", pro: false }],
   },
+  {
+    name: "Pages",
+    icon: <ListIcon />,
+    subItems: [{ name: "About", path: "/about", pro: false }],
+  },
 
 
   // {
