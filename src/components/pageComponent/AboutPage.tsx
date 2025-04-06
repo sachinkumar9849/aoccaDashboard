@@ -10,6 +10,7 @@ import ComponentCard from "@/components/common/ComponentCard";
 import ImageUploader from "@/components/ImageUploader";
 import { Editor } from '@tinymce/tinymce-react';
 import { PageFormValues, PageResponse } from "@/types";
+import { apiClient } from "@/api/client";
 import {
     Select,
     SelectContent,
@@ -18,38 +19,14 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
-
 const AboutPage = () => {
     const editorRef = useRef(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-    const [authToken, setAuthToken] = useState<string>("");
-
     // Create page mutation
     const createPageMutation = useMutation({
         mutationFn: async (formData: FormData) => {
-            // Get the token from wherever you store it (localStorage, cookies, context)
-            const token = localStorage.getItem('authToken') || authToken;
-
-            if (!token) {
-                throw new Error("Authentication token is required. Please log in.");
-            }
-
-            const response = await fetch("http://156.67.104.182:8081/api/v1/create-page", {
-                method: "POST",
-                headers: {
-                    // Include authorization header with token
-                    "Authorization": `Bearer ${token}`
-                },
-                body: formData,
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Failed to create page");
-            }
-
-            return response.json() as Promise<PageResponse>;
+            return await apiClient.createPage(formData) as PageResponse;
         },
         onSuccess: (data) => {
             toast.success(data.message || "Page created successfully!");
@@ -71,7 +48,7 @@ const AboutPage = () => {
         meta_description: Yup.string()
             .required("Meta description is required"),
         meta_keywords: Yup.string().required("Meta keywords are required"),
-        // image: Yup.mixed().required("Image is required"),
+        image: Yup.mixed().required("Image is required"),
     });
 
     // Initialize formik
@@ -128,7 +105,6 @@ const AboutPage = () => {
         reader.readAsDataURL(file);
     };
 
-
     // Generate slug from title
     const generateSlug = () => {
         const slug = formik.values.title
@@ -137,14 +113,6 @@ const AboutPage = () => {
             .replace(/\s+/g, "_");
         formik.setFieldValue("slug", slug);
     };
-
-    // Check for saved token on component mount
-    React.useEffect(() => {
-        const savedToken = localStorage.getItem('authToken');
-        if (savedToken) {
-            setAuthToken(savedToken);
-        }
-    }, []);
 
     return (
         <ComponentCard title="About Page">
@@ -242,7 +210,6 @@ const AboutPage = () => {
                         {formik.touched.meta_description && formik.errors.meta_description && (
                             <div className="text-red-500 text-sm mt-1">{formik.errors.meta_description}</div>
                         )}
-
                     </div>
 
                     <div className="col-span-2">
@@ -305,16 +272,11 @@ const AboutPage = () => {
                     <div className="col-span-4">
                         <button
                             type="submit"
-                            disabled={createPageMutation.isPending || !authToken}
+                            disabled={createPageMutation.isPending}
                             className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600 disabled:opacity-70"
                         >
                             {createPageMutation.isPending ? "Submitting..." : "Submit"}
                         </button>
-                        {!authToken && (
-                            <p className="text-red-500 text-sm mt-1">
-                                Please enter an authentication token to submit the form
-                            </p>
-                        )}
                     </div>
                 </div>
             </form>
