@@ -1,7 +1,11 @@
 "use client";
 import React, { useState, useRef, ChangeEvent, DragEvent } from 'react';
+interface ImageUploaderProps {
+  onImageUpload?: (file: File) => void;
+  preview?: string | null;
+}
 
-const ImageUploader: React.FC = () => {
+const ImageUploader: React.FC<ImageUploaderProps> = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const [uploadStatus, setUploadStatus] = useState<string>('');
@@ -98,7 +102,7 @@ const ImageUploader: React.FC = () => {
   };
 
   return (
-    <div className="">
+    <div className="relative">
       {/* Hidden file input */}
       <input
         type="file"
@@ -110,7 +114,7 @@ const ImageUploader: React.FC = () => {
       
       {/* Drag & drop area */}
       <div
-        className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 transition-colors mb-4"
+        className="border-1 border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 transition-colors mb-4"
         onClick={triggerFileInput}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -163,7 +167,7 @@ const ImageUploader: React.FC = () => {
       
       {/* Status message */}
       {uploadStatus && (
-        <p className={`mt-2 text-sm ${
+        <p className={`absolute bottom-[10px] mt-2 text-sm ${
           uploadStatus.includes('successful')
             ? 'text-green-600'
             : uploadStatus.includes('Uploading')
@@ -175,13 +179,13 @@ const ImageUploader: React.FC = () => {
       )}
 
       {/* Image details */}
-      {selectedImage && (
+      {/* {selectedImage && (
         <div className="mt-4 text-sm text-gray-600">
           <p><span className="font-medium">File name:</span> {selectedImage.name}</p>
           <p><span className="font-medium">Size:</span> {Math.round(selectedImage.size / 1024)} KB</p>
           <p><span className="font-medium">Type:</span> {selectedImage.type}</p>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

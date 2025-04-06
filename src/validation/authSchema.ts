@@ -30,3 +30,15 @@ export const LoginSchema = Yup.object().shape({
     .min(6, "Password must be at least 6 characters")
     .required("Password is required"),
 });
+
+export const validationSchema = Yup.object({
+    title: Yup.string().required("Title is required"),
+    slug: Yup.string().required("Slug is required"),
+    description: Yup.string().required("Description is required"),
+    status: Yup.string().required("Status is required"),
+    meta_title: Yup.string().required("Meta title is required"),
+    meta_description: Yup.string()
+      .required("Meta description is required"),
+    meta_keywords: Yup.string().required("Meta keywords are required"),
+    // image: Yup.mixed().required("Image is required"),
+  });

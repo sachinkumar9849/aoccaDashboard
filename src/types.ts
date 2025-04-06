@@ -26,5 +26,42 @@ export interface User {
 export interface ApiResponse {
   message: string;
 }
+export interface PageFormValues{
+  title: string;
+  description: string;
+
+  slug: string;
+  status: string;
+  meta_title: string;
+  meta_description: string;
+
+
+  
+  meta_keywords: string;
+  image_url?: File | null;
+
+}
+
+export interface PageResponse {
+  data: {
+    id: number;
+    title: string;
+    description: string;
+    image_url: string;
+    slug: string;
+    status: string;
+    meta_title: string;
+    meta_description: string;
+    meta_keywords: string[];
+    created_at: string;
+  };
+  message: string;
+}
+
+
+
+
+
+
 
 export type ApiErrorResponse = Record<string, string>;
