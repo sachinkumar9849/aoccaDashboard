@@ -1,6 +1,4 @@
 import { useMutation } from '@tanstack/react-query';
-// import { ApiErrorResponse, registerUser } from '../api/auth';
-// import { UserRegistrationValues, ApiErrorResponse } from '../types';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { ApiErrorResponse, ApiResponse, UserRegistrationValues } from '@/types';
