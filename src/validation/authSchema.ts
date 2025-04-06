@@ -21,3 +21,12 @@ export const registerSchema = Yup.object({
     .required('User type is required')
     .oneOf(['student', 'admin'], 'Invalid user type')
 });
+
+export const LoginSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+});
