@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/context/AuthProvider';
 import { ReactNode, useState } from 'react';
-import ProtectedRoute from '@/api/ProtectedRoute';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
 interface ProvidersProps {
   children: ReactNode;

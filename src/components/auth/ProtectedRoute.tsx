@@ -16,17 +16,20 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Skip authentication check for public routes
+    // Public routes that don't require authentication
     const publicRoutes = ['/signin', '/signup', '/reset-password'];
-    if (publicRoutes.includes(pathname)) {
+    
+    // If user is authenticated and trying to access auth pages, redirect to dashboard
+    if (isAuthenticated && publicRoutes.includes(pathname)) {
+      router.push('/');
       return;
     }
-
-    if (!isAuthenticated) {
+    
+    // If user is not authenticated and trying to access protected routes, redirect to signin
+    if (!isAuthenticated && !publicRoutes.includes(pathname)) {
       router.push('/signin');
     }
   }, [isAuthenticated, router, pathname]);
 
-  // For public routes or authenticated users, render children
   return <>{children}</>;
 }
