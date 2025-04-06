@@ -1,20 +1,51 @@
 "use client";
-import Input from "@/components/form/input/InputField";
-import Label from "@/components/form/Label";
-import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
-import Link from "next/link";
-import React, { useState } from "react";
+import { useFormik } from 'formik';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-
+} from "@/components/ui/select";
+import { useState } from 'react';
+import { useRegister } from '@/hooks/useRegister';
+import { registerSchema } from '@/validation/authSchema';
+import Input from "@/components/form/input/InputField";
+import Label from "@/components/form/Label";
+import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
+import Link from "next/link";
+import { toast } from "react-hot-toast";
+import { ApiErrorResponse, UserRegistrationValues } from '@/types';
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<ApiErrorResponse>({});
+
+  const { mutate: register, isPending } = useRegister({
+    onError: (errors: ApiErrorResponse) => {
+      setFieldErrors(errors);
+      Object.keys(errors).forEach(key => {
+        formik.setFieldError(key, errors[key]);
+      });
+    }
+  });
+
+  const formik = useFormik<UserRegistrationValues>({
+    initialValues: {
+      first_name: '',
+      last_name: '',
+      email: '',
+      password: '',
+      user_type: 'student'
+    },
+    validationSchema: registerSchema,
+    onSubmit: (values) => {
+      setFieldErrors({});
+      toast.loading("Creating your account...");
+      register(values);
+    },
+  });
+
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full overflow-y-auto no-scrollbar">
       <div className="w-full max-w-md sm:pt-10 mx-auto mb-5">
@@ -37,24 +68,25 @@ export default function SignUpForm() {
             </p>
           </div>
           <div>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
-
-            </div>
-
-            <form>
+            <form onSubmit={formik.handleSubmit}>
               <div className="space-y-5">
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-
                   <div className="sm:col-span-1">
                     <Label>
                       First Name<span className="text-error-500">*</span>
                     </Label>
                     <Input
                       type="text"
-                      id="fname"
-                      name="fname"
+                      id="first_name"
+                      name="first_name"
                       placeholder="Enter your first name"
+                      value={formik.values.first_name}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                     />
+                    {formik.touched.first_name && formik.errors.first_name && (
+                      <p className="mt-1 text-sm text-error-500">{formik.errors.first_name}</p>
+                    )}
                   </div>
 
                   <div className="sm:col-span-1">
@@ -63,10 +95,16 @@ export default function SignUpForm() {
                     </Label>
                     <Input
                       type="text"
-                      id="lname"
-                      name="lname"
+                      id="last_name"
+                      name="last_name"
                       placeholder="Enter your last name"
+                      value={formik.values.last_name}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                     />
+                    {formik.touched.last_name && formik.errors.last_name && (
+                      <p className="mt-1 text-sm text-error-500">{formik.errors.last_name}</p>
+                    )}
                   </div>
                   <div className="sm:col-span-1">
                     <Label>
@@ -77,22 +115,38 @@ export default function SignUpForm() {
                       id="email"
                       name="email"
                       placeholder="Enter your email"
+                      value={formik.values.email}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className={fieldErrors.email ? "border-error-500" : ""}
                     />
+                    {(formik.touched.email && formik.errors.email) || fieldErrors.email ? (
+                      <p className="mt-1 text-sm text-error-500">
+                        {fieldErrors.email || formik.errors.email}
+                      </p>
+                    ) : null}
                   </div>
-                  <div className="sm:col-span-1">
-                    <Select >
-                      <Label>
-                        User Type<span className="text-error-500">*</span>
-                      </Label>
-                      <SelectTrigger className="w-full " style={{ height: "42px" }}>
-                        <SelectValue placeholder="Student" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white z-10 w-full ">
-                        <SelectItem value="light">Student</SelectItem>
-                        <SelectItem value="dark">Admin</SelectItem>
 
+                  <div className="sm:col-span-1">
+                    <Label>
+                      User Type<span className="text-error-500">*</span>
+                    </Label>
+                    <Select
+                      name="user_type"
+                      value={formik.values.user_type}
+                      onValueChange={(value) => formik.setFieldValue('user_type', value)}
+                    >
+                      <SelectTrigger className="w-full" style={{ height: "42px" }}>
+                        <SelectValue placeholder="Select user type" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white z-10 w-full">
+                        <SelectItem value="student">Student</SelectItem>
+                        <SelectItem value="admin">Admin</SelectItem>
                       </SelectContent>
                     </Select>
+                    {formik.touched.user_type && formik.errors.user_type && (
+                      <p className="mt-1 text-sm text-error-500">{formik.errors.user_type}</p>
+                    )}
                   </div>
                 </div>
 
@@ -104,6 +158,11 @@ export default function SignUpForm() {
                     <Input
                       placeholder="Enter your password"
                       type={showPassword ? "text" : "password"}
+                      id="password"
+                      name="password"
+                      value={formik.values.password}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
@@ -116,13 +175,18 @@ export default function SignUpForm() {
                       )}
                     </span>
                   </div>
+                  {formik.touched.password && formik.errors.password && (
+                    <p className="mt-1 text-sm text-error-500">{formik.errors.password}</p>
+                  )}
                 </div>
-                {/* <!-- Checkbox --> */}
 
-                {/* <!-- Button --> */}
                 <div>
-                  <button className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
-                    Sign Up
+                  <button
+                    type="submit"
+                    className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
+                    disabled={isPending || !formik.isValid}
+                  >
+                    {isPending ? "Please wait..." : "Sign Up"}
                   </button>
                 </div>
               </div>

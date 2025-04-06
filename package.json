@@ -25,11 +25,14 @@
     "@react-jvectormap/world": "^1.1.2",
     "@tailwindcss/forms": "^0.5.9",
     "@tailwindcss/postcss": "^4.0.9",
+    "@tanstack/react-query": "^5.71.10",
     "apexcharts": "^4.3.0",
     "autoprefixer": "^10.4.20",
+    "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "flatpickr": "^4.6.13",
+    "formik": "^2.4.6",
     "lucide-react": "^0.485.0",
     "next": "15.1.3",
     "react": "^18.3.1",
@@ -39,10 +42,12 @@
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.3.5",
     "react-flatpickr": "^3.10.13",
+    "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "swiper": "^11.2.0",
     "tailwind-merge": "^2.6.0",
-    "tw-animate-css": "^1.2.5"
+    "tw-animate-css": "^1.2.5",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -3,6 +3,7 @@ import "./globals.css";
 
 import { SidebarProvider } from "@/context/SidebarContext";
 import { ThemeProvider } from "@/context/ThemeContext";
+import Providers from "@/components/Providers";
 
 const outfit = Outfit({
   variable: "--font-outfit-sans",
@@ -18,7 +19,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${outfit.variable} dark:bg-gray-900`}>
         <ThemeProvider>
-          <SidebarProvider>{children}</SidebarProvider>
+          <SidebarProvider>
+          <Providers>{children}</Providers>
+          </SidebarProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -6,6 +6,8 @@ interface InputProps {
   name?: string;
   placeholder?: string;
   defaultValue?: string | number;
+  value?: string | number;
+ 
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
   min?: string;
@@ -14,6 +16,7 @@ interface InputProps {
   disabled?: boolean;
   success?: boolean;
   error?: boolean;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   hint?: string; // Optional hint text
 }
 
@@ -22,7 +25,9 @@ const Input: FC<InputProps> = ({
   id,
   name,
   placeholder,
+  value,
   defaultValue,
+  onBlur,
   onChange,
   className = "",
   min,
@@ -54,6 +59,8 @@ const Input: FC<InputProps> = ({
         id={id}
         name={name}
         placeholder={placeholder}
+        value={value}
+        onBlur={onBlur}
         defaultValue={defaultValue}
         onChange={onChange}
         min={min}
