@@ -23,6 +23,7 @@ const AboutPage = () => {
     const editorRef = useRef(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
+
     // Create page mutation
     const createPageMutation = useMutation({
         mutationFn: async (formData: FormData) => {
@@ -191,31 +192,6 @@ const AboutPage = () => {
                                 )}
                             </div>
 
-
-                            <div className="col-span-1">
-                                <Label htmlFor="status">Status</Label>
-                                <Select
-                                    name="status"
-                                    value={formik.values.status}
-                                    onValueChange={(value) => formik.setFieldValue("status", value)}
-                                >
-                                    <SelectTrigger className="w-full" style={{ height: "44px" }}>
-                                        <SelectValue placeholder="Select status" />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-white">
-                                        <SelectItem value="published">Published</SelectItem>
-                                        <SelectItem value="draft">Draft</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                {formik.touched.status && formik.errors.status && (
-                                    <div className="text-red-500 text-sm mt-1">{formik.errors.status}</div>
-                                )}
-                            </div>
-
-
-
-
-
                             <div className="col-span-1">
                                 <Label htmlFor="description">Description</Label>
                                 <div className="rounded-md">
@@ -255,6 +231,25 @@ const AboutPage = () => {
                                         <div className="text-red-500 text-sm mt-1">{formik.errors.image_url as string}</div>
                                     )}
                                 </div>
+                            </div>
+                            <div className="col-span-1">
+                                <Label htmlFor="status">Status</Label>
+                                <Select
+                                    name="status"
+                                    value={formik.values.status}
+                                    onValueChange={(value) => formik.setFieldValue("status", value)}
+                                >
+                                    <SelectTrigger className="w-full" style={{ height: "44px" }}>
+                                        <SelectValue placeholder="Select status" />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-white">
+                                        <SelectItem value="published">Published</SelectItem>
+                                        <SelectItem value="draft">Draft</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                {formik.touched.status && formik.errors.status && (
+                                    <div className="text-red-500 text-sm mt-1">{formik.errors.status}</div>
+                                )}
                             </div>
 
                             <div className="col-span-1">
@@ -311,7 +306,7 @@ const AboutPage = () => {
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.meta_description}
-                                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm"
+                                    className="w-full h-[200px] px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-brand-500 text-sm"
                                 />
 
                                 {formik.touched.meta_description && formik.errors.meta_description && (

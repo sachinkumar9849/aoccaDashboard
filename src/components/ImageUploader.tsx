@@ -114,7 +114,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = () => {
 
       {/* Drag & drop area */}
       <div
-        className="border-1 border-gray-300 rounded-lg p-2 text-center cursor-pointer hover:border-blue-400 transition-colors mb-4"
+        className="border-1 border-gray-300 rounded-lg p-2 text-center cursor-pointer hover:border-blue-400 transition-colors"
         onClick={triggerFileInput}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -154,10 +154,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = () => {
 
       {uploadStatus && (
         <p className={`absolute bottom-[10px] mt-2 text-sm ${uploadStatus.includes('successful')
-            ? 'text-green-600'
-            : uploadStatus.includes('Uploading')
-              ? 'text-blue-600'
-              : 'text-red-600'
+          ? 'text-green-600'
+          : uploadStatus.includes('Uploading')
+            ? 'text-blue-600'
+            : 'text-red-600'
           }`}>
           {uploadStatus}
         </p>
