@@ -31,15 +31,12 @@ export interface PageFormValues{
   description: string;
   subtitle:string;
   slug: string;
+  type: string;
   status: string;
   meta_title: string;
   meta_description: string;
-
-
-  
   meta_keywords: string;
   image_url?: File | null;
-
 }
 
 export interface PageResponse {

@@ -51,7 +51,7 @@ export const apiClient = {
     },
   
     /**
-     * Create a new page
+     * Create a new page 
      */
     createPage: async (formData: FormData) => {
       return apiClient.request("/create-page", {
@@ -59,6 +59,13 @@ export const apiClient = {
         body: formData,
       });
     },
+    createNewsBlog: async (formData: FormData) => {
+      return apiClient.request("/create-news-blog", {
+        method: "POST",
+        body: formData,
+      });
+    },
+   
   
     // Add more API methods as needed...
   };

@@ -44,15 +44,15 @@ const navItems: NavItem[] = [
     icon: <ListIcon />,
     subItems: [{ name: "Staff List", path: "/staff-list", pro: false }, { name: "Staff Add", path: "/staff-add", pro: false }],
   },
+  // {
+  //   name: "News",
+  //   icon: <ListIcon />,
+  //   subItems: [{ name: "News List", path: "/news-list", pro: false }, { name: "News Add", path: "/news-add", pro: false }],
+  // },
   {
-    name: "News",
+    name: "News & Blog",
     icon: <ListIcon />,
-    subItems: [{ name: "News List", path: "/news-list", pro: false }, { name: "News Add", path: "/news-add", pro: false }],
-  },
-  {
-    name: "Blog",
-    icon: <ListIcon />,
-    subItems: [{ name: "Blog List", path: "/blog-list", pro: false }, { name: "Blog Add", path: "/blog-add", pro: false }],
+    subItems: [{ name: " List", path: "/blog-list", pro: false }, { name: " Add", path: "/blog-add", pro: false }],
   },
   {
     name: "Video",
