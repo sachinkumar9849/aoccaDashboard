@@ -29,7 +29,7 @@ export interface ApiResponse {
 export interface PageFormValues{
   title: string;
   description: string;
-
+  subtitle:string;
   slug: string;
   status: string;
   meta_title: string;

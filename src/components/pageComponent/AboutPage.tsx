@@ -41,6 +41,7 @@ const AboutPage = () => {
     // Validation schema
     const validationSchema = Yup.object({
         title: Yup.string().required("Title is required"),
+        subtitle: Yup.string().required("subtitle is required"),
         slug: Yup.string().required("Slug is required"),
         description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
@@ -48,13 +49,14 @@ const AboutPage = () => {
         meta_description: Yup.string()
             .required("Meta description is required"),
         meta_keywords: Yup.string().required("Meta keywords are required"),
-        image: Yup.mixed().required("Image is required"),
+
     });
 
     // Initialize formik
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
+            subtitle: "",
             slug: "",
             description: "",
             status: "published",
@@ -63,10 +65,13 @@ const AboutPage = () => {
             meta_keywords: "",
             image_url: null,
         },
+
         validationSchema,
         onSubmit: (values) => {
+            console.log("first log=>", values)
             const formData = new FormData();
             formData.append("title", values.title);
+            formData.append("subtitle", values.subtitle);
             formData.append("slug", values.slug);
             formData.append("description", values.description);
             formData.append("status", values.status);
@@ -85,7 +90,10 @@ const AboutPage = () => {
             }
 
             createPageMutation.mutate(formData);
+
         },
+
+
     });
 
     // Handle editor change
@@ -137,6 +145,27 @@ const AboutPage = () => {
                             <div className="text-red-500 text-sm mt-1">{formik.errors.title}</div>
                         )}
                     </div>
+
+                    <div className="col-span-1">
+                        <Label htmlFor="subtitle">subtitle</Label>
+                        <Input
+                            id="subtitle"
+                            name="subtitle"
+                            type="text"
+                            onChange={formik.handleChange}
+                            onBlur={(e) => {
+                                formik.handleBlur(e);
+                                if (formik.values.subtitle && !formik.values.slug) {
+                                    generateSlug();
+                                }
+                            }}
+                            value={formik.values.subtitle}
+                        />
+                        {formik.touched.subtitle && formik.errors.subtitle && (
+                            <div className="text-red-500 text-sm mt-1">{formik.errors.subtitle}</div>
+                        )}
+                    </div>
+
 
                     <div className="col-span-1">
                         <Label htmlFor="slug">Slug</Label>
