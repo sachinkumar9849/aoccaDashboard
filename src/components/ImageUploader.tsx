@@ -27,7 +27,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = () => {
       setPreviewUrl(reader.result as string);
     };
     reader.readAsDataURL(file);
-    
+
     setSelectedImage(file);
     setUploadStatus('');
   };
@@ -44,21 +44,21 @@ const ImageUploader: React.FC<ImageUploaderProps> = () => {
   const handleDrop = (event: DragEvent<HTMLDivElement>): void => {
     event.preventDefault();
     event.currentTarget.classList.remove('border-blue-500');
-    
+
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
       const file = event.dataTransfer.files[0];
-      
+
       if (!file.type.match('image.*')) {
         setUploadStatus('Please select an image file');
         return;
       }
-      
+
       const reader = new FileReader();
       reader.onload = () => {
         setPreviewUrl(reader.result as string);
       };
       reader.readAsDataURL(file);
-      
+
       setSelectedImage(file);
       setUploadStatus('');
     }
@@ -77,16 +77,16 @@ const ImageUploader: React.FC<ImageUploaderProps> = () => {
     try {
       const formData = new FormData();
       formData.append('image', selectedImage);
-      
+
       // Example API call - replace with your actual API endpoint
       // const response = await fetch('https://your-api.com/upload', {
       //   method: 'POST',
       //   body: formData,
       // });
-      
+
       // Simulating upload delay
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       setUploadStatus('Upload successful!');
       // Optionally clear the image after successful upload
       // setSelectedImage(null);
@@ -111,10 +111,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = () => {
         accept="image/*"
         className="hidden"
       />
-      
+
       {/* Drag & drop area */}
       <div
-        className="border-1 border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 transition-colors mb-4"
+        className="border-1 border-gray-300 rounded-lg p-2 text-center cursor-pointer hover:border-blue-400 transition-colors mb-4"
         onClick={triggerFileInput}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -124,7 +124,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = () => {
           <img
             src={previewUrl}
             alt="Preview"
-            className="max-h-48 mx-auto mb-2"
+            className="h-[200px] w-full mx-auto mb-2 object-cover"
           />
         ) : (
           <div className="py-8">
@@ -151,41 +151,19 @@ const ImageUploader: React.FC<ImageUploaderProps> = () => {
           </div>
         )}
       </div>
-      
-      {/* Upload button */}
-      <button
-        onClick={handleUpload}
-        disabled={!selectedImage}
-        className={`mx-auto flex text-center py-2 px-4 rounded ${
-          selectedImage
-            ? 'bg-brand-500 hover:bg-blue-600 text-white'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-        } transition-colors`}
-      >
-        Upload Image
-      </button>
-      
-      {/* Status message */}
+
       {uploadStatus && (
-        <p className={`absolute bottom-[10px] mt-2 text-sm ${
-          uploadStatus.includes('successful')
+        <p className={`absolute bottom-[10px] mt-2 text-sm ${uploadStatus.includes('successful')
             ? 'text-green-600'
             : uploadStatus.includes('Uploading')
               ? 'text-blue-600'
               : 'text-red-600'
-        }`}>
+          }`}>
           {uploadStatus}
         </p>
       )}
 
-      {/* Image details */}
-      {/* {selectedImage && (
-        <div className="mt-4 text-sm text-gray-600">
-          <p><span className="font-medium">File name:</span> {selectedImage.name}</p>
-          <p><span className="font-medium">Size:</span> {Math.round(selectedImage.size / 1024)} KB</p>
-          <p><span className="font-medium">Type:</span> {selectedImage.type}</p>
-        </div>
-      )} */}
+
     </div>
   );
 };
