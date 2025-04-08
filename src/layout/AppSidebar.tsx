@@ -58,6 +58,7 @@ const navItems: NavItem[] = [
     name: "Blog",
     icon: <ListIcon />,
     subItems: [{ name: "Blog List", path: "/blog-list", pro: false }, { name: "Blog Add", path: "/blog-add", pro: false }],
+  
   },
   {
     name: "Team",
@@ -65,15 +66,21 @@ const navItems: NavItem[] = [
     subItems: [{ name: "Team List", path: "/team-list", pro: false }, { name: "Team Add", path: "/team-add", pro: false }],
   },
   {
-    name: "Video",
-    icon: <ListIcon />,
-    subItems: [{ name: "Video List", path: "/video-list", pro: false }, { name: "Video Add", path: "/video-add", pro: false }],
-  },
-  {
     name: "Testimonial",
     icon: <ListIcon />,
     subItems: [{ name: "Testimonial List", path: "/testimonial-list", pro: false }, { name: "Testimonial Add", path: "/testimonial-add", pro: false }],
   },
+  {
+    name: "Topper Student",
+    icon: <ListIcon />,
+    subItems: [{ name: "Topper student List", path: "/topper-list", pro: false }, { name: "Topper student add", path: "/topper-student", pro: false }],
+  },
+  {
+    name: "Video",
+    icon: <ListIcon />,
+    subItems: [{ name: "Video List", path: "/video-list", pro: false }, { name: "Video Add", path: "/video-add", pro: false }],
+  },
+ 
   {
     name: "Services",
     icon: <ListIcon />,

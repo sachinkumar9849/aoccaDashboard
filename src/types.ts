@@ -39,6 +39,7 @@ export interface PageFormValues{
   image_url?: File | null;
   name:string;
   linkedin: string;
+  rating: string | number;
 }
 
 
