@@ -5,7 +5,6 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
 import {
-  CalenderIcon,
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
@@ -29,11 +28,7 @@ const navItems: NavItem[] = [
     path: "/",
   },
 
-  {
-    icon: <CalenderIcon />,
-    name: "About",
-    path: "/about",
-  },
+
   {
     name: "Student Management",
     icon: <ListIcon />,
@@ -44,6 +39,11 @@ const navItems: NavItem[] = [
     icon: <ListIcon />,
     subItems: [{ name: "Staff List", path: "/staff-list", pro: false }, { name: "Staff Add", path: "/staff-add", pro: false }],
   },
+  // {
+  //   name: "News",
+  //   icon: <ListIcon />,
+  //   subItems: [{ name: "News List", path: "/news-list", pro: false }, { name: "News Add", path: "/news-add", pro: false }],
+  // },
   {
     name: "News",
     icon: <ListIcon />,
@@ -53,17 +53,34 @@ const navItems: NavItem[] = [
     name: "Blog",
     icon: <ListIcon />,
     subItems: [{ name: "Blog List", path: "/blog-list", pro: false }, { name: "Blog Add", path: "/blog-add", pro: false }],
+  
   },
   {
-    name: "Video",
+    name: "Team",
     icon: <ListIcon />,
-    subItems: [{ name: "Video List", path: "/video-list", pro: false }, { name: "Video Add", path: "/video-add", pro: false }],
+    subItems: [{ name: "Team List", path: "/team-list", pro: false }, { name: "Team Add", path: "/team-add", pro: false }],
   },
   {
     name: "Testimonial",
     icon: <ListIcon />,
     subItems: [{ name: "Testimonial List", path: "/testimonial-list", pro: false }, { name: "Testimonial Add", path: "/testimonial-add", pro: false }],
   },
+  {
+    name: "Topper Student",
+    icon: <ListIcon />,
+    subItems: [{ name: "Topper student List", path: "/topper-list", pro: false }, { name: "Topper student add", path: "/topper-student", pro: false }],
+  },
+  {
+    name: "Slider",
+    icon: <ListIcon />,
+    subItems: [{ name: "Slider List", path: "/slider-list", pro: false }, { name: "Slider Add", path: "/slider-add", pro: false }],
+  },
+  {
+    name: "Video",
+    icon: <ListIcon />,
+    subItems: [{ name: "Video List", path: "/video-list", pro: false }, { name: "Video Add", path: "/video-add", pro: false }],
+  },
+ 
   {
     name: "Services",
     icon: <ListIcon />,

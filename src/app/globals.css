@@ -741,3 +741,9 @@ span.flatpickr-weekday,
 div#radix-\:R2h9uuutt7\: {
   background: white;
 }
+img.blogListImg {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  border: 1px solid #e3dfdf;
+}

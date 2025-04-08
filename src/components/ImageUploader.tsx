@@ -1,191 +1,153 @@
-"use client";
-import React, { useState, useRef, ChangeEvent, DragEvent } from 'react';
+import React, { useState, useRef, useEffect } from "react";
+import { Upload, X } from "lucide-react";
+
 interface ImageUploaderProps {
-  onImageUpload?: (file: File) => void;
-  preview?: string | null;
+  onImageChange: (file: File | null) => void;
+  currentImage?: string | null;
+  allowedTypes?: string[];
+  maxSizeMB?: number;
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = () => {
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>('');
-  const [uploadStatus, setUploadStatus] = useState<string>('');
+const ImageUploader: React.FC<ImageUploaderProps> = ({
+  onImageChange,
+  currentImage = null,
+  allowedTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp"],
+  maxSizeMB = 5,
+}) => {
+  const [preview, setPreview] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  // Update preview when currentImage prop changes
+  useEffect(() => {
+    if (currentImage) {
+      setPreview(currentImage);
+    } else {
+      setPreview(null);
+    }
+  }, [currentImage]);
 
-    // Validate file type
-    if (!file.type.match('image.*')) {
-      setUploadStatus('Please select an image file');
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFileValidation(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      handleFileValidation(e.target.files[0]);
+    }
+  };
+
+  const handleFileValidation = (file: File) => {
+    setError(null);
+    
+    // Check file type
+    if (!allowedTypes.includes(file.type)) {
+      setError(`Invalid file type. Allowed types: ${allowedTypes.join(', ')}`);
       return;
     }
-
+    
+    // Check file size (convert MB to bytes)
+    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      setError(`File size exceeds ${maxSizeMB}MB limit`);
+      return;
+    }
+    
     // Create preview
-    const reader = new FileReader();
-    reader.onload = () => {
-      setPreviewUrl(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+    const objectUrl = URL.createObjectURL(file);
+    setPreview(objectUrl);
     
-    setSelectedImage(file);
-    setUploadStatus('');
-  };
-
-  const handleDragOver = (event: DragEvent<HTMLDivElement>): void => {
-    event.preventDefault();
-    event.currentTarget.classList.add('border-blue-500');
-  };
-
-  const handleDragLeave = (event: DragEvent<HTMLDivElement>): void => {
-    event.currentTarget.classList.remove('border-blue-500');
-  };
-
-  const handleDrop = (event: DragEvent<HTMLDivElement>): void => {
-    event.preventDefault();
-    event.currentTarget.classList.remove('border-blue-500');
+    // Pass file to parent component
+    onImageChange(file);
     
-    if (event.dataTransfer.files && event.dataTransfer.files[0]) {
-      const file = event.dataTransfer.files[0];
-      
-      if (!file.type.match('image.*')) {
-        setUploadStatus('Please select an image file');
-        return;
-      }
-      
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreviewUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-      
-      setSelectedImage(file);
-      setUploadStatus('');
-    }
+    return () => URL.revokeObjectURL(objectUrl);
   };
 
-  const handleUpload = async (): Promise<void> => {
-    if (!selectedImage) {
-      setUploadStatus('Please select an image first');
-      return;
+  const handleRemoveImage = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
-
-    setUploadStatus('Uploading...');
-
-    // Example upload implementation
-    // In a real application, you would send this to your backend API
-    try {
-      const formData = new FormData();
-      formData.append('image', selectedImage);
-      
-      // Example API call - replace with your actual API endpoint
-      // const response = await fetch('https://your-api.com/upload', {
-      //   method: 'POST',
-      //   body: formData,
-      // });
-      
-      // Simulating upload delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setUploadStatus('Upload successful!');
-      // Optionally clear the image after successful upload
-      // setSelectedImage(null);
-      // setPreviewUrl('');
-    } catch (error) {
-      console.error('Upload failed:', error);
-      setUploadStatus('Upload failed. Please try again.');
-    }
+    setPreview(null);
+    onImageChange(null);
   };
 
-  const triggerFileInput = (): void => {
-    fileInputRef.current?.click();
+  const handleClickUpload = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   return (
-    <div className="relative">
-      {/* Hidden file input */}
+    <div className="w-full">
       <input
         type="file"
         ref={fileInputRef}
-        onChange={handleImageChange}
-        accept="image/*"
+        onChange={handleFileChange}
+        accept={allowedTypes.join(',')}
         className="hidden"
+        aria-label="Upload image"
       />
       
-      {/* Drag & drop area */}
-      <div
-        className="border-1 border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 transition-colors mb-4"
-        onClick={triggerFileInput}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-      >
-        {previewUrl ? (
-          <img
-            src={previewUrl}
-            alt="Preview"
-            className="max-h-48 mx-auto mb-2"
-          />
-        ) : (
-          <div className="py-8">
-            <svg
-              className="mx-auto h-12 w-12 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-              />
-            </svg>
-            <p className="mt-2 text-sm text-gray-600">
-              Click to select or drag and drop an image here
-            </p>
-            <p className="mt-1 text-xs text-gray-500">
-              Supports: JPG, PNG, GIF, etc.
-            </p>
-          </div>
-        )}
-      </div>
-      
-      {/* Upload button */}
-      <button
-        onClick={handleUpload}
-        disabled={!selectedImage}
-        className={`mx-auto flex text-center py-2 px-4 rounded ${
-          selectedImage
-            ? 'bg-brand-500 hover:bg-blue-600 text-white'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-        } transition-colors`}
-      >
-        Upload Image
-      </button>
-      
-      {/* Status message */}
-      {uploadStatus && (
-        <p className={`absolute bottom-[10px] mt-2 text-sm ${
-          uploadStatus.includes('successful')
-            ? 'text-green-600'
-            : uploadStatus.includes('Uploading')
-              ? 'text-blue-600'
-              : 'text-red-600'
-        }`}>
-          {uploadStatus}
-        </p>
-      )}
-
-      {/* Image details */}
-      {/* {selectedImage && (
-        <div className="mt-4 text-sm text-gray-600">
-          <p><span className="font-medium">File name:</span> {selectedImage.name}</p>
-          <p><span className="font-medium">Size:</span> {Math.round(selectedImage.size / 1024)} KB</p>
-          <p><span className="font-medium">Type:</span> {selectedImage.type}</p>
+      {!preview ? (
+        <div
+          className={`border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer transition-colors ${
+            isDragging ? 'border-brand-500 bg-brand-50' : 'border-gray-300 hover:border-brand-400'
+          }`}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          onClick={handleClickUpload}
+          style={{ maxHeight: "200px" }}
+        >
+          <Upload className="w-12 h-12 text-gray-400 mb-2" />
+          <p className="text-sm font-medium text-gray-700">
+            Drag and drop an image here or click to browse
+          </p>
+          <p className="text-xs text-gray-500 mt-1">
+            Supported formats: {allowedTypes.map(type => type.split('/')[1]).join(', ')}
+          </p>
+          <p className="text-xs text-gray-500">
+            Max size: {maxSizeMB}MB
+          </p>
         </div>
-      )} */}
+      ) : (
+        <div className="relative border rounded-lg overflow-hidden" style={{ maxHeight: "200px" }}>
+          <img 
+            src={preview} 
+            alt="Image preview" 
+            className="w-full h-full object-cover"
+            style={{ maxHeight: "300px" }}
+          />
+          <button
+            onClick={handleRemoveImage}
+            className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
+            aria-label="Remove image"
+            type="button"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+      
+      {error && (
+        <p className="text-red-500 text-sm mt-2">{error}</p>
+      )}
     </div>
   );
 };

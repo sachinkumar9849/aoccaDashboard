@@ -29,18 +29,22 @@ export interface ApiResponse {
 export interface PageFormValues{
   title: string;
   description: string;
-
+  subtitle:string;
   slug: string;
+  type: string;
   status: string;
   meta_title: string;
   meta_description: string;
-
-
-  
   meta_keywords: string;
   image_url?: File | null;
-
+  name:string;
+  linkedin: string;
+  rating: string;
 }
+
+
+
+
 
 export interface PageResponse {
   data: {

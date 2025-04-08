@@ -26,7 +26,7 @@ const NewsBlog = () => {
     // Create page mutation
     const createPageMutation = useMutation({
         mutationFn: async (formData: FormData) => {
-            return await apiClient.createNewsBlog(formData) as PageResponse;
+            return await apiClient.createTeam(formData) as PageResponse;
         },
         onSuccess: (data) => {
             toast.success(data.message || "Page created successfully!");
@@ -42,13 +42,8 @@ const NewsBlog = () => {
     const validationSchema = Yup.object({
         title: Yup.string().required("Title is required"),
         slug: Yup.string().required("Slug is required"),
-        description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
-        meta_title: Yup.string().required("Meta title is required"),
-        meta_description: Yup.string()
-            .required("Meta description is required"),
-        meta_keywords: Yup.string().required("Meta keywords are required"),
     });
 
     // Handle image upload
@@ -60,7 +55,7 @@ const NewsBlog = () => {
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            type: "blogs",
+            type: "topper",
             slug: "",
             description: "",
             status: "",
@@ -75,12 +70,11 @@ const NewsBlog = () => {
 
         validationSchema,
         onSubmit: (values) => {
-            console.log("form values before FormData:", values); // Log all values
-
             const formData = new FormData();
             formData.append("title", values.title);
-            formData.append("slug", values.slug);
+            formData.append("name", values.title);           
             formData.append("description", values.description);
+            formData.append("slug", values.slug);
             formData.append("status", values.status);
             formData.append("type", values.type);
             formData.append("meta_title", values.meta_title);
@@ -161,19 +155,30 @@ const NewsBlog = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.slug}</div>
                             )}
                         </div>
-
                         <div className="col-span-1">
-                            <Label htmlFor="image">Featured Image</Label>
-                            <ImageUploader
-                                onImageChange={handleImageChange}
-                                currentImage={image ? URL.createObjectURL(image) : null}
+                            <Label htmlFor="name">Name</Label>
+                            <Input
+                                id="name"
+                                name="name"
+                                type="text"
+                                onChange={formik.handleChange}
+                                onBlur={(e) => {
+                                    formik.handleBlur(e);
+                                    if (formik.values.name && !formik.values.slug) {
+                                        generateSlug();
+                                    }
+                                }}
+                                value={formik.values.name}
                             />
+                            {formik.touched.name && formik.errors.name && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
+                            )}
                         </div>
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
 
                                 <div className="col-span-1">
-                                    <div className="col-span-1 mt-3 dd">
+                                    <div className="col-span-1 dd">
                                         <Label htmlFor="status">Status</Label>
                                         <Select
                                             name="status"
@@ -195,6 +200,15 @@ const NewsBlog = () => {
                                 </div>
                             </div>
                         </div>
+
+                        <div className="col-span-1">
+                            <Label htmlFor="image">Featured Image</Label>
+                            <ImageUploader
+                                onImageChange={handleImageChange}
+                                currentImage={image ? URL.createObjectURL(image) : null}
+                            />
+                        </div>
+                     
                         <div className="col-span-2">
                             <Label htmlFor="description">Description</Label>
                             <div className="rounded-md">
