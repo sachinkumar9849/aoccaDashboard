@@ -54,6 +54,18 @@ const NewsBlog = () => {
 
     });
 
+    // Handle image upload
+    const handleImageUpload = (file: File) => {
+      console.log("Image being uploaded:", file); // Verify file object
+      formik.setFieldValue("image_url", file);
+  
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+          setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+  };
     // Initialize formik
     const formik = useFormik<PageFormValues>({
         initialValues: {
@@ -71,7 +83,8 @@ const NewsBlog = () => {
 
         validationSchema,
         onSubmit: (values) => {
-            console.log("first log=>", values)
+          console.log("form values before FormData:", values); // Log all values
+         
             const formData = new FormData();
             formData.append("title", values.title);         
             formData.append("slug", values.slug);
@@ -89,8 +102,11 @@ const NewsBlog = () => {
 
             // Append image if available
             if (values.image_url) {
-                formData.append("image", values.image_url);
-            }
+              console.log("Adding image to formData:", values.image_url)
+              formData.append("image_url", values.image_url); // Change "image" to "image_url"
+          }else{
+            console.log("No image to uplaod")
+          }
 
             createPageMutation.mutate(formData);
 
@@ -104,17 +120,6 @@ const NewsBlog = () => {
         formik.setFieldValue("description", content);
     };
 
-    // Handle image upload
-    const handleImageUpload = (file: File) => {
-        formik.setFieldValue("image_url", file);
-
-        // Create preview URL
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setImagePreview(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-    };
 
     // Generate slug from title
     const generateSlug = () => {

@@ -65,6 +65,7 @@ const AboutPage = () => {
             meta_description: "",
             meta_keywords: "",
             image_url: null,
+            type: ""
         },
 
         validationSchema,
