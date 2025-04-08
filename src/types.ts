@@ -37,7 +37,13 @@ export interface PageFormValues{
   meta_description: string;
   meta_keywords: string;
   image_url?: File | null;
+  name:string;
+  linkedin: string;
 }
+
+
+
+
 
 export interface PageResponse {
   data: {

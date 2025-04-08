@@ -60,6 +60,11 @@ const navItems: NavItem[] = [
     subItems: [{ name: "Blog List", path: "/blog-list", pro: false }, { name: "Blog Add", path: "/blog-add", pro: false }],
   },
   {
+    name: "Team",
+    icon: <ListIcon />,
+    subItems: [{ name: "Team List", path: "/team-list", pro: false }, { name: "Team Add", path: "/team-add", pro: false }],
+  },
+  {
     name: "Video",
     icon: <ListIcon />,
     subItems: [{ name: "Video List", path: "/video-list", pro: false }, { name: "Video Add", path: "/video-add", pro: false }],

@@ -65,6 +65,12 @@ export const apiClient = {
         body: formData,
       });
     },
+    createTeam: async (formData: FormData) => {
+      return apiClient.request("/create-toper-testimonial-team", {
+        method: "POST",
+        body: formData,
+      });
+    },
    
   
     // Add more API methods as needed...

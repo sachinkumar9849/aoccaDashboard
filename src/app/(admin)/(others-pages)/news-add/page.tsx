@@ -67,7 +67,9 @@ const NewsBlog = () => {
             meta_title: "",
             meta_description: "",
             meta_keywords: "",
-            subtitle: ""
+            subtitle: "",
+            name: "",
+            linkedin: ""
         },
 
         validationSchema,
