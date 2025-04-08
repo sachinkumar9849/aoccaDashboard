@@ -72,7 +72,7 @@ const NewsBlog = () => {
 
         validationSchema,
         onSubmit: (values) => {
-            console.log("form values before FormData:", values); // Log all values
+          
 
             const formData = new FormData();
             formData.append("title", values.title);

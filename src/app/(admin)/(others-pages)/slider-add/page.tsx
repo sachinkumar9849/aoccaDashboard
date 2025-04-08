@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
@@ -8,7 +8,6 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import ImageUploader from "@/components/ImageUploader";
-import { Editor } from '@tinymce/tinymce-react';
 import { PageFormValues, PageResponse } from "@/types";
 import { apiClient } from "@/api/client";
 import {
@@ -20,7 +19,6 @@ import {
 } from "@/components/ui/select";
 
 const NewsBlog = () => {
-    const editorRef = useRef(null);
     const [image, setImage] = useState<File | null>(null);
 
     // Create page mutation
