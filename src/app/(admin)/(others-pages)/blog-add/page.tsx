@@ -60,7 +60,7 @@ const NewsBlog = () => {
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            type: "news",
+            type: "blogs",
             slug: "",
             description: "",
             status: "",
@@ -76,7 +76,6 @@ const NewsBlog = () => {
 
             const formData = new FormData();
             formData.append("title", values.title);
-           
             formData.append("slug", values.slug);
             formData.append("description", values.description);
             formData.append("status", values.status);
@@ -115,7 +114,7 @@ const NewsBlog = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="News & Blogs">
+                <ComponentCard title="Blogs">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
@@ -169,7 +168,7 @@ const NewsBlog = () => {
                         </div>
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
-                              
+
                                 <div className="col-span-1">
                                     <div className="col-span-1 mt-3 dd">
                                         <Label htmlFor="status">Status</Label>
