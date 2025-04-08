@@ -34,11 +34,7 @@ const navItems: NavItem[] = [
     icon: <ListIcon />,
     subItems: [{ name: "Leads", path: "/leads", pro: false }, { name: "Leads Create", path: "/leads-create", pro: false }],
   },
-  {
-    name: "Staff Members",
-    icon: <ListIcon />,
-    subItems: [{ name: "Staff List", path: "/staff-list", pro: false }, { name: "Staff Add", path: "/staff-add", pro: false }],
-  },
+
   // {
   //   name: "News",
   //   icon: <ListIcon />,

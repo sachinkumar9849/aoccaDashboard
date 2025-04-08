@@ -26,9 +26,9 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     }
     
     // If user is not authenticated and trying to access protected routes, redirect to signin
-    if (!isAuthenticated && !publicRoutes.includes(pathname)) {
-      router.push('/signin');
-    }
+    // if (!isAuthenticated && !publicRoutes.includes(pathname)) {
+    //   router.push('/signin');
+    // }
   }, [isAuthenticated, router, pathname]);
 
   return <>{children}</>;
