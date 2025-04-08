@@ -50,9 +50,9 @@ const navItems: NavItem[] = [
   //   subItems: [{ name: "News List", path: "/news-list", pro: false }, { name: "News Add", path: "/news-add", pro: false }],
   // },
   {
-    name: "News & Blog",
+    name: "News",
     icon: <ListIcon />,
-    subItems: [{ name: " List", path: "/blog-list", pro: false }, { name: " Add", path: "/blog-add", pro: false }],
+    subItems: [{ name: "News List", path: "/news-list", pro: false }, { name: "News Add", path: "/news-add", pro: false }],
   },
   {
     name: "Video",
