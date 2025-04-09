@@ -68,7 +68,7 @@ const StudentList = () => {
             </div>
             <div className="col-span-3">
             <a
-              href="https://tailadmin.com/pricing"
+              href=""
               target="_blank"
               rel="nofollow"
               className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600"
