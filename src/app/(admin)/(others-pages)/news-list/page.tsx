@@ -7,8 +7,8 @@ const StudentList = () => {
 
   return (
     <ComponentCard title="News list">
-           <NewsBlogList />
-        </ComponentCard>
+      <NewsBlogList />
+    </ComponentCard>
   )
 }
 
