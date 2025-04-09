@@ -6,7 +6,7 @@ import NewsBlogList from "@/components/pageComponent/NewsBlogList";
 const StudentList = () => {
 
   return (
-    <ComponentCard title="Blog List">
+    <ComponentCard title="News list">
            <NewsBlogList />
         </ComponentCard>
   )
