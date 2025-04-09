@@ -42,7 +42,7 @@ const NewsBlog = () => {
     const validationSchema = Yup.object({
         title: Yup.string().required("Title is required"),
         slug: Yup.string().required("Slug is required"),
-        description: Yup.string().required("Description is required"),
+
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
         meta_title: Yup.string().required("Meta title is required"),
@@ -62,10 +62,10 @@ const NewsBlog = () => {
             title: "",
             type: "news",
             slug: "",
-            description: "",
+            description: "lorem",
             status: "",
             meta_title: "",
-            meta_description: "",
+            meta_description: "lorem",
             meta_keywords: "",
             subtitle: "",
             name: "",
@@ -80,7 +80,7 @@ const NewsBlog = () => {
 
             const formData = new FormData();
             formData.append("title", values.title);
-           
+
             formData.append("slug", values.slug);
             formData.append("description", values.description);
             formData.append("status", values.status);
@@ -164,7 +164,7 @@ const NewsBlog = () => {
                             )}
                         </div>
 
-                      
+
                         <div className="col-span-2">
                             <Label htmlFor="description">Description</Label>
                             <div className="rounded-md">
@@ -177,7 +177,6 @@ const NewsBlog = () => {
                                         height: 300,
                                         menubar: false,
                                         border: false,
-                                        host: '156.67.104.182:8081',
                                         plugins: [
                                             "advlist", "autolink", "lists", "link", "image", "charmap", "preview",
                                             "anchor", "searchreplace", "visualblocks", "code", "fullscreen",
@@ -205,7 +204,7 @@ const NewsBlog = () => {
                         </div>
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
-                              
+
                                 <div className="col-span-1">
                                     <div className="col-span-1 mt-3 dd">
                                         <Label htmlFor="status">Status</Label>

@@ -38,12 +38,12 @@ const navItems: NavItem[] = [
   // {
   //   name: "News",
   //   icon: <ListIcon />,
-  //   subItems: [{ name: "News List", path: "/news-list", pro: false }, { name: "News Add", path: "/news-add", pro: false }],
+  //   subItems: [{ name: "News List", path: "/news-list", pro: false }, { name: "News Add", path: "/news-add", pro: false }],ICAI
   // },
   {
     name: "Ca Courses",
     icon: <ListIcon />,
-    subItems: [{ name: "CAP-I", path: "/cap-i", pro: false }, { name: "News Add", path: "/news-add", pro: false }],
+    subItems: [{ name: "CAP-I", path: "/cap-i", pro: false },{ name: "CAP-II", path: "/cap-ii", pro: false },{ name: "CAP-III", path: "/cap-iii", pro: false },{ name: "ICAI", path: "/cap-iii", pro: false },{ name: "CA Final", path: "/ca-final", pro: false }],
   },
   {
     name: "News",

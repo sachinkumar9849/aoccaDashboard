@@ -41,7 +41,7 @@ const CapI = () => {
     const validationSchema = Yup.object({
         title: Yup.string().required("Title is required"),
         slug: Yup.string().required("Slug is required"),
-        description: Yup.string().required("Description is required"),
+       
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
         sort_order: Yup.string().required("Sort order is required"),
@@ -56,10 +56,10 @@ const CapI = () => {
             title: "",
             type: "cap-i",
             slug: "published",
-            description: "",
+            description: "lorem",
             status: "",
             meta_title: "",
-            meta_description: "",
+            meta_description: "lorem",
             meta_keywords: "",
             subtitle: "",
             name: "",

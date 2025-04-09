@@ -34,7 +34,7 @@ export const LoginSchema = Yup.object().shape({
 export const validationSchema = Yup.object({
     title: Yup.string().required("Title is required"),
     slug: Yup.string().required("Slug is required"),
-    description: Yup.string().required("Description is required"),
+ 
     status: Yup.string().required("Status is required"),
     meta_title: Yup.string().required("Meta title is required"),
     meta_description: Yup.string()
