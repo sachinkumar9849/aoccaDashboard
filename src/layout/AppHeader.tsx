@@ -82,7 +82,7 @@ const AppHeader: React.FC = () => {
             {/* Cross Icon */}
           </button>
 
-          <Link href="/" className="lg:hidden">
+          <Link href="http://156.67.104.182:3003" target="_" className="lg:hidden">
             <Image
               width={154}
               height={32}

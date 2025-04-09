@@ -57,10 +57,10 @@ const NewsBlog = () => {
             title: "",
             type: "topper",
             slug: "",
-            description: "",
+            description: "lorem",
             status: "",
             meta_title: "",
-            meta_description: "",
+            meta_description: "lorem",
             meta_keywords: "",
             subtitle: "",
             name: "",
@@ -73,7 +73,7 @@ const NewsBlog = () => {
         onSubmit: (values) => {
             const formData = new FormData();
             formData.append("title", values.title);
-            formData.append("name", values.title);           
+            formData.append("name", values.title);
             formData.append("description", values.description);
             formData.append("slug", values.slug);
             formData.append("status", values.status);
@@ -209,7 +209,7 @@ const NewsBlog = () => {
                                 currentImage={image ? URL.createObjectURL(image) : null}
                             />
                         </div>
-                     
+
                         <div className="col-span-2">
                             <Label htmlFor="description">Description</Label>
                             <div className="rounded-md">

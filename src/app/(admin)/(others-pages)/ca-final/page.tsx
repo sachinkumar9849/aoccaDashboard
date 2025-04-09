@@ -7,7 +7,6 @@ import { toast } from "react-hot-toast";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
-import ImageUploader from "@/components/ImageUploader";
 import { Editor } from '@tinymce/tinymce-react';
 import { PageFormValues, PageResponse } from "@/types";
 import { apiClient } from "@/api/client";
@@ -19,14 +18,14 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
-const NewsBlog = () => {
+const CapI = () => {
     const editorRef = useRef(null);
     const [image, setImage] = useState<File | null>(null);
 
     // Create page mutation
     const createPageMutation = useMutation({
         mutationFn: async (formData: FormData) => {
-            return await apiClient.createNewsBlog(formData) as PageResponse;
+            return await apiClient.createTeam(formData) as PageResponse;
         },
         onSuccess: (data) => {
             toast.success(data.message || "Page created successfully!");
@@ -42,26 +41,21 @@ const NewsBlog = () => {
     const validationSchema = Yup.object({
         title: Yup.string().required("Title is required"),
         slug: Yup.string().required("Slug is required"),
-
+       
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
-        meta_title: Yup.string().required("Meta title is required"),
-        meta_description: Yup.string()
-            .required("Meta description is required"),
-        meta_keywords: Yup.string().required("Meta keywords are required"),
+        sort_order: Yup.string().required("Sort order is required"),
+       
     });
 
-    // Handle image upload
-    const handleImageChange = (file: File | null) => {
-        setImage(file);
-    };
+
 
     // Initialize formik
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            type: "blogs",
-            slug: "",
+            type: "ca-final",
+            slug: "published",
             description: "lorem",
             status: "",
             meta_title: "",
@@ -81,7 +75,7 @@ const NewsBlog = () => {
             const formData = new FormData();
             formData.append("title", values.title);
             formData.append("slug", values.slug);
-            formData.append("description", values.description);
+            
             formData.append("status", values.status);
             formData.append("type", values.type);
             formData.append("meta_title", values.meta_title);
@@ -118,7 +112,7 @@ const NewsBlog = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="Blogs">
+                <ComponentCard title="CAP I">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
@@ -163,18 +157,61 @@ const NewsBlog = () => {
                             )}
                         </div>
 
-                        <div className="col-span-1">
-                            <Label htmlFor="image">Featured Image</Label>
-                            <ImageUploader
-                                onImageChange={handleImageChange}
-                                currentImage={image ? URL.createObjectURL(image) : null}
-                            />
+                        <div className="col-span-2">
+                            <Label htmlFor="description">Description</Label>
+                            <div className="rounded-md">
+                                <Editor
+                                    apiKey="zw0tzn1q9dadm2o14w6yqre555kee2qm29jlw65qqi021swt"
+                                    onInit={(evt, editor) => (editorRef.current = editor)}
+                                    value={formik.values.description}
+                                    onEditorChange={handleEditorChange}
+                                    init={{
+                                        height: 300,
+                                        menubar: false,
+                                        border: false,
+                                        host: '156.67.104.182:8081',
+                                        plugins: [
+                                            "advlist", "autolink", "lists", "link", "image", "charmap", "preview",
+                                            "anchor", "searchreplace", "visualblocks", "code", "fullscreen",
+                                            "insertdatetime", "media", "table", "code", "help", "wordcount","table","image"
+                                        ],
+                                        toolbar:
+                                            "undo redo | blocks | " +
+                                            "bold italic forecolor | alignleft aligncenter " +
+                                            "alignright alignjustify | bullist numlist outdent indent | " +
+                                            "table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | " +
+                                            
+                                            "removeformat | help",
+                                            
+                                        content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }"
+                                    }}
+                                />
+                            </div>
+                            {formik.touched.description && formik.errors.description && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
+                            )}
                         </div>
                         <div className="col-span-1">
-                            <div className="grid grid-cols-1">
-
+                                    <Label htmlFor="sort_order">Sort Order</Label>
+                                    <Input
+                                        id="sort_order"
+                                        name="sort_order"
+                                        type="text"
+                                        onChange={formik.handleChange}
+                                        onBlur={(e) => {
+                                            formik.handleBlur(e);
+                                            if (formik.values.sort_order && !formik.values.slug) {
+                                                generateSlug();
+                                            }
+                                        }}
+                                        value={formik.values.sort_order}
+                                    />
+                                    {formik.touched.sort_order && formik.errors.sort_order && (
+                                        <div className="text-red-500 text-sm mt-1">{formik.errors.sort_order}</div>
+                                    )}
+                                </div>
                                 <div className="col-span-1">
-                                    <div className="col-span-1 mt-3 dd">
+                                    <div className="col-span-1 dd">
                                         <Label htmlFor="status">Status</Label>
                                         <Select
                                             name="status"
@@ -194,88 +231,7 @@ const NewsBlog = () => {
                                         )}
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div className="col-span-2">
-                            <Label htmlFor="description">Description</Label>
-                            <div className="rounded-md">
-                                <Editor
-                                    apiKey="zw0tzn1q9dadm2o14w6yqre555kee2qm29jlw65qqi021swt"
-                                    onInit={(evt, editor) => (editorRef.current = editor)}
-                                    value={formik.values.description}
-                                    onEditorChange={handleEditorChange}
-                                    init={{
-                                        height: 300,
-                                        menubar: false,
-                                        border: false,
-                                        plugins: [
-                                            "advlist", "autolink", "lists", "link", "image", "charmap", "preview",
-                                            "anchor", "searchreplace", "visualblocks", "code", "fullscreen",
-                                            "insertdatetime", "media", "table", "code", "help", "wordcount"
-                                        ],
-                                        toolbar:
-                                            "undo redo | blocks | " +
-                                            "bold italic forecolor | alignleft aligncenter " +
-                                            "alignright alignjustify | bullist numlist outdent indent | " +
-                                            "removeformat | help",
-                                        content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }"
-                                    }}
-                                />
-                            </div>
-                            {formik.touched.description && formik.errors.description && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
-                            )}
-                        </div>
-
-                    </div>
-                </ComponentCard>
-                <ComponentCard title="Seo">
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="col-span-1">
-                            <Label htmlFor="meta_title">Meta Title</Label>
-                            <Input
-                                id="meta_title"
-                                name="meta_title"
-                                type="text"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.meta_title}
-                            />
-                            {formik.touched.meta_title && formik.errors.meta_title && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.meta_title}</div>
-                            )}
-                        </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="meta_keywords">Meta Keywords</Label>
-                            <Input
-                                id="meta_keywords"
-                                name="meta_keywords"
-                                type="text"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.meta_keywords}
-                                placeholder="keyword1, keyword2, keyword3"
-                            />
-                            {formik.touched.meta_keywords && formik.errors.meta_keywords && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.meta_keywords}</div>
-                            )}
-                        </div>
-                        <div className="col-span-2">
-                            <Label htmlFor="meta_description">Meta Description</Label>
-                            <textarea
-                                id="meta_description"
-                                name="meta_description"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.meta_description}
-                                className="w-full h-[200px] px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-brand-500 text-sm"
-                            />
-
-                            {formik.touched.meta_description && formik.errors.meta_description && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.meta_description}</div>
-                            )}
-                        </div>
-                        <div className="col-span-2">
+                        <div className="col-span-2 mt-4">
                             <button
                                 type="submit"
                                 disabled={createPageMutation.isPending}
@@ -286,9 +242,10 @@ const NewsBlog = () => {
                         </div>
                     </div>
                 </ComponentCard>
+             
             </div>
         </form>
     );
 };
 
-export default NewsBlog;
+export default CapI;
