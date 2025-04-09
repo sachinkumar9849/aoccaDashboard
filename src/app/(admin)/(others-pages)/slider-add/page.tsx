@@ -61,7 +61,8 @@ const NewsBlog = () => {
             meta_keywords: "",
             name: "",
             linkedin: "",
-            rating: ""
+            rating: "",
+            sort_order: ""
         },
 
         validationSchema,

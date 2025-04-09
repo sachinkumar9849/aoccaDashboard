@@ -67,7 +67,8 @@ const NewsBlog = () => {
             subtitle: "",
             name: "",
             linkedin: "",
-            rating: ""
+            rating: "",
+            sort_order: ""
         },
 
         validationSchema,
