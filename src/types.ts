@@ -40,6 +40,7 @@ export interface PageFormValues{
   name:string;
   linkedin: string;
   rating: string;
+  sort_order: string;
 }
 
 

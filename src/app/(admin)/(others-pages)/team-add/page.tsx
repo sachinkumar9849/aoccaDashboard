@@ -62,7 +62,8 @@ const NewsBlog = () => {
             meta_description: "",
             meta_keywords: "",
             subtitle: "",
-            rating: ""
+            rating: "",
+            sort_order: ""
         },
 
         validationSchema,

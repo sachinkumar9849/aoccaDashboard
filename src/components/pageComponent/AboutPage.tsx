@@ -402,7 +402,8 @@ const AboutPage = () => {
             subtitle: "",
             name: "",
             linkedin: "",
-            rating: ""
+            rating: "",
+            sort_order: ""
         },
 
         validationSchema,
