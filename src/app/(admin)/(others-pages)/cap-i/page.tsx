@@ -169,6 +169,7 @@ const CapI = () => {
                                         height: 300,
                                         menubar: false,
                                         border: false,
+                                        host: '156.67.104.182:8081',
                                         plugins: [
                                             "advlist", "autolink", "lists", "link", "image", "charmap", "preview",
                                             "anchor", "searchreplace", "visualblocks", "code", "fullscreen",
