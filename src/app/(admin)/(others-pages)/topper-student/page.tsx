@@ -111,7 +111,7 @@ const NewsBlog = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="Blogs">
+                <ComponentCard title="Topper student">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>

@@ -65,12 +65,12 @@ const TopperStudentList: React.FC = () => {
 
 
     if (!data || data.length === 0) {
-        return <div className="p-4 text-gray-500">No slider items found.</div>;
+        return <div className="p-4 text-gray-500">No topper studne items found.</div>;
     }
 
     return (
         <div className="w-full p-4 bg-white rounded-lg shadow-sm">
-            <h2 className="text-lg font-normal mb-4">Slider Items</h2>
+            <h2 className="text-lg font-normal mb-4">Topper Student</h2>
             <div className="overflow-x-auto">
                 <table className="w-full">
                     <thead>

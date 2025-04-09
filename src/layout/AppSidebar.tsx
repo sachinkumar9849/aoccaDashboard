@@ -71,17 +71,17 @@ const navItems: NavItem[] = [
     icon: <ListIcon />,
     subItems: [{ name: "Slider List", path: "/slider-list", pro: false }, { name: "Slider Add", path: "/slider-add", pro: false }],
   },
-  {
-    name: "Video",
-    icon: <ListIcon />,
-    subItems: [{ name: "Video List", path: "/video-list", pro: false }, { name: "Video Add", path: "/video-add", pro: false }],
-  },
+  // {
+  //   name: "Video",
+  //   icon: <ListIcon />,
+  //   subItems: [{ name: "Video List", path: "/video-list", pro: false }, { name: "Video Add", path: "/video-add", pro: false }],
+  // },
  
-  {
-    name: "Services",
-    icon: <ListIcon />,
-    subItems: [{ name: "Services List", path: "/services-list", pro: false }, { name: "Services Add", path: "/services-add", pro: false }],
-  },
+  // {
+  //   name: "Services",
+  //   icon: <ListIcon />,
+  //   subItems: [{ name: "Services List", path: "/services-list", pro: false }, { name: "Services Add", path: "/services-add", pro: false }],
+  // },
   {
     name: "Pages",
     icon: <ListIcon />,

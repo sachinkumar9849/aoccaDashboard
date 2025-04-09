@@ -6,6 +6,7 @@ import { Edit, Trash, Eye } from 'lucide-react';
 import TableListLoading from '../loading/TableListLoading';
 
 interface SliderItem {
+    description: string;
     id: number;
     title: string;
     image_url: string;
@@ -13,11 +14,12 @@ interface SliderItem {
     team_type: string;
     created_at: string;
     updated_at: string;
+    name: string;
 }
 
 const fetchSliders = async (): Promise<SliderItem[]> => {
     try {
-        return await apiClient.request<SliderItem[]>('/toper-testimonial-team?type=slider&status=published');
+        return await apiClient.request<SliderItem[]>('/toper-testimonial-team?type=testimonial&status=published');
     } catch (error) {
         if ((error as Error).message.includes('Authentication token is required')) {
             throw new Error('Authorization token required. Please log in to view slider data.');
@@ -26,7 +28,7 @@ const fetchSliders = async (): Promise<SliderItem[]> => {
     }
 };
 
-const SliderList: React.FC = () => {
+const TestimonialList: React.FC = () => {
     const { data, isLoading, isError, error } = useQuery({
         queryKey: ['sliders'],
         queryFn: fetchSliders,
@@ -64,30 +66,35 @@ const SliderList: React.FC = () => {
 
 
     if (!data || data.length === 0) {
-        return <div className="p-4 text-gray-500">No slider items found.</div>;
+        return <div className="p-4 text-gray-500">No topper studne items found.</div>;
     }
 
     return (
         <div className="w-full p-4 bg-white rounded-lg shadow-sm">
-            <h2 className="text-lg font-normal mb-4">Slider Items</h2>
+            <h2 className="text-lg font-normal mb-4">Testimonial</h2>
             <div className="overflow-x-auto">
                 <table className="w-full">
                     <thead>
                         <tr className="border-b">
                             <th className="py-4 px-6 text-left text-sm font-medium text-gray-600">Sn</th>
                             <th className="py-4 px-6 text-left text-sm font-medium text-gray-600">Title</th>
+                            <th className="py-4 px-6 text-left text-sm font-medium text-gray-600">Name</th>
                             <th className="py-4 px-6 text-left text-sm font-medium text-gray-600">Image</th>
+                            <th className="py-4 px-6 text-left text-sm font-medium text-gray-600">Description</th>
                             <th className="py-4 px-6 text-left text-sm font-medium text-gray-600">Status</th>
                             <th className="py-4 px-6 text-left text-sm font-medium text-gray-600">Created At</th>
                             <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((item , index) => (
+                        {data.map((item, index) => (
                             <tr key={item.id} className="border-b hover:bg-gray-50">
-                                <td className="py-4 px-6 text-gray-700">{index+1}</td>
+                                <td className="py-4 px-6 text-gray-700  w-[50px]">{index + 1}</td>
                                 <td className="py-4 px-6">
                                     <div className="font-medium text-gray-800">{item.title}</div>
+                                </td>
+                                <td className="py-4 px-6">
+                                    <div className="font-medium text-gray-800">{item.name}</div>
                                 </td>
                                 <td className="py-4 px-6">
                                     <img
@@ -95,6 +102,19 @@ const SliderList: React.FC = () => {
                                         alt="img"
                                         className="w-16 h-16 rounded object-cover"
                                     />
+                                </td>
+                                <td className="py-4 px-6">
+                                    <p className='capitalize text-gray-700 text-[13px] w-[200px]'>
+                                        {
+                                            (() => {
+                                                const tempDiv = document.createElement('div');
+                                                tempDiv.innerHTML = item.description;
+                                                const plainText = tempDiv.textContent || tempDiv.innerText || '';
+                                                const shortText = plainText.slice(0, 100);
+                                                return shortText;
+                                            })()
+                                        }
+                                    </p>
                                 </td>
                                 <td className="py-4 px-6">
                                     <span className="inline-block px-3 py-1 rounded-full text-sm font-medium text-green-600 bg-green-100">
@@ -126,4 +146,4 @@ const SliderList: React.FC = () => {
     );
 };
 
-export default SliderList;
+export default TestimonialList;
