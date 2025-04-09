@@ -177,6 +177,7 @@ const NewsBlog = () => {
                                         height: 300,
                                         menubar: false,
                                         border: false,
+                                        host: 'http://156.67.104.182:3002',
                                         plugins: [
                                             "advlist", "autolink", "lists", "link", "image", "charmap", "preview",
                                             "anchor", "searchreplace", "visualblocks", "code", "fullscreen",
