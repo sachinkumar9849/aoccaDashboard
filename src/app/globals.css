@@ -750,3 +750,6 @@ img.blogListImg {
 span.inline-block.px-3.py-1.rounded-full.text-sm.font-medium.text-green-600.bg-green-100 {
   text-transform: capitalize;
 }
+a[style="padding: 10px 25px;color:#FFF;text-decoration:none;background:#EF5350;display:block;font-size:14px;font-family:sans-serif"] {
+  display: none !IMPORTANT;
+}

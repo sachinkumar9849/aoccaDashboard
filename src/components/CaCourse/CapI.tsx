@@ -23,7 +23,7 @@ const FroalaEditorWrapper = dynamic(
   { ssr: false }
 );
 
-const CapII = () => {
+const CapI = () => {
     const [image, setImage] = useState<File | null>(null);
 
     const createPageMutation = useMutation({
@@ -52,7 +52,7 @@ const CapII = () => {
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            type: "cap-ii",
+            type: "cap-i",
             slug: "",
             description: "",
             status: "",
@@ -189,7 +189,7 @@ const CapII = () => {
                                     onValueChange={(value) => formik.setFieldValue("status", value)}
                                 >
                                     <SelectTrigger className="w-full" style={{ height: "44px" }}>
-                                        <SelectValue placeholder="published" />
+                                        <SelectValue placeholder="Published" />
                                     </SelectTrigger>
                                     <SelectContent className="bg-white">
                                         <SelectItem value="published">Published</SelectItem>
@@ -217,4 +217,4 @@ const CapII = () => {
     );
 };
 
-export default CapII;
+export default CapI;
