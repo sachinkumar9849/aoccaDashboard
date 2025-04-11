@@ -23,7 +23,7 @@ const FroalaEditorWrapper = dynamic(
   { ssr: false }
 );
 
-const CapII = () => {
+const CapIII = () => {
     const [image, setImage] = useState<File | null>(null);
 
     const createPageMutation = useMutation({
@@ -52,7 +52,7 @@ const CapII = () => {
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            type: "cap-ii",
+            type: "cap-iii",
             slug: "",
             description: "",
             status: "",
@@ -103,7 +103,7 @@ const CapII = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="CapII">
+                <ComponentCard title="CapIII">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
@@ -217,4 +217,4 @@ const CapII = () => {
     );
 };
 
-export default CapII;
+export default CapIII;
