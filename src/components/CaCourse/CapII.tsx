@@ -55,7 +55,7 @@ const CapII = () => {
             type: "cap-ii",
             slug: "",
             description: "",
-            status: "",
+            status: "published",
             meta_title: "",
             meta_description: "",
             meta_keywords: "",

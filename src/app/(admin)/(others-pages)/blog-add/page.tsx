@@ -18,6 +18,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import FroalaEditorWrapper from "@/components/CaCourse/FroalaEditorWrapper";
 
 const NewsBlog = () => {
     const editorRef = useRef(null);
@@ -42,7 +43,7 @@ const NewsBlog = () => {
     const validationSchema = Yup.object({
         title: Yup.string().required("Title is required"),
         slug: Yup.string().required("Slug is required"),
-
+        description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
         meta_title: Yup.string().required("Meta title is required"),
@@ -51,21 +52,21 @@ const NewsBlog = () => {
         meta_keywords: Yup.string().required("Meta keywords are required"),
     });
 
-    // Handle image upload
+
     const handleImageChange = (file: File | null) => {
         setImage(file);
     };
 
-    // Initialize formik
+
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
             type: "blogs",
             slug: "",
-            description: "lorem",
-            status: "",
+            description: "",
+            status: "published",
             meta_title: "",
-            meta_description: "lorem",
+            meta_description: "",
             meta_keywords: "",
             subtitle: "",
             name: "",
@@ -80,6 +81,7 @@ const NewsBlog = () => {
 
             const formData = new FormData();
             formData.append("title", values.title);
+
             formData.append("slug", values.slug);
             formData.append("description", values.description);
             formData.append("status", values.status);
@@ -163,6 +165,19 @@ const NewsBlog = () => {
                             )}
                         </div>
 
+
+                        <div className="col-span-2">
+                        <Label htmlFor="description">Description</Label>
+                            {typeof window !== 'undefined' && (
+                                <FroalaEditorWrapper
+                                    value={formik.values.description}
+                                    onChange={(model: string) => formik.setFieldValue('description', model)}
+                                />
+                            )}
+                            {formik.touched.description && formik.errors.description && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
+                            )}
+                        </div>
                         <div className="col-span-1">
                             <Label htmlFor="image">Featured Image</Label>
                             <ImageUploader
@@ -182,7 +197,7 @@ const NewsBlog = () => {
                                             onValueChange={(value) => formik.setFieldValue("status", value)}
                                         >
                                             <SelectTrigger className="w-full" style={{ height: "44px" }}>
-                                                <SelectValue placeholder="Select status" />
+                                                <SelectValue placeholder="published" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-white">
                                                 <SelectItem value="published">Published</SelectItem>
@@ -195,36 +210,6 @@ const NewsBlog = () => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-span-2">
-                            <Label htmlFor="description">Description</Label>
-                            <div className="rounded-md">
-                                <Editor
-                                    apiKey="zw0tzn1q9dadm2o14w6yqre555kee2qm29jlw65qqi021swt"
-                                    onInit={(evt, editor) => (editorRef.current = editor)}
-                                    value={formik.values.description}
-                                    onEditorChange={handleEditorChange}
-                                    init={{
-                                        height: 300,
-                                        menubar: false,
-                                        border: false,
-                                        plugins: [
-                                            "advlist", "autolink", "lists", "link", "image", "charmap", "preview",
-                                            "anchor", "searchreplace", "visualblocks", "code", "fullscreen",
-                                            "insertdatetime", "media", "table", "code", "help", "wordcount"
-                                        ],
-                                        toolbar:
-                                            "undo redo | blocks | " +
-                                            "bold italic forecolor | alignleft aligncenter " +
-                                            "alignright alignjustify | bullist numlist outdent indent | " +
-                                            "removeformat | help",
-                                        content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }"
-                                    }}
-                                />
-                            </div>
-                            {formik.touched.description && formik.errors.description && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
-                            )}
                         </div>
 
                     </div>

@@ -55,7 +55,7 @@ const CapIII = () => {
             type: "cap-iii",
             slug: "",
             description: "",
-            status: "",
+            status: "published",
             meta_title: "",
             meta_description: "",
             meta_keywords: "",

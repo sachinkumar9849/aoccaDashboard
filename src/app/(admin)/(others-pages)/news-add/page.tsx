@@ -18,6 +18,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import FroalaEditorWrapper from "@/components/CaCourse/FroalaEditorWrapper";
 
 const NewsBlog = () => {
     const editorRef = useRef(null);
@@ -42,7 +43,7 @@ const NewsBlog = () => {
     const validationSchema = Yup.object({
         title: Yup.string().required("Title is required"),
         slug: Yup.string().required("Slug is required"),
-
+        description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
         meta_title: Yup.string().required("Meta title is required"),
@@ -62,10 +63,10 @@ const NewsBlog = () => {
             title: "",
             type: "news",
             slug: "",
-            description: "lorem",
+            description: "",
             status: "",
             meta_title: "",
-            meta_description: "lorem",
+            meta_description: "",
             meta_keywords: "",
             subtitle: "",
             name: "",
@@ -166,31 +167,13 @@ const NewsBlog = () => {
 
 
                         <div className="col-span-2">
-                            <Label htmlFor="description">Description</Label>
-                            <div className="rounded-md">
-                                <Editor
-                                    apiKey="zw0tzn1q9dadm2o14w6yqre555kee2qm29jlw65qqi021swt"
-                                    onInit={(evt, editor) => (editorRef.current = editor)}
+                        <Label htmlFor="description">Description</Label>
+                            {typeof window !== 'undefined' && (
+                                <FroalaEditorWrapper
                                     value={formik.values.description}
-                                    onEditorChange={handleEditorChange}
-                                    init={{
-                                        height: 300,
-                                        menubar: false,
-                                        border: false,
-                                        plugins: [
-                                            "advlist", "autolink", "lists", "link", "image", "charmap", "preview",
-                                            "anchor", "searchreplace", "visualblocks", "code", "fullscreen",
-                                            "insertdatetime", "media", "table", "code", "help", "wordcount"
-                                        ],
-                                        toolbar:
-                                            "undo redo | blocks | " +
-                                            "bold italic forecolor | alignleft aligncenter " +
-                                            "alignright alignjustify | bullist numlist outdent indent | " +
-                                            "removeformat | help",
-                                        content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }"
-                                    }}
+                                    onChange={(model: string) => formik.setFieldValue('description', model)}
                                 />
-                            </div>
+                            )}
                             {formik.touched.description && formik.errors.description && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
                             )}
