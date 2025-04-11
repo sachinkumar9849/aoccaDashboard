@@ -18,6 +18,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import FroalaEditorWrapper from "@/components/CaCourse/FroalaEditorWrapper";
 
 const NewsBlog = () => {
     const editorRef = useRef(null);
@@ -60,7 +61,7 @@ const NewsBlog = () => {
             type: "testimonial",
             slug: "",
             description: "",
-            status: "",
+            status: "published",
             meta_title: "",
             meta_description: "",
             meta_keywords: "",
@@ -73,7 +74,7 @@ const NewsBlog = () => {
 
         validationSchema,
         onSubmit: (values) => {
-          
+
 
             const formData = new FormData();
             formData.append("title", values.title);
@@ -90,7 +91,7 @@ const NewsBlog = () => {
             }
 
             // Convert comma-separated keywords to array
-           
+
 
             createPageMutation.mutate(formData);
         },
@@ -108,66 +109,55 @@ const NewsBlog = () => {
             <div className="grid grid-cols-1 gap-5">
                 <ComponentCard title="Testimonial add">
                     <div className="grid grid-cols-2 gap-4">
-
-
                         <div className="col-span-1">
-                            <div className="grid grid-cols-1 gap-4">
+                            <Label htmlFor="title">Title</Label>
+                            <Input
+                                id="title"
+                                name="title"
+                                type="text"
+                                onChange={formik.handleChange}
+                                onBlur={(e) => {
+                                    formik.handleBlur(e);
 
-
-                                <div className="col-span-1">
-                                    <Label htmlFor="title">Title</Label>
-                                    <Input
-                                        id="title"
-                                        name="title"
-                                        type="text"
-                                        onChange={formik.handleChange}
-                                        onBlur={(e) => {
-                                            formik.handleBlur(e);
-
-                                        }}
-                                        value={formik.values.title}
-                                    />
-                                    {formik.touched.title && formik.errors.title && (
-                                        <div className="text-red-500 text-sm mt-1">{formik.errors.title}</div>
-                                    )}
-                                </div>
-                                <div className="col-span-1">
-                                    <Label htmlFor="name">Name</Label>
-                                    <Input
-                                        id="name"
-                                        name="name"
-                                        type="text"
-                                        onChange={formik.handleChange}
-                                        onBlur={(e) => {
-                                            formik.handleBlur(e);
-
-                                        }}
-                                        value={formik.values.name}
-                                    />
-                                    {formik.touched.name && formik.errors.name && (
-                                        <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
-                                    )}
-                                </div>
-                                <div className="col-span-1">
-                                    <Label htmlFor="rating">Rating</Label>
-                                    <Input
-                                        id="rating"
-                                        name="rating"
-                                        type="text"
-                                        onChange={formik.handleChange}
-                                        onBlur={(e) => {
-                                            formik.handleBlur(e);
-
-                                        }}
-                                        value={formik.values.rating}
-                                    />
-                                    {formik.touched.rating && formik.errors.rating && (
-                                        <div className="text-red-500 text-sm mt-1">{formik.errors.rating}</div>
-                                    )}
-                                </div>
-
-                            </div>
+                                }}
+                                value={formik.values.title}
+                            />
+                            {formik.touched.title && formik.errors.title && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.title}</div>
+                            )}
                         </div>
+                        <div className="col-span-1">
+                            <Label htmlFor="name">Name</Label>
+                            <Input
+                                id="name"
+                                name="name"
+                                type="text"
+                                onChange={formik.handleChange}
+                                onBlur={(e) => {
+                                    formik.handleBlur(e);
+
+                                }}
+                                value={formik.values.name}
+                            />
+                            {formik.touched.name && formik.errors.name && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
+                            )}
+                        </div>
+                        <div className="col-span-2">
+                            <Label htmlFor="description">Description</Label>
+                            {typeof window !== 'undefined' && (
+                                <FroalaEditorWrapper
+                                    value={formik.values.description}
+                                    onChange={(model: string) => formik.setFieldValue('description', model)}
+                                />
+                            )}
+                            {formik.touched.description && formik.errors.description && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
+                            )}
+                        </div>
+
+
+
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
                                 <div className="col-span-1">
@@ -186,7 +176,7 @@ const NewsBlog = () => {
                                             onValueChange={(value) => formik.setFieldValue("status", value)}
                                         >
                                             <SelectTrigger className="w-full" style={{ height: "44px" }}>
-                                                <SelectValue placeholder="Select status" />
+                                                <SelectValue placeholder="published" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-white">
                                                 <SelectItem value="published">Published</SelectItem>
@@ -200,36 +190,29 @@ const NewsBlog = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-span-2">
-                            <Label htmlFor="description">Description</Label>
-                            <div className="rounded-md">
-                                <Editor
-                                    apiKey="zw0tzn1q9dadm2o14w6yqre555kee2qm29jlw65qqi021swt"
-                                    onInit={(evt, editor) => (editorRef.current = editor)}
-                                    value={formik.values.description}
-                                    onEditorChange={handleEditorChange}
-                                    init={{
-                                        height: 300,
-                                        menubar: false,
-                                        border: false,
-                                        plugins: [
-                                            "advlist", "autolink", "lists", "link", "image", "charmap", "preview",
-                                            "anchor", "searchreplace", "visualblocks", "code", "fullscreen",
-                                            "insertdatetime", "media", "table", "code", "help", "wordcount"
-                                        ],
-                                        toolbar:
-                                            "undo redo | blocks | " +
-                                            "bold italic forecolor | alignleft aligncenter " +
-                                            "alignright alignjustify | bullist numlist outdent indent | " +
-                                            "removeformat | help",
-                                        content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }"
-                                    }}
-                                />
-                            </div>
-                            {formik.touched.description && formik.errors.description && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
+
+
+                        <div className="col-span-1">
+                            <Label htmlFor="rating">Rating</Label>
+                            <Input
+                                id="rating"
+                                name="rating"
+                                type="text"
+                                onChange={formik.handleChange}
+                                onBlur={(e) => {
+                                    formik.handleBlur(e);
+
+                                }}
+                                value={formik.values.rating}
+                            />
+                            {formik.touched.rating && formik.errors.rating && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.rating}</div>
                             )}
                         </div>
+
+
+                      
+
                         <div className="col-span-2">
                             <button
                                 type="submit"

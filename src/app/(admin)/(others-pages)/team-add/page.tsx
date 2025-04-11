@@ -55,11 +55,11 @@ const NewsBlog = () => {
             name: "",
             type: "team",
             slug: "",
-            description: "lorem",
+            description: "",
             linkedin: "",
-            status: "",
+            status: "published",
             meta_title: "",
-            meta_description: "lorem",
+            meta_description: "",
             meta_keywords: "",
             subtitle: "",
             rating: "",
@@ -156,7 +156,7 @@ const NewsBlog = () => {
                                             onValueChange={(value) => formik.setFieldValue("status", value)}
                                         >
                                             <SelectTrigger className="w-full" style={{ height: "44px" }}>
-                                                <SelectValue placeholder="Select status" />
+                                                <SelectValue placeholder="published" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-white">
                                                 <SelectItem value="published">Published</SelectItem>
