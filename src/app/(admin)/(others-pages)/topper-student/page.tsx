@@ -18,6 +18,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import FroalaEditorWrapper from "@/components/CaCourse/FroalaEditorWrapper";
 
 const NewsBlog = () => {
     const editorRef = useRef(null);
@@ -41,6 +42,7 @@ const NewsBlog = () => {
     // Validation schema
     const validationSchema = Yup.object({
         title: Yup.string().required("Title is required"),
+        description: Yup.string().required("Description is required"),
         slug: Yup.string().required("Slug is required"),
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
@@ -57,10 +59,10 @@ const NewsBlog = () => {
             title: "",
             type: "topper",
             slug: "",
-            description: "lorem",
-            status: "",
+            description: "",
+            status: "published",
             meta_title: "",
-            meta_description: "lorem",
+            meta_description: "",
             meta_keywords: "",
             subtitle: "",
             name: "",
@@ -113,7 +115,7 @@ const NewsBlog = () => {
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
                 <ComponentCard title="Topper student">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
                             <Input
@@ -175,71 +177,49 @@ const NewsBlog = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
                             )}
                         </div>
-                        <div className="col-span-1">
-                            <div className="grid grid-cols-1">
 
-                                <div className="col-span-1">
-                                    <div className="col-span-1 dd">
-                                        <Label htmlFor="status">Status</Label>
-                                        <Select
-                                            name="status"
-                                            value={formik.values.status}
-                                            onValueChange={(value) => formik.setFieldValue("status", value)}
-                                        >
-                                            <SelectTrigger className="w-full" style={{ height: "44px" }}>
-                                                <SelectValue placeholder="Select status" />
-                                            </SelectTrigger>
-                                            <SelectContent className="bg-white">
-                                                <SelectItem value="published">Published</SelectItem>
-                                                <SelectItem value="draft">Draft</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        {formik.touched.status && formik.errors.status && (
-                                            <div className="text-red-500 text-sm mt-1">{formik.errors.status}</div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="col-span-3">
+                            <Label htmlFor="description">Description</Label>
+                            {typeof window !== 'undefined' && (
+                                <FroalaEditorWrapper
+                                    value={formik.values.description}
+                                    onChange={(model: string) => formik.setFieldValue('description', model)}
+                                />
+                            )}
+                            {formik.touched.description && formik.errors.description && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
+                            )}
                         </div>
 
-                        <div className="col-span-1">
+
+                        <div className="col-span-2">
                             <Label htmlFor="image">Featured Image</Label>
                             <ImageUploader
                                 onImageChange={handleImageChange}
                                 currentImage={image ? URL.createObjectURL(image) : null}
                             />
                         </div>
-
-                        <div className="col-span-2">
-                            <Label htmlFor="description">Description</Label>
-                            <div className="rounded-md">
-                                <Editor
-                                    apiKey="zw0tzn1q9dadm2o14w6yqre555kee2qm29jlw65qqi021swt"
-                                    onInit={(evt, editor) => (editorRef.current = editor)}
-                                    value={formik.values.description}
-                                    onEditorChange={handleEditorChange}
-                                    init={{
-                                        height: 300,
-                                        menubar: false,
-                                        border: false,
-                                        plugins: [
-                                            "advlist", "autolink", "lists", "link", "image", "charmap", "preview",
-                                            "anchor", "searchreplace", "visualblocks", "code", "fullscreen",
-                                            "insertdatetime", "media", "table", "code", "help", "wordcount"
-                                        ],
-                                        toolbar:
-                                            "undo redo | blocks | " +
-                                            "bold italic forecolor | alignleft aligncenter " +
-                                            "alignright alignjustify | bullist numlist outdent indent | " +
-                                            "removeformat | help",
-                                        content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }"
-                                    }}
-                                />
-                            </div>
-                            {formik.touched.description && formik.errors.description && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
+                        <div className="col-span-1 dd">
+                            <Label htmlFor="status">Status</Label>
+                            <Select
+                                name="status"
+                                value={formik.values.status}
+                                onValueChange={(value) => formik.setFieldValue("status", value)}
+                            >
+                                <SelectTrigger className="w-full" style={{ height: "44px" }}>
+                                    <SelectValue placeholder="published" />
+                                </SelectTrigger>
+                                <SelectContent className="bg-white">
+                                    <SelectItem value="published">Published</SelectItem>
+                                    <SelectItem value="draft">Draft</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            {formik.touched.status && formik.errors.status && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.status}</div>
                             )}
                         </div>
+
+
 
                     </div>
                 </ComponentCard>
@@ -259,7 +239,7 @@ const NewsBlog = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.meta_title}</div>
                             )}
                         </div>
-                        <div className="col-span-1">
+                        <div className="col-span-">
                             <Label htmlFor="meta_keywords">Meta Keywords</Label>
                             <Input
                                 id="meta_keywords"
