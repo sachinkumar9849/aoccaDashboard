@@ -17,15 +17,16 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import FroalaEditorWrapper from "../CaCourse/FroalaEditorWrapper";
+import FroalaEditorWrapper from "@/components/CaCourse/FroalaEditorWrapper";
 
-const AboutPage = () => {
+const NewsAdd = () => {
+   
     const [image, setImage] = useState<File | null>(null);
 
     // Create page mutation
     const createPageMutation = useMutation({
         mutationFn: async (formData: FormData) => {
-            return await apiClient.createPage(formData) as PageResponse;
+            return await apiClient.createNewsBlog(formData) as PageResponse;
         },
         onSuccess: (data) => {
             toast.success(data.message || "Page created successfully!");
@@ -40,28 +41,26 @@ const AboutPage = () => {
     // Validation schema
     const validationSchema = Yup.object({
         title: Yup.string().required("Title is required"),
-        subtitle: Yup.string().required("Subtitle is required"),
-        description: Yup.string().required("Description is required"),
         slug: Yup.string().required("Slug is required"),
-      
+        description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
-       
+        type: Yup.string().required("Type is required"),
         meta_title: Yup.string().required("Meta title is required"),
         meta_description: Yup.string()
             .required("Meta description is required"),
         meta_keywords: Yup.string().required("Meta keywords are required"),
     });
 
-    // Handle image upload
+
     const handleImageChange = (file: File | null) => {
         setImage(file);
     };
 
-    // Initialize formik
+
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            type: "",
+            type: "news",
             slug: "",
             description: "",
             status: "published",
@@ -81,10 +80,11 @@ const AboutPage = () => {
 
             const formData = new FormData();
             formData.append("title", values.title);
+
             formData.append("slug", values.slug);
             formData.append("description", values.description);
             formData.append("status", values.status);
-          
+            formData.append("type", values.type);
             formData.append("meta_title", values.meta_title);
             formData.append("meta_description", values.meta_description);
 
@@ -104,6 +104,7 @@ const AboutPage = () => {
     });
     // Handle editor change
 
+
     // Generate slug from title
     const generateSlug = () => {
         const slug = formik.values.title
@@ -116,7 +117,7 @@ const AboutPage = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="About">
+                <ComponentCard title="News">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
@@ -160,6 +161,8 @@ const AboutPage = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.slug}</div>
                             )}
                         </div>
+
+
                         <div className="col-span-2">
                         <Label htmlFor="description">Description</Label>
                             {typeof window !== 'undefined' && (
@@ -172,30 +175,12 @@ const AboutPage = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
                             )}
                         </div>
-
                         <div className="col-span-1">
                             <Label htmlFor="image">Featured Image</Label>
                             <ImageUploader
                                 onImageChange={handleImageChange}
                                 currentImage={image ? URL.createObjectURL(image) : null}
                             />
-                        </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="subtitle">Subtitle</Label>
-                            <Input
-                                id="subtitle"
-                                name="subtitle"
-                                type="text"
-                                onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-                                
-                                }}
-                                value={formik.values.subtitle}
-                            />
-                            {formik.touched.subtitle && formik.errors.subtitle && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.subtitle}</div>
-                            )}
                         </div>
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
@@ -223,7 +208,6 @@ const AboutPage = () => {
                                 </div>
                             </div>
                         </div>
-                       
 
                     </div>
                 </ComponentCard>
@@ -289,4 +273,4 @@ const AboutPage = () => {
     );
 };
 
-export default AboutPage;
+export default NewsAdd;
