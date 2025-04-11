@@ -18,13 +18,6 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
-// Dynamically import Froala Editor with SSR disabled
-// const FroalaEditor = dynamic(
-//   () => import('react-froala-wysiwyg'),
-//   { ssr: false }
-// );
-
-// Dynamically import CSS and plugins only on client-side
 const FroalaEditorWrapper = dynamic(
   () => import('./FroalaEditorWrapper'),
   { ssr: false }
@@ -60,9 +53,9 @@ const CapII = () => {
         initialValues: {
             title: "",
             type: "cap-ii",
-            slug: "published",
+            slug: "",
             description: "",
-            status: "",
+            status: "published",
             meta_title: "",
             meta_description: "",
             meta_keywords: "",
@@ -110,7 +103,7 @@ const CapII = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="CAP II">
+                <ComponentCard title="CapII">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
@@ -196,7 +189,7 @@ const CapII = () => {
                                     onValueChange={(value) => formik.setFieldValue("status", value)}
                                 >
                                     <SelectTrigger className="w-full" style={{ height: "44px" }}>
-                                        <SelectValue placeholder="Select status" />
+                                        <SelectValue placeholder="published" />
                                     </SelectTrigger>
                                     <SelectContent className="bg-white">
                                         <SelectItem value="published">Published</SelectItem>

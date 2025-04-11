@@ -17,15 +17,16 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import FroalaEditorWrapper from "../CaCourse/FroalaEditorWrapper";
+import FroalaEditorWrapper from "@/components/CaCourse/FroalaEditorWrapper";
 
-const AboutPage = () => {
+const TestimonialAdd = () => {
+
     const [image, setImage] = useState<File | null>(null);
 
     // Create page mutation
     const createPageMutation = useMutation({
         mutationFn: async (formData: FormData) => {
-            return await apiClient.createPage(formData) as PageResponse;
+            return await apiClient.createTeam(formData) as PageResponse;
         },
         onSuccess: (data) => {
             toast.success(data.message || "Page created successfully!");
@@ -40,16 +41,11 @@ const AboutPage = () => {
     // Validation schema
     const validationSchema = Yup.object({
         title: Yup.string().required("Title is required"),
-        subtitle: Yup.string().required("Subtitle is required"),
+        name: Yup.string().required("Name is required"),
         description: Yup.string().required("Description is required"),
-        slug: Yup.string().required("Slug is required"),
-      
         status: Yup.string().required("Status is required"),
-       
-        meta_title: Yup.string().required("Meta title is required"),
-        meta_description: Yup.string()
-            .required("Meta description is required"),
-        meta_keywords: Yup.string().required("Meta keywords are required"),
+        type: Yup.string().required("Type is required"),
+
     });
 
     // Handle image upload
@@ -61,7 +57,7 @@ const AboutPage = () => {
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            type: "",
+            type: "testimonial",
             slug: "",
             description: "",
             status: "published",
@@ -77,16 +73,16 @@ const AboutPage = () => {
 
         validationSchema,
         onSubmit: (values) => {
-            console.log("form values before FormData:", values); // Log all values
+
 
             const formData = new FormData();
             formData.append("title", values.title);
-            formData.append("slug", values.slug);
+            formData.append("name", values.name);
+            formData.append("rating", values.rating);
             formData.append("description", values.description);
             formData.append("status", values.status);
-          
-            formData.append("meta_title", values.meta_title);
-            formData.append("meta_description", values.meta_description);
+            formData.append("type", values.type);
+
 
             // Add image to formData if available
             if (image) {
@@ -94,29 +90,17 @@ const AboutPage = () => {
             }
 
             // Convert comma-separated keywords to array
-            const keywordsArray = values.meta_keywords
-                .split(",")
-                .map((keyword) => keyword.trim());
-            formData.append("meta_keywords", JSON.stringify(keywordsArray));
+
 
             createPageMutation.mutate(formData);
         },
     });
-    // Handle editor change
 
-    // Generate slug from title
-    const generateSlug = () => {
-        const slug = formik.values.title
-            .toLowerCase()
-            .replace(/[^\w\s]/gi, "")
-            .replace(/\s+/g, "_");
-        formik.setFieldValue("slug", slug);
-    };
 
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="About">
+                <ComponentCard title="Testimonial add">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
@@ -127,9 +111,7 @@ const AboutPage = () => {
                                 onChange={formik.handleChange}
                                 onBlur={(e) => {
                                     formik.handleBlur(e);
-                                    if (formik.values.title && !formik.values.slug) {
-                                        generateSlug();
-                                    }
+
                                 }}
                                 value={formik.values.title}
                             />
@@ -138,30 +120,24 @@ const AboutPage = () => {
                             )}
                         </div>
                         <div className="col-span-1">
-                            <Label htmlFor="slug">Slug</Label>
-                            <div className="flex">
-                                <Input
-                                    id="slug"
-                                    name="slug"
-                                    type="text"
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.slug}
-                                />
-                                <button
-                                    type="button"
-                                    className="ml-2 px-3 py-2 bg-gray-200 rounded-md text-sm"
-                                    onClick={generateSlug}
-                                >
-                                    Generate
-                                </button>
-                            </div>
-                            {formik.touched.slug && formik.errors.slug && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.slug}</div>
+                            <Label htmlFor="name">Name</Label>
+                            <Input
+                                id="name"
+                                name="name"
+                                type="text"
+                                onChange={formik.handleChange}
+                                onBlur={(e) => {
+                                    formik.handleBlur(e);
+
+                                }}
+                                value={formik.values.name}
+                            />
+                            {formik.touched.name && formik.errors.name && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
                             )}
                         </div>
                         <div className="col-span-2">
-                        <Label htmlFor="description">Description</Label>
+                            <Label htmlFor="description">Description</Label>
                             {typeof window !== 'undefined' && (
                                 <FroalaEditorWrapper
                                     value={formik.values.description}
@@ -173,33 +149,17 @@ const AboutPage = () => {
                             )}
                         </div>
 
-                        <div className="col-span-1">
-                            <Label htmlFor="image">Featured Image</Label>
-                            <ImageUploader
-                                onImageChange={handleImageChange}
-                                currentImage={image ? URL.createObjectURL(image) : null}
-                            />
-                        </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="subtitle">Subtitle</Label>
-                            <Input
-                                id="subtitle"
-                                name="subtitle"
-                                type="text"
-                                onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-                                
-                                }}
-                                value={formik.values.subtitle}
-                            />
-                            {formik.touched.subtitle && formik.errors.subtitle && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.subtitle}</div>
-                            )}
-                        </div>
+
+
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
-
+                                <div className="col-span-1">
+                                    <Label htmlFor="image">Featured Image</Label>
+                                    <ImageUploader
+                                        onImageChange={handleImageChange}
+                                        currentImage={image ? URL.createObjectURL(image) : null}
+                                    />
+                                </div>
                                 <div className="col-span-1">
                                     <div className="col-span-1 mt-3 dd">
                                         <Label htmlFor="status">Status</Label>
@@ -223,56 +183,29 @@ const AboutPage = () => {
                                 </div>
                             </div>
                         </div>
-                       
 
-                    </div>
-                </ComponentCard>
-                <ComponentCard title="Seo">
-                    <div className="grid grid-cols-2 gap-4">
+
                         <div className="col-span-1">
-                            <Label htmlFor="meta_title">Meta Title</Label>
+                            <Label htmlFor="rating">Rating</Label>
                             <Input
-                                id="meta_title"
-                                name="meta_title"
+                                id="rating"
+                                name="rating"
                                 type="text"
                                 onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.meta_title}
-                            />
-                            {formik.touched.meta_title && formik.errors.meta_title && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.meta_title}</div>
-                            )}
-                        </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="meta_keywords">Meta Keywords</Label>
-                            <Input
-                                id="meta_keywords"
-                                name="meta_keywords"
-                                type="text"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.meta_keywords}
-                                placeholder="keyword1, keyword2, keyword3"
-                            />
-                            {formik.touched.meta_keywords && formik.errors.meta_keywords && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.meta_keywords}</div>
-                            )}
-                        </div>
-                        <div className="col-span-2">
-                            <Label htmlFor="meta_description">Meta Description</Label>
-                            <textarea
-                                id="meta_description"
-                                name="meta_description"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.meta_description}
-                                className="w-full h-[200px] px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-brand-500 text-sm"
-                            />
+                                onBlur={(e) => {
+                                    formik.handleBlur(e);
 
-                            {formik.touched.meta_description && formik.errors.meta_description && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.meta_description}</div>
+                                }}
+                                value={formik.values.rating}
+                            />
+                            {formik.touched.rating && formik.errors.rating && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.rating}</div>
                             )}
                         </div>
+
+
+
+
                         <div className="col-span-2">
                             <button
                                 type="submit"
@@ -282,11 +215,14 @@ const AboutPage = () => {
                                 {createPageMutation.isPending ? "Submitting..." : "Submit"}
                             </button>
                         </div>
+
+
                     </div>
                 </ComponentCard>
+
             </div>
         </form>
     );
 };
 
-export default AboutPage;
+export default TestimonialAdd;
