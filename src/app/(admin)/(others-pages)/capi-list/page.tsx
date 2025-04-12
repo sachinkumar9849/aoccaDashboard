@@ -1,9 +1,20 @@
 "use client";
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Edit, Trash, Eye } from 'lucide-react';
 import { apiClient } from '@/api/client';
 import Link from 'next/link';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+// import { toast } from "@/components/ui/use-toast";
 
 type NewsType = 'news' | 'blogs';
 type StatusType = 'published' | 'draft';
@@ -29,11 +40,37 @@ interface NewsBlog {
 
 const NewsBlogList: React.FC = () => {
   const [activeTab] = useState<'all' | NewsType>('all');
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
     queryKey: ['capi-list'],
     queryFn: () => apiClient.request<NewsBlog[]>('/toper-testimonial-team?type=cap-i&status=published')
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => 
+      apiClient.request(`/toper-testimonial-team/${id}`, {
+        method: 'DELETE'
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['capi-list'] });
+      
+    }
+  });
+
+  const handleDeleteClick = (id: number) => {
+    setItemToDelete(id);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (itemToDelete) {
+      deleteMutation.mutate(itemToDelete);
+    }
+    setIsDeleteDialogOpen(false);
+  };
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
@@ -92,10 +129,8 @@ const NewsBlogList: React.FC = () => {
                 <tr key={item.id} className="border-b hover:bg-gray-50">
                   <td className="py-3 px-6 w-[300px]">
                     <div className="flex items-center gap-3">
-
                       <div>
                         <p className="font-medium text-gray-800">{item.title}</p>
-
                       </div>
                     </div>
                   </td>
@@ -111,7 +146,6 @@ const NewsBlogList: React.FC = () => {
                         })()
                       }
                     </p>
-
                   </td>
                   <td className="py-3 px-6 text-gray-700">
                     {formatDate(item.created_at)}
@@ -126,7 +160,11 @@ const NewsBlogList: React.FC = () => {
                       <Link href={`/capi-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
                         <Edit size={18} />
                       </Link>
-                      <button className="p-1 text-red-500 hover:text-red-700" title="Delete">
+                      <button 
+                        className="p-1 text-red-500 hover:text-red-700" 
+                        title="Delete"
+                        onClick={() => handleDeleteClick(item.id)}
+                      >
                         <Trash size={18} />
                       </button>
                       <button className="p-1 text-green-500 hover:text-green-700" title="View">
@@ -146,6 +184,27 @@ const NewsBlogList: React.FC = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent className='bg-white'>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to delete?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the selected item.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleConfirmDelete}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
