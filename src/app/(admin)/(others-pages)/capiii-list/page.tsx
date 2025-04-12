@@ -73,8 +73,8 @@ const NewsBlogList: React.FC = () => {
   }
 
   return (
-    <div className="">
-
+    <div className="w-full p-4 bg-white rounded-lg shadow-sm">
+      <h2 className="text-lg font-normal mb-4">Cap-III</h2>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
