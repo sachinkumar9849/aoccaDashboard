@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
@@ -18,19 +18,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import FroalaEditorWrapper from "@/components/CaCourse/FroalaEditorWrapper";
+import { useRouter } from "next/navigation";
 
 const TopperStudent = () => {
   const [image, setImage] = useState<File | null>(null);
-
+const queryClient = useQueryClient();
+const router = useRouter();
   // Create page mutation
   const createPageMutation = useMutation({
     mutationFn: async (formData: FormData) => {
       return await apiClient.createTeam(formData) as PageResponse;
     },
     onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['topper-student-list'] });
       toast.success(data.message || "Page created successfully!");
       formik.resetForm();
       setImage(null);
+      router.push("/topper-list")
     },
     onError: (error: Error) => {
       toast.error(error.message || "An error occurred while creating the page");
@@ -108,7 +112,7 @@ const TopperStudent = () => {
   return (
     <form onSubmit={formik.handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 gap-5">
-        <ComponentCard title="Topper student">
+        <ComponentCard title="Topper student add">
           <div className="grid grid-cols-3 gap-4">
             <div className="col-span-1">
               <Label htmlFor="title">Title</Label>
