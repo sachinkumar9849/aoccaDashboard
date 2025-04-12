@@ -17,6 +17,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 const FroalaEditorWrapper = dynamic(
   () => import('./FroalaEditorWrapper'),
@@ -25,12 +26,14 @@ const FroalaEditorWrapper = dynamic(
 
 const Icai = () => {
     const [image, setImage] = useState<File | null>(null);
+    const router = useRouter();
 
     const createPageMutation = useMutation({
         mutationFn: async (formData: FormData) => {
             return await apiClient.createTeam(formData) as PageResponse;
         },
         onSuccess: (data) => {
+            router.push("/icai-list")
             toast.success(data.message || "Page created successfully!");
             formik.resetForm();
             setImage(null);
