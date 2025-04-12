@@ -65,6 +65,21 @@ export const apiClient = {
         body: formData,
       });
     },
+
+    getNewsBlogById: async (newsId: string | string[]) => {
+      return apiClient.request(`/news-blog-id/${newsId}`, {
+        method: "GET",
+      });
+    },
+    updateNewsBlog: async (id: string | string[], formData: FormData) => {
+      return apiClient.request(`/update-news-blog/${id}`, {
+        method: "PATCH",
+        body: formData,
+      });
+    },
+    
+    
+
     createTeam: async (formData: FormData) => {
       return apiClient.request("/create-toper-testimonial-team", {
         method: "POST",

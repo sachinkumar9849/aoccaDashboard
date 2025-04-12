@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Edit, Trash, Eye } from 'lucide-react';
 import { apiClient } from '@/api/client';
+import Link from 'next/link';
 
 type NewsType = 'news' | 'blogs';
 type StatusType = 'published' | 'draft';
@@ -129,9 +130,9 @@ const NewsBlogList: React.FC = () => {
                   </td>
                   <td className="py-3 px-6">
                     <div className="flex gap-2">
-                      <button className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
-                        <Edit size={18} />
-                      </button>
+                    <Link href={`/news-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
+  <Edit size={18} />
+</Link>
                       <button className="p-1 text-red-500 hover:text-red-700" title="Delete">
                         <Trash size={18} />
                       </button>
