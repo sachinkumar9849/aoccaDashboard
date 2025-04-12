@@ -65,7 +65,7 @@ const queryClient = useQueryClient();
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            type: "cap-iii",
+            type: "icai",
             slug: "",
             description: "",
             status: "published",
@@ -142,9 +142,9 @@ const queryClient = useQueryClient();
             });
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['capiii-list'] });
+            queryClient.invalidateQueries({ queryKey: ['icai-list'] });
             toast.success(data.message || "News updated successfully!");
-            router.push("/capiii-list");
+            router.push("/icai-list");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while updating the news");
@@ -328,7 +328,7 @@ const queryClient = useQueryClient();
                             </button>
                             <button
                                 type="button"
-                                onClick={() => router.push("/news-list")}
+                                onClick={() => router.push("/icai-list")}
                                 className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
                             >
                                 Cancel
