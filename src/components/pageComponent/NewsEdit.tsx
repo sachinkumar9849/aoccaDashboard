@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
@@ -52,6 +52,8 @@ const NewsEdit = () => {
 
     const [image, setImage] = useState<File | null>(null);
     const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
+    const queryClient = useQueryClient();
+    
 
     // Validation schema
     const validationSchema = Yup.object({
@@ -149,6 +151,7 @@ const NewsEdit = () => {
             });
         },
         onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['news-blog'] });
             toast.success(data.message || "News updated successfully!");
             router.push("/news-list");
         },
