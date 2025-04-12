@@ -2,7 +2,6 @@
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
 import { toast } from "react-hot-toast";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
@@ -45,11 +44,11 @@ interface UpdateNewsResponse {
     data?: [];
 }
 
-const CapiiiEdit = () => {
+const IcaiEdit = () => {
     const params = useParams();
     const router = useRouter();
     const newsId = params.id;
-const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
     // Validation schema
     const validationSchema = Yup.object({
@@ -81,7 +80,6 @@ const queryClient = useQueryClient();
         validationSchema,
         onSubmit: (values) => {
             const formData = new FormData();
-
             formData.append("title", values.title);
             formData.append("slug", values.slug);
             formData.append("description", values.description);
@@ -142,6 +140,7 @@ const queryClient = useQueryClient();
             });
         },
         onSuccess: (data) => {
+            
             queryClient.invalidateQueries({ queryKey: ['icai-list'] });
             toast.success(data.message || "News updated successfully!");
             router.push("/icai-list");
@@ -342,4 +341,4 @@ const queryClient = useQueryClient();
     );
 };
 
-export default CapiiiEdit;
+export default IcaiEdit;
