@@ -234,7 +234,7 @@ const queryClient = useQueryClient();
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="Edit News">
+                <ComponentCard title="CAP-I">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
@@ -328,7 +328,7 @@ const queryClient = useQueryClient();
                             </button>
                             <button
                                 type="button"
-                                onClick={() => router.push("/news-list")}
+                                onClick={() => router.push("/capi-list")}
                                 className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
                             >
                                 Cancel

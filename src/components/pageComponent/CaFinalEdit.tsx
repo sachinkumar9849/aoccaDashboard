@@ -234,7 +234,7 @@ const queryClient = useQueryClient();
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="Edit News">
+                <ComponentCard title="CA FINAL EDIT">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
