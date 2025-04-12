@@ -87,6 +87,17 @@ export const apiClient = {
       });
     },
    
+    getToperTestimonialTeamById: async (newsId: string | string[]) => {
+      return apiClient.request(`/toper-testimonial-team/${newsId}`, {
+        method: "GET",
+      });
+    },
+    updateToperTestimonialTeamById: async (id: string | string[], formData: FormData) => {
+      return apiClient.request(`/update-toper-testimonial-team/${id}`, {
+        method: "PATCH",
+        body: formData,
+      });
+    },
   
     // Add more API methods as needed...
   };
