@@ -17,7 +17,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import FroalaEditorWrapper from "@/components/CaCourse/FroalaEditorWrapper";
 import { useParams, useRouter } from "next/navigation";
 
 interface NewsData {
@@ -45,7 +44,7 @@ interface UpdateNewsResponse {
     data?: [];
 }
 
-const NewsEdit = () => {
+const TeamEdit = () => {
     const params = useParams();
     const router = useRouter();
     const newsId = params.id;
@@ -59,19 +58,17 @@ const NewsEdit = () => {
     const validationSchema = Yup.object({
         title: Yup.string().required("Title is required"),
         slug: Yup.string().required("Slug is required"),
-        description: Yup.string().required("Description is required"),
+
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
-        meta_title: Yup.string().required("Meta title is required"),
-        meta_description: Yup.string().required("Meta description is required"),
-        meta_keywords: Yup.string().required("Meta keywords are required"),
+      
     });
 
     // Initialize formik with default values
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            type: "news",
+            type: "team",
             slug: "",
             description: "",
             status: "published",
@@ -90,14 +87,13 @@ const NewsEdit = () => {
 
             formData.append("title", values.title);
             formData.append("slug", values.slug);
-            formData.append("description", values.description);
+            formData.append("name", values.name);
             formData.append("type", values.type);
-            formData.append("meta_title", values.meta_title);
-            formData.append("meta_description", values.meta_description);
+          
 
             // Add optional fields if they exist
-            if (values.subtitle) formData.append("subtitle", values.subtitle);
-            if (values.name) formData.append("name", values.name);
+            
+        
             if (values.linkedin) formData.append("linkedin", values.linkedin);
             if (values.rating) formData.append("rating", values.rating);
             if (values.sort_order) formData.append("sort_order", values.sort_order);
@@ -108,10 +104,7 @@ const NewsEdit = () => {
             }
 
             // Convert comma-separated keywords to array
-            const keywordsArray = values.meta_keywords
-                .split(",")
-                .map((keyword) => keyword.trim());
-            formData.append("meta_keywords", JSON.stringify(keywordsArray));
+           
 
             updateNewsMutation.mutate(formData);
         },
@@ -119,12 +112,12 @@ const NewsEdit = () => {
 
     // Fetch news data
     const { data, isLoading, error } = useQuery<NewsData, Error>({
-        queryKey: ['news-details', newsId],
+        queryKey: ['team-list', newsId],
         queryFn: async () => {
             console.log("Fetching news with ID:", newsId);
             try {
                 // Use the apiClient utility which adds the authorization token
-                const response = await apiClient.request<NewsData>(`/news-blog-id/${newsId}`, {
+                const response = await apiClient.request<NewsData>(`/toper-testimonial-team-by-id/${newsId}`, {
                     method: "GET"
                 });
                 console.log("API Response:", response);
@@ -145,15 +138,15 @@ const NewsEdit = () => {
             if (!newsId) {
                 throw new Error("News ID is required");
             }
-            return await apiClient.request<UpdateNewsResponse>(`/update-news-blog/${newsId}`, {
+            return await apiClient.request<UpdateNewsResponse>(`/update-toper-testimonial-team/${newsId}`, {
                 method: "PATCH",
                 body: formData,
             });
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['news-blog'] });
+            queryClient.invalidateQueries({ queryKey: ['team-list'] });
             toast.success(data.message || "News updated successfully!");
-            router.push("/news-list");
+            router.push("/team-list");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while updating the news");
@@ -213,7 +206,7 @@ const NewsEdit = () => {
             // Set form values based on the API response structure
             formik.setValues({
                 title: data.title || "",
-                type: data.type || "news",
+                type: data.type || "team",
                 slug: data.slug || "",
                 description: data.description || "",
                 status: data.status || "published",
@@ -247,7 +240,7 @@ const NewsEdit = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="Edit News">
+                <ComponentCard title="Team Edit">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
@@ -269,41 +262,25 @@ const NewsEdit = () => {
                             )}
                         </div>
                         <div className="col-span-1">
-                            <Label htmlFor="slug">Slug</Label>
-                            <div className="flex">
-                                <Input
-                                    id="slug"
-                                    name="slug"
-                                    type="text"
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.slug}
-                                />
-                                <button
-                                    type="button"
-                                    className="ml-2 px-3 py-2 bg-gray-200 rounded-md text-sm"
-                                    onClick={generateSlug}
-                                >
-                                    Generate
-                                </button>
-                            </div>
-                            {formik.touched.slug && formik.errors.slug && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.slug}</div>
+                            <Label htmlFor="name">Name</Label>
+                            <Input
+                                id="name"
+                                name="name"
+                                type="text"
+                                onChange={formik.handleChange}
+                                onBlur={(e) => {
+                                    formik.handleBlur(e);
+                                    if (formik.values.name && !formik.values.slug) {
+                                        generateSlug();
+                                    }
+                                }}
+                                value={formik.values.name}
+                            />
+                            {formik.touched.name && formik.errors.name && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
                             )}
                         </div>
-                        <div className="col-span-2">
-                            <Label htmlFor="description">Description</Label>
-                            {/* Client-side only rendering with proper null/undefined checks */}
-                            {formik.values.description !== undefined && (
-                                <FroalaEditorWrapper
-                                    value={formik.values.description || ""}
-                                    onChange={(model: string) => formik.setFieldValue('description', model)}
-                                />
-                            )}
-                            {formik.touched.description && formik.errors.description && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
-                            )}
-                        </div>
+                        
                         <div className="col-span-1">
                             <Label htmlFor="image">Featured Image</Label>
                             <ImageUploader
@@ -342,52 +319,7 @@ const NewsEdit = () => {
                         </div>
                     </div>
                 </ComponentCard>
-                <ComponentCard title="Seo">
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="col-span-1">
-                            <Label htmlFor="meta_title">Meta Title</Label>
-                            <Input
-                                id="meta_title"
-                                name="meta_title"
-                                type="text"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.meta_title}
-                            />
-                            {formik.touched.meta_title && formik.errors.meta_title && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.meta_title}</div>
-                            )}
-                        </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="meta_keywords">Meta Keywords</Label>
-                            <Input
-                                id="meta_keywords"
-                                name="meta_keywords"
-                                type="text"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.meta_keywords}
-                                placeholder="keyword1, keyword2, keyword3"
-                            />
-                            {formik.touched.meta_keywords && formik.errors.meta_keywords && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.meta_keywords}</div>
-                            )}
-                        </div>
-                        <div className="col-span-2">
-                            <Label htmlFor="meta_description">Meta Description</Label>
-                            <textarea
-                                id="meta_description"
-                                name="meta_description"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.meta_description}
-                                className="w-full h-[200px] px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-brand-500 text-sm"
-                            />
-                            {formik.touched.meta_description && formik.errors.meta_description && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.meta_description}</div>
-                            )}
-                        </div>
-                        <div className="col-span-2 flex gap-4">
+                <div className="col-span-2 flex gap-4">
                             <button
                                 type="submit"
                                 disabled={updateNewsMutation.isPending}
@@ -397,17 +329,15 @@ const NewsEdit = () => {
                             </button>
                             <button
                                 type="button"
-                                onClick={() => router.push("/news-list")}
+                                onClick={() => router.push("/team-list")}
                                 className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
                             >
                                 Cancel
                             </button>
                         </div>
-                    </div>
-                </ComponentCard>
             </div>
         </form>
     );
 };
 
-export default NewsEdit;
+export default TeamEdit;

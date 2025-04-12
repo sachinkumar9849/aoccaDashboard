@@ -1,16 +1,12 @@
 
-
 'use client';
 
 import dynamic from "next/dynamic";
 
-const IcaiEdit = dynamic(() => import('@/components/pageComponent/IcaiEdit'), {
+const BlogEdit = dynamic(() => import('@/components/pageComponent/BlogEdit'), {
   ssr: false,
 });
 
 export default function Page() {
-  return <IcaiEdit />;
+  return <BlogEdit />;
 }
-
-
-

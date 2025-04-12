@@ -1,9 +1,12 @@
+
 "use client";
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Edit, Trash, Eye } from 'lucide-react';
 import { apiClient } from '@/api/client';
 import Link from 'next/link';
+import DeleteConfirmationDialog from '@/components/common/DeleteConfirmationDialog';
+
 
 type NewsType = 'news' | 'blogs';
 type StatusType = 'published' | 'draft';
@@ -27,13 +30,43 @@ interface NewsBlog {
   seo: SEO;
 }
 
-const CaCourseII: React.FC = () => {
+const NewsBlogList: React.FC = () => {
   const [activeTab] = useState<'all' | NewsType>('all');
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
     queryKey: ['cacourse-ii'],
     queryFn: () => apiClient.request<NewsBlog[]>('/toper-testimonial-team?type=cap-ii&status=published')
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) =>
+      apiClient.request(`/toper-testimonial-team/${id}`, {
+        method: 'DELETE'
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cacourse-ii'] });
+
+    }
+  });
+
+  const handleDeleteClick = (id: number) => {
+    setItemToDelete(id);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (itemToDelete) {
+      deleteMutation.mutate(itemToDelete);
+    }
+    setIsDeleteDialogOpen(false);
+  };
+  const handleCloseDeleteDialog = () => {
+    setIsDeleteDialogOpen(false);
+  };
+
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
@@ -73,7 +106,6 @@ const CaCourseII: React.FC = () => {
   }
 
   return (
-
     <div className="w-full p-4 bg-white rounded-lg shadow-sm">
       <h2 className="text-lg font-normal mb-4">Cap-II</h2>
       <div className="overflow-x-auto">
@@ -93,10 +125,8 @@ const CaCourseII: React.FC = () => {
                 <tr key={item.id} className="border-b hover:bg-gray-50">
                   <td className="py-3 px-6 w-[300px]">
                     <div className="flex items-center gap-3">
-
                       <div>
                         <p className="font-medium text-gray-800">{item.title}</p>
-
                       </div>
                     </div>
                   </td>
@@ -112,7 +142,6 @@ const CaCourseII: React.FC = () => {
                         })()
                       }
                     </p>
-
                   </td>
                   <td className="py-3 px-6 text-gray-700">
                     {formatDate(item.created_at)}
@@ -127,7 +156,11 @@ const CaCourseII: React.FC = () => {
                       <Link href={`/cacourse-ii/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
                         <Edit size={18} />
                       </Link>
-                      <button className="p-1 text-red-500 hover:text-red-700" title="Delete">
+                      <button
+                        className="p-1 text-red-500 hover:text-red-700"
+                        title="Delete"
+                        onClick={() => handleDeleteClick(item.id)}
+                      >
                         <Trash size={18} />
                       </button>
                       <button className="p-1 text-green-500 hover:text-green-700" title="View">
@@ -147,8 +180,9 @@ const CaCourseII: React.FC = () => {
           </tbody>
         </table>
       </div>
+      <DeleteConfirmationDialog isOpen={isDeleteDialogOpen} onClose={handleCloseDeleteDialog} onConfirm={handleConfirmDelete} />
     </div>
   );
 };
 
-export default CaCourseII;
+export default NewsBlogList;

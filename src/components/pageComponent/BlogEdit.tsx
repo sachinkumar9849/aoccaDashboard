@@ -45,7 +45,7 @@ interface UpdateNewsResponse {
     data?: [];
 }
 
-const NewsEdit = () => {
+const BlogEdit = () => {
     const params = useParams();
     const router = useRouter();
     const newsId = params.id;
@@ -151,9 +151,9 @@ const NewsEdit = () => {
             });
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['news-blog'] });
+            queryClient.invalidateQueries({ queryKey: ['blog-list'] });
             toast.success(data.message || "News updated successfully!");
-            router.push("/news-list");
+            router.push("/blog-list");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while updating the news");
@@ -247,7 +247,7 @@ const NewsEdit = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="Edit News">
+                <ComponentCard title="Blog Edit">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
@@ -397,7 +397,7 @@ const NewsEdit = () => {
                             </button>
                             <button
                                 type="button"
-                                onClick={() => router.push("/news-list")}
+                                onClick={() => router.push("/blog-list")}
                                 className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
                             >
                                 Cancel
@@ -410,4 +410,4 @@ const NewsEdit = () => {
     );
 };
 
-export default NewsEdit;
+export default BlogEdit;

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
@@ -17,6 +17,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 const FroalaEditorWrapper = dynamic(
   () => import('./FroalaEditorWrapper'),
@@ -25,15 +26,19 @@ const FroalaEditorWrapper = dynamic(
 
 const CapIII = () => {
     const [image, setImage] = useState<File | null>(null);
+    const router = useRouter();
+    const queryClient = useQueryClient();
 
     const createPageMutation = useMutation({
         mutationFn: async (formData: FormData) => {
             return await apiClient.createTeam(formData) as PageResponse;
         },
         onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['capiii-list'] });
             toast.success(data.message || "Page created successfully!");
             formik.resetForm();
             setImage(null);
+            router.push("/capiii-list");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while creating the page");

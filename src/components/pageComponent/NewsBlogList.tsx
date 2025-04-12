@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Edit, Trash, Eye } from 'lucide-react';
 import { apiClient } from '@/api/client';
 import Link from 'next/link';
+import DeleteConfirmationDialog from '../common/DeleteConfirmationDialog';
 
 type NewsType = 'news' | 'blogs';
 type StatusType = 'published' | 'draft';
@@ -28,11 +29,44 @@ interface NewsBlog {
 
 const NewsBlogList: React.FC = () => {
   const [activeTab] = useState<'all' | NewsType>('all');
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+  const queryClient = useQueryClient();
+
 
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
     queryKey: ['news-blog'],
-    queryFn: () => apiClient.request<NewsBlog[]>('/news-blog')
+    queryFn: () => apiClient.request<NewsBlog[]>('/news-blog?type=news')
   });
+
+  // delete function 
+
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) =>
+      apiClient.request(`/news-blog/${id}`, {
+        method: 'DELETE'
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['news-blog'] });
+
+    }
+  });
+
+  const handleDeleteClick = (id: number) => {
+    setItemToDelete(id);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (itemToDelete) {
+      deleteMutation.mutate(itemToDelete);
+    }
+    setIsDeleteDialogOpen(false);
+  };
+  const handleCloseDeleteDialog = () => {
+    setIsDeleteDialogOpen(false);
+  };
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
@@ -130,10 +164,14 @@ const NewsBlogList: React.FC = () => {
                   </td>
                   <td className="py-3 px-6">
                     <div className="flex gap-2">
-                    <Link href={`/news-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
-  <Edit size={18} />
-</Link>
-                      <button className="p-1 text-red-500 hover:text-red-700" title="Delete">
+                      <Link href={`/news-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
+                        <Edit size={18} />
+                      </Link>
+                      <button
+                        className="p-1 text-red-500 hover:text-red-700"
+                        title="Delete"
+                        onClick={() => handleDeleteClick(item.id)}
+                      >
                         <Trash size={18} />
                       </button>
                       <button className="p-1 text-green-500 hover:text-green-700" title="View">
@@ -153,6 +191,7 @@ const NewsBlogList: React.FC = () => {
           </tbody>
         </table>
       </div>
+      <DeleteConfirmationDialog isOpen={isDeleteDialogOpen} onClose={handleCloseDeleteDialog} onConfirm={handleConfirmDelete} />
     </div>
   );
 };

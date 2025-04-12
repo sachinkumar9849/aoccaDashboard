@@ -43,7 +43,7 @@ const navItems: NavItem[] = [
   {
     name: "Ca Courses",
     icon: <ListIcon />,
-    subItems: [{ name: "CAP-I", path: "/cap-i", pro: false },{ name: "CAP-II", path: "/cap-ii", pro: false },{ name: "CAP-III", path: "/cap-iii", pro: false },{ name: "ICAI", path: "/cap-iii", pro: false },{ name: "CA Final", path: "/ca-final", pro: false }],
+    subItems: [{ name: "CAP-I", path: "/cap-i", pro: false },{ name: "CAP-II", path: "/cap-ii", pro: false },{ name: "CAP-III", path: "/cap-iii", pro: false },{ name: "ICAI", path: "/icai", pro: false },{ name: "CA Final", path: "/ca-final", pro: false }],
   },
   {
     name: "Ca Courses List",

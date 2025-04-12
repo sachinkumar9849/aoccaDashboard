@@ -17,24 +17,29 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 const FroalaEditorWrapper = dynamic(
-  () => import('./FroalaEditorWrapper'),
-  { ssr: false }
+    () => import('./FroalaEditorWrapper'),
+    { ssr: false }
 );
 
 const CapII = () => {
     const [image, setImage] = useState<File | null>(null);
     const queryClient = useQueryClient();
+    const router = useRouter();
+
     const createPageMutation = useMutation({
         mutationFn: async (formData: FormData) => {
             return await apiClient.createTeam(formData) as PageResponse;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['capii-list'] });
+
+            queryClient.invalidateQueries({ queryKey: ['cacourse-ii'] });
             toast.success(data.message || "Page created successfully!");
             formik.resetForm();
             setImage(null);
+            router.push("/cacourse-ii");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while creating the page");
@@ -161,7 +166,7 @@ const CapII = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
                             )}
                         </div>
-                        
+
                         <div className="col-span-1">
                             <Label htmlFor="sort_order">Sort Order</Label>
                             <Input

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
@@ -18,9 +18,12 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import FroalaEditorWrapper from "@/components/CaCourse/FroalaEditorWrapper";
+import { useRouter } from "next/navigation";
 
 const BlogAdd = () => {
     const [image, setImage] = useState<File | null>(null);
+    const router = useRouter();
+    const queryClient = useQueryClient();
 
     // Create page mutation
     const createPageMutation = useMutation({
@@ -28,9 +31,11 @@ const BlogAdd = () => {
             return await apiClient.createNewsBlog(formData) as PageResponse;
         },
         onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['blog-list'] });
             toast.success(data.message || "Page created successfully!");
             formik.resetForm();
             setImage(null);
+            router.push("/blog-list");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while creating the page");
