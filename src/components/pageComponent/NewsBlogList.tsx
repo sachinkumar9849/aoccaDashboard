@@ -30,13 +30,13 @@ interface NewsBlog {
 const NewsBlogList: React.FC = () => {
   const [activeTab] = useState<'all' | NewsType>('all');
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-    const [itemToDelete, setItemToDelete] = useState<number | null>(null);
-    const queryClient = useQueryClient();
-  
+  const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+  const queryClient = useQueryClient();
+
 
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
     queryKey: ['news-blog'],
-    queryFn: () => apiClient.request<NewsBlog[]>('/news-blog')
+    queryFn: () => apiClient.request<NewsBlog[]>('/news-blog?type=news')
   });
 
   // delete function 
