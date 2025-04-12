@@ -1,6 +1,12 @@
 "use client";
-import React from 'react';
-import FroalaEditor from 'react-froala-wysiwyg';
+import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+
+// Dynamically import FroalaEditor to ensure it only loads on client-side
+const FroalaEditor = dynamic(
+  () => import('react-froala-wysiwyg'),
+  { ssr: false }
+);
 
 // Import styles
 import "froala-editor/css/froala_style.min.css";
@@ -13,31 +19,60 @@ import "froala-editor/css/plugins/quick_insert.min.css";
 import "froala-editor/css/plugins/char_counter.min.css";
 import "froala-editor/css/plugins/colors.min.css";
 
-// Import plugins
-import 'froala-editor/js/plugins/table.min.js';
-import 'froala-editor/js/plugins/image.min.js';
-import 'froala-editor/js/plugins/link.min.js';
-import 'froala-editor/js/plugins/lists.min.js';
-import 'froala-editor/js/plugins/paragraph_format.min.js';
-import 'froala-editor/js/plugins/code_view.min.js';
-import 'froala-editor/js/plugins/char_counter.min.js';
-import 'froala-editor/js/plugins/emoticons.min.js';
-import 'froala-editor/js/plugins/draggable.min.js';
-import 'froala-editor/js/plugins/font_family.min.js';
-import 'froala-editor/js/plugins/font_size.min.js';
-import 'froala-editor/js/plugins/line_height.min.js';
-import 'froala-editor/js/plugins/paragraph_style.min.js';
-import 'froala-editor/js/plugins/quick_insert.min.js';
-import 'froala-editor/js/plugins/quote.min.js';
-import 'froala-editor/js/plugins/colors.min.js';
-import 'froala-editor/js/plugins/align.min.js';
-
 interface EditorProps {
   value: string;
   onChange: (value: string) => void;
 }
 
 const FroalaEditorWrapper: React.FC<EditorProps> = ({ value, onChange }) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    // This ensures we only render the editor after the component has mounted
+    setIsMounted(true);
+
+    // Import plugins only when component mounts (client-side)
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/table.min.js');
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/image.min.js');
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/link.min.js');
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/lists.min.js');
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/paragraph_format.min.js');
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/code_view.min.js');
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/char_counter.min.js');
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/emoticons.min.js');
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/draggable.min.js');
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/font_family.min.js');
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/font_size.min.js');
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/line_height.min.js');
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/paragraph_style.min.js');
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/quick_insert.min.js');
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/quote.min.js');
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/colors.min.js');
+    // @ts-expect-error - Froala plugin imports lack proper type definitions
+    import('froala-editor/js/plugins/align.min.js');
+  }, []);
+
+  // Only render the editor when the component has mounted
+  if (!isMounted) {
+    return <div className="border p-4 min-h-[300px] bg-gray-50">Loading editor...</div>;
+  }
+
   return (
     <FroalaEditor
       model={value}

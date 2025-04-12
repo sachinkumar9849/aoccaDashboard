@@ -65,6 +65,21 @@ export const apiClient = {
         body: formData,
       });
     },
+
+    getNewsBlogById: async (newsId: string | string[]) => {
+      return apiClient.request(`/news-blog-id/${newsId}`, {
+        method: "GET",
+      });
+    },
+    updateNewsBlog: async (id: string | string[], formData: FormData) => {
+      return apiClient.request(`/update-news-blog/${id}`, {
+        method: "PATCH",
+        body: formData,
+      });
+    },
+    
+    
+
     createTeam: async (formData: FormData) => {
       return apiClient.request("/create-toper-testimonial-team", {
         method: "POST",
@@ -72,6 +87,17 @@ export const apiClient = {
       });
     },
    
+    getToperTestimonialTeamById: async (newsId: string | string[]) => {
+      return apiClient.request(`/toper-testimonial-team/${newsId}`, {
+        method: "GET",
+      });
+    },
+    updateToperTestimonialTeamById: async (id: string | string[], formData: FormData) => {
+      return apiClient.request(`/update-toper-testimonial-team/${id}`, {
+        method: "PATCH",
+        body: formData,
+      });
+    },
   
     // Add more API methods as needed...
   };

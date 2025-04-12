@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Edit, Trash, Eye } from 'lucide-react';
@@ -26,12 +27,12 @@ interface NewsBlog {
   seo: SEO;
 }
 
-const NewsBlogList: React.FC = () => {
+const CaCourseII: React.FC = () => {
   const [activeTab] = useState<'all' | NewsType>('all');
 
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
-    queryKey: ['news-blog'],
-    queryFn: () => apiClient.request<NewsBlog[]>('/news-blog')
+    queryKey: ['cacourse-ii'],
+    queryFn: () => apiClient.request<NewsBlog[]>('/toper-testimonial-team?type=cap-ii&status=published')
   });
 
   const formatDate = (dateString: string): string => {
@@ -72,8 +73,9 @@ const NewsBlogList: React.FC = () => {
   }
 
   return (
-    <div className="">
 
+    <div className="w-full p-4 bg-white rounded-lg shadow-sm">
+      <h2 className="text-lg font-normal mb-4">Cap-II</h2>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
@@ -91,15 +93,7 @@ const NewsBlogList: React.FC = () => {
                 <tr key={item.id} className="border-b hover:bg-gray-50">
                   <td className="py-3 px-6 w-[300px]">
                     <div className="flex items-center gap-3">
-                      {item.image_url ? (
-                        <img
-                          src={item.image_url}
-                          alt={item.title}
-                          className="w-12 h-12 rounded object-cover"
-                        />
-                      ) : (
-                        <img className='blogListImg' src="https://lh5.googleusercontent.com/proxy/t08n2HuxPfw8OpbutGWjekHAgxfPFv-pZZ5_-uTfhEGK8B5Lp-VN4VjrdxKtr8acgJA93S14m9NdELzjafFfy13b68pQ7zzDiAmn4Xg8LvsTw1jogn_7wStYeOx7ojx5h63Gliw" alt="" />
-                      )}
+
                       <div>
                         <p className="font-medium text-gray-800">{item.title}</p>
 
@@ -130,9 +124,9 @@ const NewsBlogList: React.FC = () => {
                   </td>
                   <td className="py-3 px-6">
                     <div className="flex gap-2">
-                    <Link href={`/news-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
-  <Edit size={18} />
-</Link>
+                      <Link href={`/cacourse-ii/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
+                        <Edit size={18} />
+                      </Link>
                       <button className="p-1 text-red-500 hover:text-red-700" title="Delete">
                         <Trash size={18} />
                       </button>
@@ -157,4 +151,4 @@ const NewsBlogList: React.FC = () => {
   );
 };
 
-export default NewsBlogList;
+export default CaCourseII;
