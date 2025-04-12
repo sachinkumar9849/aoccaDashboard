@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
@@ -17,9 +17,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 const TeamAdd = () => {
     const [image, setImage] = useState<File | null>(null);
+    const queryClient = useQueryClient();
+    const router = useRouter();
+
+   
 
     // Create page mutation
     const createPageMutation = useMutation({
@@ -27,9 +32,11 @@ const TeamAdd = () => {
             return await apiClient.createTeam(formData) as PageResponse;
         },
         onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['team-list'] });
             toast.success(data.message || "Page created successfully!");
             formik.resetForm();
             setImage(null);
+            router.push("/team-list");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while creating the page");
