@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
@@ -49,7 +49,7 @@ const CapiiEdit = () => {
     const router = useRouter();
     const newsId = params.id;
 
-   
+    const queryClient = useQueryClient();
 
     // Validation schema
     const validationSchema = Yup.object({
@@ -58,7 +58,7 @@ const CapiiEdit = () => {
         description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
-       
+
     });
 
     // Initialize formik with default values
@@ -97,7 +97,7 @@ const CapiiEdit = () => {
             if (values.sort_order) formData.append("sort_order", values.sort_order);
 
             // Add image to formData if available
-      
+
 
             // Convert comma-separated keywords to array
             const keywordsArray = values.meta_keywords
@@ -143,6 +143,8 @@ const CapiiEdit = () => {
             });
         },
         onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['cacourse-ii'] });
+       
             toast.success(data.message || "News updated successfully!");
             router.push("/cacourse-ii");
         },
@@ -216,7 +218,7 @@ const CapiiEdit = () => {
                 sort_order: data.sort_order || ""
             });
 
- 
+
 
             console.log("Form values after setting:", formik.values);
         }
@@ -290,7 +292,7 @@ const CapiiEdit = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
                             )}
                         </div>
-                      
+
 
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
@@ -335,7 +337,7 @@ const CapiiEdit = () => {
                         </div>
                     </div>
                 </ComponentCard>
-               
+
             </div>
         </form>
     );

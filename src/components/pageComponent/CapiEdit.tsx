@@ -2,13 +2,14 @@
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useMutation, useQuery } from "@tanstack/react-query";
+
 import { toast } from "react-hot-toast";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import { PageFormValues } from "@/types";
 import { apiClient } from "@/api/client";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     Select,
     SelectContent,
@@ -48,7 +49,7 @@ const NewsEdit = () => {
     const params = useParams();
     const router = useRouter();
     const newsId = params.id;
-
+const queryClient = useQueryClient();
 
     // Validation schema
     const validationSchema = Yup.object({
@@ -141,6 +142,7 @@ const NewsEdit = () => {
             });
         },
         onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['capi-list'] });
             toast.success(data.message || "News updated successfully!");
             router.push("/capi-list");
         },

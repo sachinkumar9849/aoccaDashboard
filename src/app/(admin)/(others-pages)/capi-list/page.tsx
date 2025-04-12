@@ -31,7 +31,7 @@ const NewsBlogList: React.FC = () => {
   const [activeTab] = useState<'all' | NewsType>('all');
 
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
-    queryKey: ['news-blog'],
+    queryKey: ['capi-list'],
     queryFn: () => apiClient.request<NewsBlog[]>('/toper-testimonial-team?type=cap-i&status=published')
   });
 
