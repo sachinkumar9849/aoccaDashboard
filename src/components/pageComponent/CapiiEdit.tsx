@@ -44,7 +44,7 @@ interface UpdateNewsResponse {
     data?: [];
 }
 
-const NewsEdit = () => {
+const CapiiEdit = () => {
     const params = useParams();
     const router = useRouter();
     const newsId = params.id;
@@ -111,7 +111,7 @@ const NewsEdit = () => {
 
     // Fetch news data
     const { data, isLoading, error } = useQuery<NewsData, Error>({
-        queryKey: ['news-details', newsId],
+        queryKey: ['capi-list', newsId],
         queryFn: async () => {
             console.log("Fetching news with ID:", newsId);
             try {
@@ -144,7 +144,7 @@ const NewsEdit = () => {
         },
         onSuccess: (data) => {
             toast.success(data.message || "News updated successfully!");
-            router.push("/capi-list");
+            router.push("/cacourse-ii");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while updating the news");
@@ -327,7 +327,7 @@ const NewsEdit = () => {
                             </button>
                             <button
                                 type="button"
-                                onClick={() => router.push("/news-list")}
+                                onClick={() => router.push("/cacourse-ii")}
                                 className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
                             >
                                 Cancel
@@ -341,4 +341,4 @@ const NewsEdit = () => {
     );
 };
 
-export default NewsEdit;
+export default CapiiEdit;

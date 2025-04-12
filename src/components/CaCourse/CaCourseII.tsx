@@ -31,7 +31,7 @@ const CaCourseII: React.FC = () => {
   const [activeTab] = useState<'all' | NewsType>('all');
 
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
-    queryKey: ['news-blog'],
+    queryKey: ['cacourse-ii'],
     queryFn: () => apiClient.request<NewsBlog[]>('/toper-testimonial-team?type=cap-ii&status=published')
   });
 
@@ -124,7 +124,7 @@ const CaCourseII: React.FC = () => {
                   </td>
                   <td className="py-3 px-6">
                     <div className="flex gap-2">
-                      <Link href={`/capi-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
+                      <Link href={`/cacourse-ii/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
                         <Edit size={18} />
                       </Link>
                       <button className="p-1 text-red-500 hover:text-red-700" title="Delete">

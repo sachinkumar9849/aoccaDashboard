@@ -3,11 +3,11 @@
 
 import dynamic from "next/dynamic";
 
-const CapiEdit = dynamic(() => import('@/components/pageComponent/CapiEdit'), {
+const CapiiEdit = dynamic(() => import('@/components/pageComponent/CapiiEdit'), {
   ssr: false,
 });
 
 export default function Page() {
-  return <CapiEdit />;
+  return <CapiiEdit />;
 }
 
