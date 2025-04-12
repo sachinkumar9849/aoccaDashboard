@@ -344,7 +344,7 @@ const TestimonialEdit = () => {
                             </button>
                             <button
                                 type="button"
-                                onClick={() => router.push("/blog-list")}
+                                onClick={() => router.push("/testimonial-list")}
                                 className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
                             >
                                 Cancel
