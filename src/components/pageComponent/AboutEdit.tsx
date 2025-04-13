@@ -75,7 +75,8 @@ const AboutEdit = () => {
             name: "",
             linkedin: "",
             rating: "",
-            sort_order: ""
+            sort_order: "",
+            video: ""
         },
         validationSchema,
         onSubmit: (values) => {
@@ -209,7 +210,8 @@ const AboutEdit = () => {
                 name: "",
                 linkedin: "",
                 rating: "",
-                sort_order: ""
+                sort_order: "",
+                video:""
             });
 
             // Set current image URL if available

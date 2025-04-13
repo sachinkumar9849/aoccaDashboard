@@ -70,7 +70,8 @@ const TeamAdd = () => {
             meta_keywords: "",
             subtitle: "",
             rating: "",
-            sort_order: ""
+            sort_order: "",
+            video: ""
         },
 
         validationSchema,

@@ -70,7 +70,8 @@ const router = useRouter();
       name: "",
       linkedin: "",
       rating: "",
-      sort_order: ""
+      sort_order: "",
+      video: ""
     },
 
     validationSchema,

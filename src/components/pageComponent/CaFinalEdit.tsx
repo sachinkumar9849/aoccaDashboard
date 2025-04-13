@@ -32,6 +32,7 @@ interface NewsData {
     rating?: string;
     sort_order?: string;
     image_url?: string;
+    video?: string;
     seo?: {
         meta_title: string;
         meta_description: string;
@@ -49,7 +50,7 @@ const CaFinalEdit = () => {
     const params = useParams();
     const router = useRouter();
     const newsId = params.id;
-const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
     // Validation schema
     const validationSchema = Yup.object({
@@ -58,7 +59,7 @@ const queryClient = useQueryClient();
         description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
-       
+
     });
 
     // Initialize formik with default values
@@ -76,7 +77,8 @@ const queryClient = useQueryClient();
             name: "",
             linkedin: "",
             rating: "",
-            sort_order: "0"
+            sort_order: "0",
+            video: ""
         },
         validationSchema,
         onSubmit: (values) => {
@@ -97,7 +99,7 @@ const queryClient = useQueryClient();
             if (values.sort_order) formData.append("sort_order", values.sort_order);
 
             // Add image to formData if available
- 
+
             // Convert comma-separated keywords to array
             const keywordsArray = values.meta_keywords
                 .split(",")
@@ -213,11 +215,12 @@ const queryClient = useQueryClient();
                 name: data.name || "",
                 linkedin: data.linkedin || "",
                 rating: data.rating || "",
-                sort_order: data.sort_order || ""
+                sort_order: data.sort_order || "",
+                video: data.video || ""
             });
 
             // Set current image URL if available
-           
+
 
             console.log("Form values after setting:", formik.values);
         }
@@ -291,7 +294,7 @@ const queryClient = useQueryClient();
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
                             )}
                         </div>
-                      
+
 
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
@@ -336,7 +339,7 @@ const queryClient = useQueryClient();
                         </div>
                     </div>
                 </ComponentCard>
-               
+
             </div>
         </form>
     );

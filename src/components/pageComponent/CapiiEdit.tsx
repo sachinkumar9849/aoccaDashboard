@@ -30,6 +30,7 @@ interface NewsData {
     linkedin?: string;
     rating?: string;
     sort_order?: string;
+    video?:string;
     image_url?: string;
     seo?: {
         meta_title: string;
@@ -76,7 +77,8 @@ const CapiiEdit = () => {
             name: "",
             linkedin: "",
             rating: "",
-            sort_order: "0"
+            sort_order: "0",
+            video: ""
         },
         validationSchema,
         onSubmit: (values) => {
@@ -215,7 +217,8 @@ const CapiiEdit = () => {
                 name: data.name || "",
                 linkedin: data.linkedin || "",
                 rating: data.rating || "",
-                sort_order: data.sort_order || ""
+                sort_order: data.sort_order || "",
+                video: data.video || ""
             });
 
 

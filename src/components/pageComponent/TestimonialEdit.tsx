@@ -32,6 +32,7 @@ interface NewsData {
     rating?: string;
     sort_order?: string;
     image_url?: string;
+    video?:string;
     seo?: {
         meta_title: string;
         meta_description: string;
@@ -79,7 +80,8 @@ const TestimonialEdit = () => {
             name: "",
             linkedin: "",
             rating: "",
-            sort_order: ""
+            sort_order: "",
+            video: ""
         },
         validationSchema,
         onSubmit: (values) => {
@@ -221,7 +223,8 @@ const TestimonialEdit = () => {
                 name: data.name || "",
                 linkedin: data.linkedin || "",
                 rating: data.rating || "",
-                sort_order: data.sort_order || ""
+                sort_order: data.sort_order || "",
+                video: data.video || "",
             });
 
             // Set current image URL if available
