@@ -58,8 +58,6 @@ const TeamEdit = () => {
     // Validation schema
     const validationSchema = Yup.object({
         title: Yup.string().required("Title is required"),
-        slug: Yup.string().required("Slug is required"),
-
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
       
@@ -92,11 +90,11 @@ const TeamEdit = () => {
             formData.append("name", values.name);
             formData.append("type", values.type);
           
-
+            formData.append("linkedin", values.linkedin);
             // Add optional fields if they exist
             
         
-            if (values.linkedin) formData.append("linkedin", values.linkedin);
+            
             if (values.rating) formData.append("rating", values.rating);
             if (values.sort_order) formData.append("sort_order", values.sort_order);
 
@@ -283,22 +281,32 @@ const TeamEdit = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
                             )}
                         </div>
-                        
                         <div className="col-span-1">
-                            <Label htmlFor="image">Featured Image</Label>
-                            <ImageUploader
-                                onImageChange={handleImageChange}
-                                currentImage={image ? URL.createObjectURL(image) : currentImageUrl}
+                            <Label htmlFor="linkedin">Linkedin</Label>
+                            <Input
+                                id="linkedin"
+                                name="linkedin"
+                                type="text"
+                                onChange={formik.handleChange}
+                                onBlur={(e) => {
+                                    formik.handleBlur(e);
+                                    if (formik.values.linkedin && !formik.values.slug) {
+                                        generateSlug();
+                                    }
+                                }}
+                                value={formik.values.linkedin}
                             />
-                            {currentImageUrl && !image && (
-                                <p className="text-sm text-gray-500 mt-1">Current image will be kept unless a new one is selected</p>
+                            {formik.touched.linkedin && formik.errors.linkedin && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.linkedin}</div>
                             )}
                         </div>
+                        
+                       
 
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
                                 <div className="col-span-1">
-                                    <div className="col-span-1 mt-3 dd">
+                                    <div className="col-span-1 dd">
                                         <Label htmlFor="status">Status</Label>
                                         <Select
                                             name="status"
@@ -319,6 +327,16 @@ const TeamEdit = () => {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div className="col-span-1">
+                            <Label htmlFor="image">Featured Image</Label>
+                            <ImageUploader
+                                onImageChange={handleImageChange}
+                                currentImage={image ? URL.createObjectURL(image) : currentImageUrl}
+                            />
+                            {currentImageUrl && !image && (
+                                <p className="text-sm text-gray-500 mt-1">Current image will be kept unless a new one is selected</p>
+                            )}
                         </div>
                     </div>
                 </ComponentCard>
