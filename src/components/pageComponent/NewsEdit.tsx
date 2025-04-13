@@ -62,9 +62,7 @@ const NewsEdit = () => {
         description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
-        meta_title: Yup.string().required("Meta title is required"),
-        meta_description: Yup.string().required("Meta description is required"),
-        meta_keywords: Yup.string().required("Meta keywords are required"),
+       
     });
 
     // Initialize formik with default values
@@ -138,7 +136,7 @@ const NewsEdit = () => {
         enabled: !!newsId,
     });
 
-    // Update news mutation with proper type
+    // Update mutation with proper type
     const updateNewsMutation = useMutation<UpdateNewsResponse, Error, FormData>({
         mutationFn: async (formData: FormData) => {
             // Make sure newsId is defined before calling updateNewsBlog
@@ -393,7 +391,7 @@ const NewsEdit = () => {
                                 disabled={updateNewsMutation.isPending}
                                 className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600 disabled:opacity-70"
                             >
-                                {updateNewsMutation.isPending ? "Updating..." : "Update News"}
+                                {updateNewsMutation.isPending ? "Updating..." : "Update"}
                             </button>
                             <button
                                 type="button"

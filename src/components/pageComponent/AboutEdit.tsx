@@ -18,21 +18,19 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import FroalaEditorWrapper from "@/components/CaCourse/FroalaEditorWrapper";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-interface NewsData {
+interface PageData {
+    id: number;
     title: string;
-    type: string;
-    slug: string;
+    subtitle: string;
     description: string;
+    image_url: string;
+    slug: string;
     status: string;
-    subtitle?: string;
-    name?: string;
-    linkedin?: string;
-    rating?: string;
-    sort_order?: string;
-    image_url?: string;
-    seo?: {
+    created_at: string;
+    updated_at: string;
+    seo: {
         meta_title: string;
         meta_description: string;
         meta_keywords: string[];
@@ -40,42 +38,40 @@ interface NewsData {
 }
 
 // Define the API response type for update mutation
-interface UpdateNewsResponse {
+interface UpdatePageResponse {
     message: string;
-    data?: [];
+    data?: PageData;
 }
 
-const TestimonialEdit = () => {
-    const params = useParams();
+const AboutEdit = () => {
     const router = useRouter();
-    const newsId = params.id;
+    // Hardcoded page ID for the About page
+    const pageId = "1";
 
     const [image, setImage] = useState<File | null>(null);
     const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
     const queryClient = useQueryClient();
     
-
     // Validation schema
     const validationSchema = Yup.object({
-        title: Yup.string().required("Title is required"),     
+        title: Yup.string().required("Title is required"),
+       
         description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
-        type: Yup.string().required("Type is required"),
-       
     });
 
     // Initialize formik with default values
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            type: "testimonial",
+            subtitle: "",
             slug: "",
             description: "",
             status: "published",
             meta_title: "",
             meta_description: "",
             meta_keywords: "",
-            subtitle: "",
+            type: "",
             name: "",
             linkedin: "",
             rating: "",
@@ -88,16 +84,12 @@ const TestimonialEdit = () => {
             formData.append("title", values.title);
             formData.append("slug", values.slug);
             formData.append("description", values.description);
-            formData.append("type", values.type);
-            formData.append("meta_title", values.meta_title);
-            formData.append("meta_description", values.meta_description);
+            formData.append("status", values.status);
 
             // Add optional fields if they exist
             if (values.subtitle) formData.append("subtitle", values.subtitle);
-            if (values.name) formData.append("name", values.name);
-            if (values.linkedin) formData.append("linkedin", values.linkedin);
-            if (values.rating) formData.append("rating", values.rating);
-            if (values.sort_order) formData.append("sort_order", values.sort_order);
+            formData.append("meta_title", values.meta_title || "");
+            formData.append("meta_description", values.meta_description || "");
 
             // Add image to formData if available
             if (image) {
@@ -106,54 +98,52 @@ const TestimonialEdit = () => {
 
             // Convert comma-separated keywords to array
             const keywordsArray = values.meta_keywords
-                .split(",")
-                .map((keyword) => keyword.trim());
+                ? values.meta_keywords.split(",").map((keyword) => keyword.trim())
+                : [];
             formData.append("meta_keywords", JSON.stringify(keywordsArray));
 
-            updateNewsMutation.mutate(formData);
+            updatePageMutation.mutate(formData);
         },
     });
 
-    // Fetch news data
-    const { data, isLoading, error } = useQuery<NewsData, Error>({
-        queryKey: ['testimonial-list', newsId],
+    // Fetch page data
+    const { data, isLoading, error } = useQuery<PageData, Error>({
+        queryKey: ['about-page-details'],
         queryFn: async () => {
-            console.log("Fetching news with ID:", newsId);
+            console.log("Fetching page with ID:", pageId);
             try {
                 // Use the apiClient utility which adds the authorization token
-                const response = await apiClient.request<NewsData>(`/toper-testimonial-team-by-id/${newsId}`, {
+                const response = await apiClient.request<PageData>(`/page-by-id/${pageId}`, {
                     method: "GET"
                 });
                 console.log("API Response:", response);
                 return response;
             } catch (error) {
-                console.error("Error fetching news:", error);
-                toast.error("Failed to fetch news data");
+                console.error("Error fetching page:", error);
+                toast.error("Failed to fetch page data");
                 throw error;
             }
         },
-        enabled: !!newsId,
+        // Enable immediately since we're using a hardcoded pageId
+        enabled: true,
     });
 
     // Update mutation with proper type
-    const updateNewsMutation = useMutation<UpdateNewsResponse, Error, FormData>({
+    const updatePageMutation = useMutation<UpdatePageResponse, Error, FormData>({
         mutationFn: async (formData: FormData) => {
-            // Make sure newsId is defined before calling updateNewsBlog
-            if (!newsId) {
-                throw new Error("News ID is required");
-            }
-            return await apiClient.request<UpdateNewsResponse>(`/update-toper-testimonial-team/${newsId}`, {
+            return await apiClient.request<UpdatePageResponse>(`/update-page/${pageId}`, {
                 method: "PATCH",
                 body: formData,
             });
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['testimonial-list'] });
-            toast.success(data.message || "News updated successfully!");
-            router.push("/testimonial-list");
+            queryClient.invalidateQueries({ queryKey: ['about-page-details'] });
+            toast.success(data.message || "About page updated successfully!");
+            // Optionally navigate to a different page after successful update
+            // router.push("/dashboard");
         },
         onError: (error: Error) => {
-            toast.error(error.message || "An error occurred while updating the news");
+            toast.error(error.message || "An error occurred while updating the page");
         },
     });
 
@@ -170,10 +160,8 @@ const TestimonialEdit = () => {
         formik.setFieldValue("slug", slug);
     };
 
-    // Use useEffect to populate form data after fetching
+    // Use useEffect to check for auth token
     useEffect(() => {
-        console.log("Component mounted with newsId:", newsId);
-
         // Check if token exists, if not redirect to login
         const token = localStorage.getItem("authToken");
         if (!token) {
@@ -181,7 +169,7 @@ const TestimonialEdit = () => {
             router.push("/login");
             return;
         }
-    }, [newsId, router]);
+    }, [router]);
 
     // Set form values when data is loaded
     useEffect(() => {
@@ -210,18 +198,18 @@ const TestimonialEdit = () => {
             // Set form values based on the API response structure
             formik.setValues({
                 title: data.title || "",
-                type: data.type || "news",
+                subtitle: data.subtitle || "",
                 slug: data.slug || "",
                 description: data.description || "",
                 status: data.status || "published",
                 meta_title: data.seo?.meta_title || "",
                 meta_description: data.seo?.meta_description || "",
                 meta_keywords: metaKeywords,
-                subtitle: data.subtitle || "",
-                name: data.name || "",
-                linkedin: data.linkedin || "",
-                rating: data.rating || "",
-                sort_order: data.sort_order || ""
+                type: "",
+                name: "",
+                linkedin: "",
+                rating: "",
+                sort_order: ""
             });
 
             // Set current image URL if available
@@ -234,7 +222,7 @@ const TestimonialEdit = () => {
     }, [data]);
 
     if (error) {
-        return <div className="text-red-500">Error loading news: {(error as Error).message}</div>;
+        return <div className="text-red-500">Error loading page: {(error as Error).message}</div>;
     }
 
     if (isLoading) {
@@ -244,7 +232,7 @@ const TestimonialEdit = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="Testimonial Edit">
+                <ComponentCard title="About Page Edit">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
@@ -265,24 +253,39 @@ const TestimonialEdit = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.title}</div>
                             )}
                         </div>
+                        {/* <div className="col-span-1">
+                            <Label htmlFor="slug">Slug</Label>
+                            <div className="flex">
+                                <Input
+                                    id="slug"
+                                    name="slug"
+                                    type="text"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.slug}
+                                />
+                                <button
+                                    type="button"
+                                    className="ml-2 px-3 py-2 bg-gray-200 rounded-md text-sm"
+                                    onClick={generateSlug}
+                                >
+                                    Generate
+                                </button>
+                            </div>
+                            {formik.touched.slug && formik.errors.slug && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.slug}</div>
+                            )}
+                        </div> */}
                         <div className="col-span-1">
-                            <Label htmlFor="name">Name</Label>
+                            <Label htmlFor="subtitle">Subtitle</Label>
                             <Input
-                                id="name"
-                                name="name"
+                                id="subtitle"
+                                name="subtitle"
                                 type="text"
                                 onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-                                    if (formik.values.name && !formik.values.slug) {
-                                        generateSlug();
-                                    }
-                                }}
-                                value={formik.values.name}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.subtitle}
                             />
-                            {formik.touched.name && formik.errors.name && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
-                            )}
                         </div>
                         <div className="col-span-2">
                             <Label htmlFor="description">Description</Label>
@@ -297,6 +300,8 @@ const TestimonialEdit = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
                             )}
                         </div>
+                   
+                       
                         <div className="col-span-1">
                             <Label htmlFor="image">Featured Image</Label>
                             <ImageUploader
@@ -307,43 +312,76 @@ const TestimonialEdit = () => {
                                 <p className="text-sm text-gray-500 mt-1">Current image will be kept unless a new one is selected</p>
                             )}
                         </div>
-
                         <div className="col-span-1">
-                            <div className="grid grid-cols-1">
-                                <div className="col-span-1">
-                                    <div className="col-span-1 mt-3 dd">
-                                        <Label htmlFor="status">Status</Label>
-                                        <Select
-                                            name="status"
-                                            value={formik.values.status}
-                                            onValueChange={(value) => formik.setFieldValue("status", value)}
-                                        >
-                                            <SelectTrigger className="w-full" style={{ height: "44px" }}>
-                                                <SelectValue placeholder="published" />
-                                            </SelectTrigger>
-                                            <SelectContent className="bg-white">
-                                                <SelectItem value="published">Published</SelectItem>
-                                                <SelectItem value="draft">Draft</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        {formik.touched.status && formik.errors.status && (
-                                            <div className="text-red-500 text-sm mt-1">{formik.errors.status}</div>
-                                        )}
-                                    </div>
-                                </div>
+                            <div className="col-span-1 mt-0">
+                                <Label htmlFor="status">Status</Label>
+                                <Select
+                                    name="status"
+                                    value={formik.values.status}
+                                    onValueChange={(value) => formik.setFieldValue("status", value)}
+                                >
+                                    <SelectTrigger className="w-full" style={{ height: "44px" }}>
+                                        <SelectValue placeholder="published" />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-white">
+                                        <SelectItem value="published">Published</SelectItem>
+                                        <SelectItem value="draft">Draft</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                {formik.touched.status && formik.errors.status && (
+                                    <div className="text-red-500 text-sm mt-1">{formik.errors.status}</div>
+                                )}
                             </div>
+                        </div>
+                    </div>
+                </ComponentCard>
+                <ComponentCard title="SEO">
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="col-span-1">
+                            <Label htmlFor="meta_title">Meta Title</Label>
+                            <Input
+                                id="meta_title"
+                                name="meta_title"
+                                type="text"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.meta_title}
+                            />
+                        </div>
+                        <div className="col-span-1">
+                            <Label htmlFor="meta_keywords">Meta Keywords</Label>
+                            <Input
+                                id="meta_keywords"
+                                name="meta_keywords"
+                                type="text"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.meta_keywords}
+                                placeholder="keyword1, keyword2, keyword3"
+                            />
+                        </div>
+                        <div className="col-span-2">
+                            <Label htmlFor="meta_description">Meta Description</Label>
+                            <textarea
+                                id="meta_description"
+                                name="meta_description"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.meta_description}
+                                className="w-full h-32 px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-brand-500 text-sm"
+                            />
                         </div>
                         <div className="col-span-2 flex gap-4">
                             <button
                                 type="submit"
-                                disabled={updateNewsMutation.isPending}
+                                disabled={updatePageMutation.isPending}
                                 className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600 disabled:opacity-70"
                             >
-                                {updateNewsMutation.isPending ? "Updating..." : "Update"}
+                                {updatePageMutation.isPending ? "Updating..." : "Update About Page"}
                             </button>
                             <button
                                 type="button"
-                                onClick={() => router.push("/testimonial-list")}
+                                onClick={() => router.push("/dashboard")}
                                 className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
                             >
                                 Cancel
@@ -351,10 +389,9 @@ const TestimonialEdit = () => {
                         </div>
                     </div>
                 </ComponentCard>
-             
             </div>
         </form>
     );
 };
 
-export default TestimonialEdit;
+export default AboutEdit;
