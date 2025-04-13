@@ -130,7 +130,7 @@ const CapiiEdit = () => {
         enabled: !!newsId,
     });
 
-    // Update news mutation with proper type
+    // Update mutation with proper type
     const updateNewsMutation = useMutation<UpdateNewsResponse, Error, FormData>({
         mutationFn: async (formData: FormData) => {
             // Make sure newsId is defined before calling updateNewsBlog
@@ -325,7 +325,7 @@ const CapiiEdit = () => {
                                 disabled={updateNewsMutation.isPending}
                                 className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600 disabled:opacity-70"
                             >
-                                {updateNewsMutation.isPending ? "Updating..." : "Update News"}
+                                {updateNewsMutation.isPending ? "Updating..." : "Update"}
                             </button>
                             <button
                                 type="button"

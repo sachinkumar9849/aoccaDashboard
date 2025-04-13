@@ -50,10 +50,6 @@ const NewsAdd = () => {
         description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
-        meta_title: Yup.string().required("Meta title is required"),
-        meta_description: Yup.string()
-            .required("Meta description is required"),
-        meta_keywords: Yup.string().required("Meta keywords are required"),
     });
 
 
