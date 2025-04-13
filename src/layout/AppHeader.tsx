@@ -5,6 +5,7 @@ import { useSidebar } from "@/context/SidebarContext";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState ,useEffect,useRef} from "react";
+import logoPng from "@/app/image/logo.png"
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
@@ -87,7 +88,7 @@ const AppHeader: React.FC = () => {
               width={154}
               height={32}
               className="dark:hidden"
-              src="./images/logo/logo.svg"
+              src={logoPng}
               alt="Logo"
             />
             <Image
