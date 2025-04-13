@@ -32,6 +32,7 @@ export interface PageFormValues{
   subtitle:string;
   slug: string;
   type: string;
+  video: string;
   status: string;
   meta_title: string;
   meta_description: string;

@@ -69,7 +69,8 @@ const AboutPage = () => {
             name: "",
             linkedin: "",
             rating: "",
-            sort_order: ""
+            sort_order: "",
+            video: ""
         },
 
         validationSchema,

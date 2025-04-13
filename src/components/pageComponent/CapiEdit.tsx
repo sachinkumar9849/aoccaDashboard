@@ -32,6 +32,7 @@ interface NewsData {
     rating?: string;
     sort_order?: string;
     image_url?: string;
+    video?:string;
     seo?: {
         meta_title: string;
         meta_description: string;
@@ -76,7 +77,8 @@ const queryClient = useQueryClient();
             name: "",
             linkedin: "",
             rating: "",
-            sort_order: "0"
+            sort_order: "0",
+            video: ""
         },
         validationSchema,
         onSubmit: (values) => {
@@ -95,6 +97,7 @@ const queryClient = useQueryClient();
             if (values.linkedin) formData.append("linkedin", values.linkedin);
             if (values.rating) formData.append("rating", values.rating);
             if (values.sort_order) formData.append("sort_order", values.sort_order);
+            
 
             // Add image to formData if available
  
@@ -213,7 +216,8 @@ const queryClient = useQueryClient();
                 name: data.name || "",
                 linkedin: data.linkedin || "",
                 rating: data.rating || "",
-                sort_order: data.sort_order || ""
+                sort_order: data.sort_order || "",
+                video: data.video || ""
             });
 
             // Set current image URL if available

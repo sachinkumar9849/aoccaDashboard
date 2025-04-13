@@ -17,7 +17,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import FroalaEditorWrapper from "@/components/CaCourse/FroalaEditorWrapper";
 import { useParams, useRouter } from "next/navigation";
 
 interface NewsData {
@@ -46,7 +45,7 @@ interface UpdateNewsResponse {
     data?: [];
 }
 
-const TestimonialEdit = () => {
+const HighlightEdit = () => {
     const params = useParams();
     const router = useRouter();
     const newsId = params.id;
@@ -58,18 +57,19 @@ const TestimonialEdit = () => {
 
     // Validation schema
     const validationSchema = Yup.object({
-        title: Yup.string().required("Title is required"),     
-        description: Yup.string().required("Description is required"),
+      
+  
+
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
-       
+      
     });
 
     // Initialize formik with default values
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            type: "testimonial",
+            type: "slider",
             slug: "",
             description: "",
             status: "published",
@@ -77,11 +77,11 @@ const TestimonialEdit = () => {
             meta_description: "",
             meta_keywords: "",
             subtitle: "",
+            video:"",
             name: "",
             linkedin: "",
             rating: "",
             sort_order: "",
-            video: ""
         },
         validationSchema,
         onSubmit: (values) => {
@@ -89,14 +89,14 @@ const TestimonialEdit = () => {
 
             formData.append("title", values.title);
             formData.append("slug", values.slug);
-            formData.append("description", values.description);
+            formData.append("name", values.name);
             formData.append("type", values.type);
-            formData.append("meta_title", values.meta_title);
-            formData.append("meta_description", values.meta_description);
+            formData.append("video", values.video);
+          
 
             // Add optional fields if they exist
-            if (values.subtitle) formData.append("subtitle", values.subtitle);
-            if (values.name) formData.append("name", values.name);
+            
+        
             if (values.linkedin) formData.append("linkedin", values.linkedin);
             if (values.rating) formData.append("rating", values.rating);
             if (values.sort_order) formData.append("sort_order", values.sort_order);
@@ -107,10 +107,7 @@ const TestimonialEdit = () => {
             }
 
             // Convert comma-separated keywords to array
-            const keywordsArray = values.meta_keywords
-                .split(",")
-                .map((keyword) => keyword.trim());
-            formData.append("meta_keywords", JSON.stringify(keywordsArray));
+           
 
             updateNewsMutation.mutate(formData);
         },
@@ -118,7 +115,7 @@ const TestimonialEdit = () => {
 
     // Fetch news data
     const { data, isLoading, error } = useQuery<NewsData, Error>({
-        queryKey: ['testimonial-list', newsId],
+        queryKey: ['highlight-list', newsId],
         queryFn: async () => {
             console.log("Fetching news with ID:", newsId);
             try {
@@ -150,9 +147,9 @@ const TestimonialEdit = () => {
             });
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['testimonial-list'] });
+            queryClient.invalidateQueries({ queryKey: ['highlight-list'] });
             toast.success(data.message || "News updated successfully!");
-            router.push("/testimonial-list");
+            router.push("/highlight-list");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while updating the news");
@@ -212,7 +209,7 @@ const TestimonialEdit = () => {
             // Set form values based on the API response structure
             formik.setValues({
                 title: data.title || "",
-                type: data.type || "news",
+                type: data.type || "team",
                 slug: data.slug || "",
                 description: data.description || "",
                 status: data.status || "published",
@@ -224,7 +221,7 @@ const TestimonialEdit = () => {
                 linkedin: data.linkedin || "",
                 rating: data.rating || "",
                 sort_order: data.sort_order || "",
-                video: data.video || "",
+                video: data.video || ""
             });
 
             // Set current image URL if available
@@ -247,28 +244,28 @@ const TestimonialEdit = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="Testimonial Edit">
+                <ComponentCard title="Highlight Edit">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
-                            <Label htmlFor="title">Title</Label>
+                            <Label htmlFor="video">Video</Label>
                             <Input
-                                id="title"
-                                name="title"
+                                id="video"
+                                name="video"
                                 type="text"
                                 onChange={formik.handleChange}
                                 onBlur={(e) => {
                                     formik.handleBlur(e);
-                                    if (formik.values.title && !formik.values.slug) {
+                                    if (formik.values.video && !formik.values.slug) {
                                         generateSlug();
                                     }
                                 }}
-                                value={formik.values.title}
+                                value={formik.values.video}
                             />
-                            {formik.touched.title && formik.errors.title && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.title}</div>
+                            {formik.touched.video && formik.errors.video && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.video}</div>
                             )}
                         </div>
-                        <div className="col-span-1">
+                        <div className="col-span-1 hidden">
                             <Label htmlFor="name">Name</Label>
                             <Input
                                 id="name"
@@ -287,34 +284,10 @@ const TestimonialEdit = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
                             )}
                         </div>
-                        <div className="col-span-2">
-                            <Label htmlFor="description">Description</Label>
-                            {/* Client-side only rendering with proper null/undefined checks */}
-                            {formik.values.description !== undefined && (
-                                <FroalaEditorWrapper
-                                    value={formik.values.description || ""}
-                                    onChange={(model: string) => formik.setFieldValue('description', model)}
-                                />
-                            )}
-                            {formik.touched.description && formik.errors.description && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
-                            )}
-                        </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="image">Featured Image</Label>
-                            <ImageUploader
-                                onImageChange={handleImageChange}
-                                currentImage={image ? URL.createObjectURL(image) : currentImageUrl}
-                            />
-                            {currentImageUrl && !image && (
-                                <p className="text-sm text-gray-500 mt-1">Current image will be kept unless a new one is selected</p>
-                            )}
-                        </div>
-
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
                                 <div className="col-span-1">
-                                    <div className="col-span-1 mt-3 dd">
+                                    <div className="col-span-1 dd">
                                         <Label htmlFor="status">Status</Label>
                                         <Select
                                             name="status"
@@ -336,7 +309,21 @@ const TestimonialEdit = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-span-2 flex gap-4">
+                        <div className="col-span-1">
+                            <Label htmlFor="image">Featured Image</Label>
+                            <ImageUploader
+                                onImageChange={handleImageChange}
+                                currentImage={image ? URL.createObjectURL(image) : currentImageUrl}
+                            />
+                            {currentImageUrl && !image && (
+                                <p className="text-sm text-gray-500 mt-1">Current image will be kept unless a new one is selected</p>
+                            )}
+                        </div>
+
+                      
+                    </div>
+                </ComponentCard>
+                <div className="col-span-2 flex gap-4">
                             <button
                                 type="submit"
                                 disabled={updateNewsMutation.isPending}
@@ -346,18 +333,15 @@ const TestimonialEdit = () => {
                             </button>
                             <button
                                 type="button"
-                                onClick={() => router.push("/testimonial-list")}
+                                onClick={() => router.push("/highlight-list")}
                                 className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
                             >
                                 Cancel
                             </button>
                         </div>
-                    </div>
-                </ComponentCard>
-             
             </div>
         </form>
     );
 };
 
-export default TestimonialEdit;
+export default HighlightEdit;

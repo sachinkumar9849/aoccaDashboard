@@ -19,24 +19,22 @@ import {
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 
-const TeamAdd = () => {
+const NewsBlog = () => {
     const [image, setImage] = useState<File | null>(null);
     const queryClient = useQueryClient();
     const router = useRouter();
-
-   
-
+    // queryClient.invalidateQueries({ queryKey: ['news-blog'] });
     // Create page mutation
     const createPageMutation = useMutation({
         mutationFn: async (formData: FormData) => {
             return await apiClient.createTeam(formData) as PageResponse;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['team-list'] });
+            queryClient.invalidateQueries({ queryKey: ['slider-list'] });
             toast.success(data.message || "Page created successfully!");
             formik.resetForm();
             setImage(null);
-            router.push("/team-list");
+            router.push("/slider-list");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while creating the page");
@@ -45,9 +43,8 @@ const TeamAdd = () => {
 
     // Validation schema
     const validationSchema = Yup.object({
-        title: Yup.string().required("Title is required"),
-        name: Yup.string().required("Name is required"),
         status: Yup.string().required("Status is required"),
+        type: Yup.string().required("Type is required"),
     });
 
     // Handle image upload
@@ -59,16 +56,16 @@ const TeamAdd = () => {
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            name: "",
-            type: "team",
+            subtitle: "",
+            type: "highlight",
             slug: "",
-            description: "",
-            linkedin: "",
+            description: "lorem",
             status: "published",
             meta_title: "",
-            meta_description: "",
+            meta_description: "lorem",
             meta_keywords: "",
-            subtitle: "",
+            name: "",
+            linkedin: "",
             rating: "",
             sort_order: "",
             video: ""
@@ -76,12 +73,15 @@ const TeamAdd = () => {
 
         validationSchema,
         onSubmit: (values) => {
+            console.log("form values before FormData:", values); // Log all values
+
             const formData = new FormData();
-            formData.append("title", values.title);
-            formData.append("type", values.type);
-            formData.append("name", values.name);
-            formData.append("linkedin", values.linkedin);
+            formData.append("video", values.video);
+            formData.append("subtitle", values.subtitle);
             formData.append("status", values.status);
+            formData.append("type", values.type);
+
+
             // Add image to formData if available
             if (image) {
                 formData.append("image", image);
@@ -98,59 +98,24 @@ const TeamAdd = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="Team">
+                <ComponentCard title="Highlights Add">
                     <div className="grid grid-cols-2 gap-4">
+
                         <div className="col-span-1">
-                            <Label htmlFor="title">Title</Label>
+                            <Label htmlFor="video">Video Link</Label>
                             <Input
-                                id="title"
-                                name="title"
+                                id="video"
+                                name="video"
                                 type="text"
                                 onChange={formik.handleChange}
                                 onBlur={(e) => {
                                     formik.handleBlur(e);
 
                                 }}
-                                value={formik.values.title}
-                            />
-                            {formik.touched.title && formik.errors.title && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.title}</div>
-                            )}
-                        </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="name">Name</Label>
-                            <Input
-                                id="name"
-                                name="name"
-                                type="text"
-                                onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-
-                                }}
-                                value={formik.values.name}
-                            />
-                            {formik.touched.name && formik.errors.name && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
-                            )}
-                        </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="linkedin">linkedin</Label>
-                            <Input
-                                id="linkedin"
-                                name="linkedin"
-                                type="text"
-                                onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-
-                                }}
-                                value={formik.values.linkedin}
+                                value={formik.values.video}
                             />
 
                         </div>
-
-
 
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
@@ -164,7 +129,7 @@ const TeamAdd = () => {
                                             onValueChange={(value) => formik.setFieldValue("status", value)}
                                         >
                                             <SelectTrigger className="w-full" style={{ height: "44px" }}>
-                                                <SelectValue placeholder="published" />
+                                                <SelectValue placeholder="Select status" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-white">
                                                 <SelectItem value="published">Published</SelectItem>
@@ -185,6 +150,7 @@ const TeamAdd = () => {
                                 currentImage={image ? URL.createObjectURL(image) : null}
                             />
                         </div>
+
                         <div className="col-span-2">
                             <button
                                 type="submit"
@@ -203,4 +169,4 @@ const TeamAdd = () => {
     );
 };
 
-export default TeamAdd;
+export default NewsBlog;
