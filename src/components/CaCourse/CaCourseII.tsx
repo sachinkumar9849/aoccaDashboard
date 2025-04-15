@@ -6,6 +6,7 @@ import { Edit, Trash, Eye } from 'lucide-react';
 import { apiClient } from '@/api/client';
 import Link from 'next/link';
 import DeleteConfirmationDialog from '@/components/common/DeleteConfirmationDialog';
+import Button from '../ui/button/Button';
 
 
 type NewsType = 'news' | 'blogs';
@@ -107,7 +108,13 @@ const NewsBlogList: React.FC = () => {
 
   return (
     <div className="w-full p-4 bg-white rounded-lg shadow-sm">
+   
+      <div className="flex justify-between items-center">
       <h2 className="text-lg font-normal mb-4">Cap-II</h2>
+      <Link href="/cap-ii">
+      <Button>Add</Button>
+      </Link>
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
