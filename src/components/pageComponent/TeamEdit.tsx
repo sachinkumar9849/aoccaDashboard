@@ -31,7 +31,7 @@ interface NewsData {
     rating?: string;
     sort_order?: string;
     image_url?: string;
-    video?:string;
+    video?: string;
     seo?: {
         meta_title: string;
         meta_description: string;
@@ -53,14 +53,14 @@ const TeamEdit = () => {
     const [image, setImage] = useState<File | null>(null);
     const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
     const queryClient = useQueryClient();
-    
+
 
     // Validation schema
     const validationSchema = Yup.object({
         title: Yup.string().required("Title is required"),
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
-      
+
     });
 
     // Initialize formik with default values
@@ -83,18 +83,20 @@ const TeamEdit = () => {
         },
         validationSchema,
         onSubmit: (values) => {
+            console.log("Form values on submit", values)
             const formData = new FormData();
 
             formData.append("title", values.title);
-            formData.append("slug", values.slug);
+
             formData.append("name", values.name);
+
             formData.append("type", values.type);
-          
+
             formData.append("linkedin", values.linkedin);
             // Add optional fields if they exist
-            
-        
-            
+
+
+
             if (values.rating) formData.append("rating", values.rating);
             if (values.sort_order) formData.append("sort_order", values.sort_order);
 
@@ -104,11 +106,13 @@ const TeamEdit = () => {
             }
 
             // Convert comma-separated keywords to array
-           
+
 
             updateNewsMutation.mutate(formData);
+            console.log("Form values on submit two=>", values)
         },
     });
+
 
     // Fetch news data
     const { data, isLoading, error } = useQuery<NewsData, Error>({
@@ -134,6 +138,7 @@ const TeamEdit = () => {
     // Update mutation with proper type
     const updateNewsMutation = useMutation<UpdateNewsResponse, Error, FormData>({
         mutationFn: async (formData: FormData) => {
+            console.log("first", formData)
             // Make sure newsId is defined before calling updateNewsBlog
             if (!newsId) {
                 throw new Error("News ID is required");
@@ -158,13 +163,6 @@ const TeamEdit = () => {
     };
 
     // Generate slug from title
-    const generateSlug = () => {
-        const slug = formik.values.title
-            .toLowerCase()
-            .replace(/[^\w\s]/gi, "")
-            .replace(/\s+/g, "-");
-        formik.setFieldValue("slug", slug);
-    };
 
     // Use useEffect to populate form data after fetching
     useEffect(() => {
@@ -206,6 +204,7 @@ const TeamEdit = () => {
             // Set form values based on the API response structure
             formik.setValues({
                 title: data.title || "",
+                name: data.name || "",
                 type: data.type || "team",
                 slug: data.slug || "",
                 description: data.description || "",
@@ -214,7 +213,7 @@ const TeamEdit = () => {
                 meta_description: data.seo?.meta_description || "",
                 meta_keywords: metaKeywords,
                 subtitle: data.subtitle || "",
-                name: data.name || "",
+                
                 linkedin: data.linkedin || "",
                 rating: data.rating || "",
                 sort_order: data.sort_order || "",
@@ -250,12 +249,7 @@ const TeamEdit = () => {
                                 name="title"
                                 type="text"
                                 onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-                                    if (formik.values.title && !formik.values.slug) {
-                                        generateSlug();
-                                    }
-                                }}
+
                                 value={formik.values.title}
                             />
                             {formik.touched.title && formik.errors.title && (
@@ -269,18 +263,14 @@ const TeamEdit = () => {
                                 name="name"
                                 type="text"
                                 onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-                                    if (formik.values.name && !formik.values.slug) {
-                                        generateSlug();
-                                    }
-                                }}
+
                                 value={formik.values.name}
                             />
                             {formik.touched.name && formik.errors.name && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
                             )}
                         </div>
+                        
                         <div className="col-span-1">
                             <Label htmlFor="linkedin">Linkedin</Label>
                             <Input
@@ -288,20 +278,15 @@ const TeamEdit = () => {
                                 name="linkedin"
                                 type="text"
                                 onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-                                    if (formik.values.linkedin && !formik.values.slug) {
-                                        generateSlug();
-                                    }
-                                }}
+
                                 value={formik.values.linkedin}
                             />
                             {formik.touched.linkedin && formik.errors.linkedin && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.linkedin}</div>
                             )}
                         </div>
-                        
-                       
+
+
 
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
@@ -341,21 +326,21 @@ const TeamEdit = () => {
                     </div>
                 </ComponentCard>
                 <div className="col-span-2 flex gap-4">
-                            <button
-                                type="submit"
-                                disabled={updateNewsMutation.isPending}
-                                className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600 disabled:opacity-70"
-                            >
-                                {updateNewsMutation.isPending ? "Updating..." : "Update"}
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => router.push("/team-list")}
-                                className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
-                            >
-                                Cancel
-                            </button>
-                        </div>
+                    <button
+                        type="submit"
+                        disabled={updateNewsMutation.isPending}
+                        className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600 disabled:opacity-70"
+                    >
+                        {updateNewsMutation.isPending ? "Updating..." : "Update"}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => router.push("/team-list")}
+                        className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
+                    >
+                        Cancel
+                    </button>
+                </div>
             </div>
         </form>
     );
