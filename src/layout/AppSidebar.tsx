@@ -82,6 +82,11 @@ const navItems: NavItem[] = [
     subItems: [{ name: "Slider List", path: "/slider-list", pro: false }, { name: "Slider Add", path: "/slider-add", pro: false }],
   },
   {
+    name: "Faq",
+    icon: <ListIcon />,
+    subItems: [{ name: "Faq List", path: "/faq-list", pro: false }, { name: "Faq Add", path: "/faq-add", pro: false }],
+  },
+  {
     name: "Highlight",
     icon: <ListIcon />,
     subItems: [{ name: "Highlight Add", path: "/highlight-add", pro: false }, { name: "Highlight List", path: "/highlight-list", pro: false }],
