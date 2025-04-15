@@ -110,7 +110,7 @@ const NewsBlogList: React.FC = () => {
 
       <div className="flex justify-between items-center">
       <h2 className="text-lg font-normal mb-4"> CA-FOUNDATION</h2>
-      <Link href="/cap-i">
+      <Link href="/ca-foundation">
       <Button>Add</Button>
       </Link>
       </div>
