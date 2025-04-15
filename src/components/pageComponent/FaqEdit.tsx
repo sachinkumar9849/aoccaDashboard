@@ -1,15 +1,15 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "react-hot-toast";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
-import ImageUploader from "@/components/ImageUploader";
 import { PageFormValues } from "@/types";
 import { apiClient } from "@/api/client";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     Select,
     SelectContent,
@@ -17,6 +17,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import FroalaEditorWrapper from "@/components/CaCourse/FroalaEditorWrapper";
 import { useParams, useRouter } from "next/navigation";
 
 interface NewsData {
@@ -29,7 +30,7 @@ interface NewsData {
     name?: string;
     linkedin?: string;
     rating?: string;
-    sort_order?: string;
+    sort_order: string;
     image_url?: string;
     video?: string;
     seo?: {
@@ -45,19 +46,17 @@ interface UpdateNewsResponse {
     data?: [];
 }
 
-const TeamEdit = () => {
+const FaqEdit = () => {
     const params = useParams();
     const router = useRouter();
     const newsId = params.id;
-
-    const [image, setImage] = useState<File | null>(null);
-    const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
     const queryClient = useQueryClient();
-
 
     // Validation schema
     const validationSchema = Yup.object({
         title: Yup.string().required("Title is required"),
+
+        description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
 
@@ -67,7 +66,7 @@ const TeamEdit = () => {
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            type: "team",
+            type: "faq",
             slug: "",
             description: "",
             status: "published",
@@ -83,40 +82,41 @@ const TeamEdit = () => {
         },
         validationSchema,
         onSubmit: (values) => {
-            console.log("Form values on submit", values)
+            console.log("Submitting values:", values);
             const formData = new FormData();
 
             formData.append("title", values.title);
-
-            formData.append("name", values.name);
-
+            formData.append("slug", values.slug);
+            formData.append("description", values.description);
             formData.append("type", values.type);
-
-            formData.append("linkedin", values.linkedin);
+            formData.append("meta_title", values.meta_title);
+            formData.append("meta_description", values.meta_description);
+            console.log("Submitting sort_order:", values.sort_order);
+            formData.append("sort_order", values.sort_order.toString());
             // Add optional fields if they exist
-
-
-
+            if (values.subtitle) formData.append("subtitle", values.subtitle);
+            if (values.name) formData.append("name", values.name);
+            if (values.linkedin) formData.append("linkedin", values.linkedin);
             if (values.rating) formData.append("rating", values.rating);
-            if (values.sort_order) formData.append("sort_order", values.sort_order);
+
+            console.log("Submitting sort_order:", values.sort_order);
 
             // Add image to formData if available
-            if (image) {
-                formData.append("image", image);
-            }
 
             // Convert comma-separated keywords to array
-
-
+            const keywordsArray = values.meta_keywords
+                .split(",")
+                .map((keyword) => keyword.trim());
+            formData.append("meta_keywords", JSON.stringify(keywordsArray));
+   
+            
             updateNewsMutation.mutate(formData);
-            console.log("Form values on submit two=>", values)
         },
     });
 
-
     // Fetch news data
     const { data, isLoading, error } = useQuery<NewsData, Error>({
-        queryKey: ['team-list', newsId],
+        queryKey: ['news-details', newsId],
         queryFn: async () => {
             console.log("Fetching news with ID:", newsId);
             try {
@@ -138,31 +138,37 @@ const TeamEdit = () => {
     // Update mutation with proper type
     const updateNewsMutation = useMutation<UpdateNewsResponse, Error, FormData>({
         mutationFn: async (formData: FormData) => {
-            console.log("first", formData)
             // Make sure newsId is defined before calling updateNewsBlog
             if (!newsId) {
                 throw new Error("News ID is required");
             }
+            console.log("Final FormData sending to API:");
+     
             return await apiClient.request<UpdateNewsResponse>(`/update-toper-testimonial-team/${newsId}`, {
                 method: "PATCH",
                 body: formData,
             });
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['team-list'] });
+            queryClient.invalidateQueries({ queryKey: ['faq-list'] });
             toast.success(data.message || "News updated successfully!");
-            router.push("/team-list");
+            router.push("/faq-list");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while updating the news");
         },
     });
 
-    const handleImageChange = (file: File | null) => {
-        setImage(file);
-    };
+
 
     // Generate slug from title
+    const generateSlug = () => {
+        const slug = formik.values.title
+            .toLowerCase()
+            .replace(/[^\w\s]/gi, "")
+            .replace(/\s+/g, "-");
+        formik.setFieldValue("slug", slug);
+    };
 
     // Use useEffect to populate form data after fetching
     useEffect(() => {
@@ -204,8 +210,7 @@ const TeamEdit = () => {
             // Set form values based on the API response structure
             formik.setValues({
                 title: data.title || "",
-                name: data.name || "",
-                type: data.type || "team",
+                type: data.type || "faq",
                 slug: data.slug || "",
                 description: data.description || "",
                 status: data.status || "published",
@@ -213,17 +218,15 @@ const TeamEdit = () => {
                 meta_description: data.seo?.meta_description || "",
                 meta_keywords: metaKeywords,
                 subtitle: data.subtitle || "",
-                
+                name: data.name || "",
                 linkedin: data.linkedin || "",
                 rating: data.rating || "",
-                sort_order: data.sort_order || "",
-                video: data.video || "",
+                sort_order: data.sort_order !== undefined ? String(data.sort_order) : "",
+                video: data.video || ""
             });
 
             // Set current image URL if available
-            if (data.image_url) {
-                setCurrentImageUrl(data.image_url);
-            }
+
 
             console.log("Form values after setting:", formik.values);
         }
@@ -240,7 +243,7 @@ const TeamEdit = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="Team Edit">
+                <ComponentCard title="CAP-I">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
@@ -249,7 +252,12 @@ const TeamEdit = () => {
                                 name="title"
                                 type="text"
                                 onChange={formik.handleChange}
-
+                                onBlur={(e) => {
+                                    formik.handleBlur(e);
+                                    if (formik.values.title && !formik.values.slug) {
+                                        generateSlug();
+                                    }
+                                }}
                                 value={formik.values.title}
                             />
                             {formik.touched.title && formik.errors.title && (
@@ -257,41 +265,38 @@ const TeamEdit = () => {
                             )}
                         </div>
                         <div className="col-span-1">
-                            <Label htmlFor="name">Name</Label>
+                            <Label htmlFor="sort_order">Sort order</Label>
                             <Input
-                                id="name"
-                                name="name"
-                                type="text"
-                                onChange={formik.handleChange}
-
-                                value={formik.values.name}
-                            />
-                            {formik.touched.name && formik.errors.name && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
-                            )}
-                        </div>
-                        
-                        <div className="col-span-1">
-                            <Label htmlFor="linkedin">Linkedin</Label>
-                            <Input
-                                id="linkedin"
-                                name="linkedin"
-                                type="text"
-                                onChange={formik.handleChange}
-
-                                value={formik.values.linkedin}
-                            />
-                            {formik.touched.linkedin && formik.errors.linkedin && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.linkedin}</div>
-                            )}
+    id="sort_order"
+    name="sort_order"
+    type="text"
+    onChange={(e) => {
+        formik.handleChange(e);
+        console.log("New sort_order value:", e.target.value);
+    }}
+    value={formik.values.sort_order}
+/>
                         </div>
 
+                        <div className="col-span-2">
+                            <Label htmlFor="description">Description</Label>
+                            {/* Client-side only rendering with proper null/undefined checks */}
+                            {formik.values.description !== undefined && (
+                                <FroalaEditorWrapper
+                                    value={formik.values.description || ""}
+                                    onChange={(model: string) => formik.setFieldValue('description', model)}
+                                />
+                            )}
+                            {formik.touched.description && formik.errors.description && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
+                            )}
+                        </div>
 
 
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
                                 <div className="col-span-1">
-                                    <div className="col-span-1 dd">
+                                    <div className="col-span-1 mt-3 dd">
                                         <Label htmlFor="status">Status</Label>
                                         <Select
                                             name="status"
@@ -313,37 +318,28 @@ const TeamEdit = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="image">Featured Image</Label>
-                            <ImageUploader
-                                onImageChange={handleImageChange}
-                                currentImage={image ? URL.createObjectURL(image) : currentImageUrl}
-                            />
-                            {currentImageUrl && !image && (
-                                <p className="text-sm text-gray-500 mt-1">Current image will be kept unless a new one is selected</p>
-                            )}
+                        <div className="col-span-2 flex gap-4">
+                            <button
+                                type="submit"
+                                disabled={updateNewsMutation.isPending}
+                                className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600 disabled:opacity-70"
+                            >
+                                {updateNewsMutation.isPending ? "Updating..." : "Update"}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => router.push("/capi-list")}
+                                className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
+                            >
+                                Cancel
+                            </button>
                         </div>
                     </div>
                 </ComponentCard>
-                <div className="col-span-2 flex gap-4">
-                    <button
-                        type="submit"
-                        disabled={updateNewsMutation.isPending}
-                        className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600 disabled:opacity-70"
-                    >
-                        {updateNewsMutation.isPending ? "Updating..." : "Update"}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => router.push("/team-list")}
-                        className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
-                    >
-                        Cancel
-                    </button>
-                </div>
+
             </div>
         </form>
     );
 };
 
-export default TeamEdit;
+export default FaqEdit;

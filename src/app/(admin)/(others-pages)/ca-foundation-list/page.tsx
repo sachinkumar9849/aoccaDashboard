@@ -37,8 +37,8 @@ const NewsBlogList: React.FC = () => {
   const queryClient = useQueryClient();
 
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
-    queryKey: ['capi-list'],
-    queryFn: () => apiClient.request<NewsBlog[]>('/toper-testimonial-team?type=cap-i&status=published')
+    queryKey: ['ca-foundation-list'],
+    queryFn: () => apiClient.request<NewsBlog[]>('/toper-testimonial-team?type=foundation&status=published')
   });
 
   const deleteMutation = useMutation({
@@ -47,7 +47,7 @@ const NewsBlogList: React.FC = () => {
         method: 'DELETE'
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['capi-list'] });
+      queryClient.invalidateQueries({ queryKey: ['ca-foundation-list'] });
       
     }
   });
@@ -109,8 +109,8 @@ const NewsBlogList: React.FC = () => {
     <div className="w-full p-4 bg-white rounded-lg shadow-sm">
 
       <div className="flex justify-between items-center">
-      <h2 className="text-lg font-normal mb-4"> Cap-I</h2>
-      <Link href="/cap-i">
+      <h2 className="text-lg font-normal mb-4"> CA-FOUNDATION</h2>
+      <Link href="/ca-foundation">
       <Button>Add</Button>
       </Link>
       </div>
@@ -159,7 +159,7 @@ const NewsBlogList: React.FC = () => {
                   </td>
                   <td className="py-3 px-6">
                     <div className="flex gap-2">
-                      <Link href={`/capi-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
+                      <Link href={`/ca-foundation-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
                         <Edit size={18} />
                       </Link>
                       <button 

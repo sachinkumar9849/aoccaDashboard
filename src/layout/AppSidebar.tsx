@@ -40,15 +40,20 @@ const navItems: NavItem[] = [
   //   icon: <ListIcon />,
   //   subItems: [{ name: "News List", path: "/news-list", pro: false }, { name: "News Add", path: "/news-add", pro: false }],ICAI
   // },
+  // {
+  //   name: "Ca Courses",
+  //   icon: <ListIcon />,
+  //   subItems: [{ name: "CAP-I", path: "/cap-i", pro: false },{ name: "CAP-II", path: "/cap-ii", pro: false },{ name: "CAP-III", path: "/cap-iii", pro: false },{ name: "ICAI", path: "/icai", pro: false },{ name: "CA Final", path: "/ca-final", pro: false }],
+  // },
   {
     name: "Ca Courses",
     icon: <ListIcon />,
-    subItems: [{ name: "CAP-I", path: "/cap-i", pro: false },{ name: "CAP-II", path: "/cap-ii", pro: false },{ name: "CAP-III", path: "/cap-iii", pro: false },{ name: "ICAI", path: "/icai", pro: false },{ name: "CA Final", path: "/ca-final", pro: false }],
+    subItems: [{ name: "CA-Foundation", path: "/ca-foundation", pro: false },{ name: "CA-Intermediate", path: "/ca-Intermediate", pro: false },{ name: "CA Final", path: "/ca-final", pro: false }],
   },
   {
     name: "Ca Courses List",
     icon: <ListIcon />,
-    subItems: [{ name: "CAP-I", path: "/capi-list", pro: false },{ name: "CAP-II", path: "/cacourse-ii", pro: false },{ name: "CAP-III", path: "/capiii-list", pro: false },{ name: "ICAI", path: "/icai-list", pro: false },{ name: "CA Final", path: "/cafinal-list", pro: false }],
+    subItems: [{ name: "CA-Foundation", path: "/ca-foundation-list", pro: false },{ name: "CA-Intermediate", path: "/ca-Intermediate-list", pro: false },{ name: "CA Final", path: "/cafinal-list", pro: false }],
   },
   {
     name: "News",
@@ -80,6 +85,11 @@ const navItems: NavItem[] = [
     name: "Slider",
     icon: <ListIcon />,
     subItems: [{ name: "Slider List", path: "/slider-list", pro: false }, { name: "Slider Add", path: "/slider-add", pro: false }],
+  },
+  {
+    name: "Faq",
+    icon: <ListIcon />,
+    subItems: [{ name: "Faq List", path: "/faq-list", pro: false }, { name: "Faq Add", path: "/faq-add", pro: false }],
   },
   {
     name: "Highlight",

@@ -5,7 +5,6 @@ import { Edit, Trash, Eye } from 'lucide-react';
 import { apiClient } from '@/api/client';
 import Link from 'next/link';
 import DeleteConfirmationDialog from '@/components/common/DeleteConfirmationDialog';
-import Button from '@/components/ui/button/Button';
 
 
 type NewsType = 'news' | 'blogs';
@@ -28,6 +27,7 @@ interface NewsBlog {
   created_at: string;
   updated_at: string;
   seo: SEO;
+  sort_order: number;
 }
 
 const NewsBlogList: React.FC = () => {
@@ -37,8 +37,8 @@ const NewsBlogList: React.FC = () => {
   const queryClient = useQueryClient();
 
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
-    queryKey: ['capi-list'],
-    queryFn: () => apiClient.request<NewsBlog[]>('/toper-testimonial-team?type=cap-i&status=published')
+    queryKey: ['faq-list'],
+    queryFn: () => apiClient.request<NewsBlog[]>('/toper-testimonial-team?type=faq&status=published')
   });
 
   const deleteMutation = useMutation({
@@ -47,7 +47,7 @@ const NewsBlogList: React.FC = () => {
         method: 'DELETE'
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['capi-list'] });
+      queryClient.invalidateQueries({ queryKey: ['faq-list'] });
       
     }
   });
@@ -108,18 +108,17 @@ const NewsBlogList: React.FC = () => {
   return (
     <div className="w-full p-4 bg-white rounded-lg shadow-sm">
 
-      <div className="flex justify-between items-center">
-      <h2 className="text-lg font-normal mb-4"> Cap-I</h2>
-      <Link href="/cap-i">
-      <Button>Add</Button>
-      </Link>
-      </div>
+    
+      <h2 className="text-lg font-normal mb-4"> FAQ</h2>
+      
+    
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b">
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Title</th>
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Description</th>
+              <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Sort Order</th>
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Published Date</th>
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Status</th>
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Actions</th>
@@ -129,14 +128,14 @@ const NewsBlogList: React.FC = () => {
             {filteredItems && filteredItems.length > 0 ? (
               filteredItems.map((item) => (
                 <tr key={item.id} className="border-b hover:bg-gray-50">
-                  <td className="py-3 px-6 w-[300px]">
+                  <td className="py-3 px-6 w-[200px]">
                     <div className="flex items-center gap-3">
                       <div>
                         <p className="font-medium text-gray-800">{item.title}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="py-3 px-6 w-[200px]">
+                  <td className="py-3 px-6 w-[300px]">
                     <p className='capitalize text-gray-700 text-[13px]'>
                       {
                         (() => {
@@ -149,6 +148,13 @@ const NewsBlogList: React.FC = () => {
                       }
                     </p>
                   </td>
+                  <td className="py-3 px-6 w-[150px]">
+                    <div className="flex items-center gap-3">
+                      <div>
+                        <p className="font-medium text-gray-800">{item.sort_order}</p>
+                      </div>
+                    </div>
+                  </td>
                   <td className="py-3 px-6 text-gray-700">
                     {formatDate(item.created_at)}
                   </td>
@@ -159,7 +165,7 @@ const NewsBlogList: React.FC = () => {
                   </td>
                   <td className="py-3 px-6">
                     <div className="flex gap-2">
-                      <Link href={`/capi-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
+                      <Link href={`/faq-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
                         <Edit size={18} />
                       </Link>
                       <button 
