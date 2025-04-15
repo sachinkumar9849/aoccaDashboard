@@ -43,11 +43,6 @@ export interface PageFormValues{
   rating: string;
   sort_order: string;
 }
-
-
-
-
-
 export interface PageResponse {
   data: {
     id: number;
@@ -60,6 +55,7 @@ export interface PageResponse {
     meta_description: string;
     meta_keywords: string[];
     created_at: string;
+    sort_order: string;
   };
   message: string;
 }

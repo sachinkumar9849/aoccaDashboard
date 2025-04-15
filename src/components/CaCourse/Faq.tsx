@@ -68,8 +68,9 @@ const Faq = () => {
             name: "",
             linkedin: "",
             rating: "",
+
+            video: "",
             sort_order: "",
-            video: ""
         },
 
         validationSchema,
@@ -78,7 +79,9 @@ const Faq = () => {
             const formData = new FormData();
             formData.append("title", values.title);
             formData.append("description", values.description);
-            formData.append("sort_order", values.sort_order);
+            formData.append("sort_order", String(Number(values.sort_order)));
+
+
             formData.append("slug", values.slug);
             formData.append("status", values.status);
             formData.append("type", values.type);

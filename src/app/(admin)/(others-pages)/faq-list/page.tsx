@@ -5,7 +5,6 @@ import { Edit, Trash, Eye } from 'lucide-react';
 import { apiClient } from '@/api/client';
 import Link from 'next/link';
 import DeleteConfirmationDialog from '@/components/common/DeleteConfirmationDialog';
-import Button from '@/components/ui/button/Button';
 
 
 type NewsType = 'news' | 'blogs';
@@ -28,7 +27,7 @@ interface NewsBlog {
   created_at: string;
   updated_at: string;
   seo: SEO;
-  sort_order: string | number;
+  sort_order: number;
 }
 
 const NewsBlogList: React.FC = () => {
