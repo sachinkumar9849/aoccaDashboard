@@ -58,7 +58,7 @@ const MandatoryTraining = () => {
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            type: "foundation",
+            type: "mandatory",
             slug: "",
             description: "",
             status: "published",
