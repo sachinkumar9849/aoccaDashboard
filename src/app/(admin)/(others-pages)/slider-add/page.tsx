@@ -80,6 +80,7 @@ const NewsBlog = () => {
             formData.append("subtitle", values.subtitle);
             formData.append("status", values.status);
             formData.append("type", values.type);
+            formData.append("sort_order",values.sort_order);
 
 
             // Add image to formData if available
@@ -164,6 +165,19 @@ const NewsBlog = () => {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div className="col-span-1">
+                            <Label htmlFor="sort_order">Sort order</Label>
+                            <Input
+                                id="sort_order"
+                                name="sort_order"
+                                type="number"
+                                onChange={(e) => {
+                                    formik.handleChange(e);
+                                    console.log("New sort_order value:", e.target.value);
+                                }}
+                                value={formik.values.sort_order}
+                            />
                         </div>
                         <div className="col-span-2">
                             <button

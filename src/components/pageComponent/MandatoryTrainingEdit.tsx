@@ -2,14 +2,13 @@
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import { PageFormValues } from "@/types";
 import { apiClient } from "@/api/client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     Select,
     SelectContent,
@@ -31,8 +30,8 @@ interface NewsData {
     linkedin?: string;
     rating?: string;
     sort_order?: string;
+    video?:string;
     image_url?: string;
-    video?: string;
     seo?: {
         meta_title: string;
         meta_description: string;
@@ -46,10 +45,11 @@ interface UpdateNewsResponse {
     data?: [];
 }
 
-const CaFinalEdit = () => {
+const CaIntermediateEdit = () => {
     const params = useParams();
     const router = useRouter();
     const newsId = params.id;
+
     const queryClient = useQueryClient();
 
     // Validation schema
@@ -66,7 +66,7 @@ const CaFinalEdit = () => {
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            type: "ca-final",
+            type: "mandatory",
             slug: "",
             description: "",
             status: "published",
@@ -96,9 +96,10 @@ const CaFinalEdit = () => {
             if (values.name) formData.append("name", values.name);
             if (values.linkedin) formData.append("linkedin", values.linkedin);
             if (values.rating) formData.append("rating", values.rating);
-           
+
 
             // Add image to formData if available
+
 
             // Convert comma-separated keywords to array
             const keywordsArray = values.meta_keywords
@@ -112,9 +113,9 @@ const CaFinalEdit = () => {
 
     // Fetch news data
     const { data, isLoading, error } = useQuery<NewsData, Error>({
-        queryKey: ['news-details', newsId],
+        queryKey: ['mandatory-training-list', newsId],
         queryFn: async () => {
-            console.log("Fetching news with ID:", newsId);
+            
             try {
                 // Use the apiClient utility which adds the authorization token
                 const response = await apiClient.request<NewsData>(`/toper-testimonial-team-by-id/${newsId}`, {
@@ -144,9 +145,10 @@ const CaFinalEdit = () => {
             });
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['cafinal-list'] });
+            queryClient.invalidateQueries({ queryKey: ['mandatory-training-list'] });
+       
             toast.success(data.message || "News updated successfully!");
-            router.push("/cafinal-list");
+            router.push("/mandatory-training-list");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while updating the news");
@@ -219,7 +221,6 @@ const CaFinalEdit = () => {
                 video: data.video || ""
             });
 
-            // Set current image URL if available
 
 
             console.log("Form values after setting:", formik.values);
@@ -237,7 +238,7 @@ const CaFinalEdit = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="CA FINAL EDIT">
+                <ComponentCard title="CA-INTERMEDIATE">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
@@ -294,30 +295,12 @@ const CaFinalEdit = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
                             )}
                         </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="sort_order">Sort Order</Label>
-                            <Input
-                                id="sort_order"
-                                name="sort_order"
-                                type="text"
-                                onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-                                    if (formik.values.sort_order && !formik.values.slug) {
-                                        generateSlug();
-                                    }
-                                }}
-                                value={formik.values.sort_order}
-                            />
-                            {formik.touched.sort_order && formik.errors.sort_order && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.sort_order}</div>
-                            )}
-                        </div>
+
 
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
                                 <div className="col-span-1">
-                                    <div className="col-span-1 dd">
+                                    <div className="col-span-1 mt-3 dd">
                                         <Label htmlFor="status">Status</Label>
                                         <Select
                                             name="status"
@@ -339,6 +322,18 @@ const CaFinalEdit = () => {
                                 </div>
                             </div>
                         </div>
+                        <div className="col-span-1">
+                            <Label htmlFor="title">Sort Order</Label>
+                            <Input
+                                id="sort_order"
+                                name="sort_order"
+                                type="number"
+                                onChange={formik.handleChange}
+                              
+                                value={formik.values.sort_order}
+                            />
+                           
+                        </div>
                         <div className="col-span-2 flex gap-4">
                             <button
                                 type="submit"
@@ -349,7 +344,7 @@ const CaFinalEdit = () => {
                             </button>
                             <button
                                 type="button"
-                                onClick={() => router.push("/cafinal-list")}
+                                onClick={() => router.push("/cacourse-ii")}
                                 className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
                             >
                                 Cancel
@@ -363,4 +358,4 @@ const CaFinalEdit = () => {
     );
 };
 
-export default CaFinalEdit;
+export default CaIntermediateEdit;

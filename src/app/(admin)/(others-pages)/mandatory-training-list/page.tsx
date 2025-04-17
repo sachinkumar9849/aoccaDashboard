@@ -28,18 +28,18 @@ interface NewsBlog {
   created_at: string;
   updated_at: string;
   seo: SEO;
-  sort_order: string;
+  sort_order:string;
 }
 
-const NewsBlogList: React.FC = () => {
+const CaIntermediate: React.FC = () => {
   const [activeTab] = useState<'all' | NewsType>('all');
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
   const queryClient = useQueryClient();
 
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
-    queryKey: ['ca-foundation-list'],
-    queryFn: () => apiClient.request<NewsBlog[]>('/toper-testimonial-team?type=foundation&status=published')
+    queryKey: ['mandatory-training-list'],
+    queryFn: () => apiClient.request<NewsBlog[]>('/toper-testimonial-team?type=mandatory&status=published')
   });
 
   const deleteMutation = useMutation({
@@ -48,7 +48,7 @@ const NewsBlogList: React.FC = () => {
         method: 'DELETE'
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ca-foundation-list'] });
+      queryClient.invalidateQueries({ queryKey: ['mandatory-training-list'] });
       
     }
   });
@@ -110,8 +110,8 @@ const NewsBlogList: React.FC = () => {
     <div className="w-full p-4 bg-white rounded-lg shadow-sm">
 
       <div className="flex justify-between items-center">
-      <h2 className="text-lg font-normal mb-4"> CA-FOUNDATION</h2>
-      <Link href="/ca-foundation">
+      <h2 className="text-lg font-normal mb-4"> MANDATORY TRAINING</h2>
+      <Link href="/mandatory-training-list">
       <Button>Add</Button>
       </Link>
       </div>
@@ -168,7 +168,7 @@ const NewsBlogList: React.FC = () => {
                   </td>
                   <td className="py-3 px-6">
                     <div className="flex gap-2">
-                      <Link href={`/ca-foundation-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
+                      <Link href={`/mandatory-training-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
                         <Edit size={18} />
                       </Link>
                       <button 
@@ -202,4 +202,4 @@ const NewsBlogList: React.FC = () => {
   );
 };
 
-export default NewsBlogList;
+export default CaIntermediate;

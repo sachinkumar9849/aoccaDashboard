@@ -173,7 +173,7 @@ const CaIntermediate = () => {
                             <Input
                                 id="sort_order"
                                 name="sort_order"
-                                type="text"
+                                type="number"
                                 onChange={formik.handleChange}
                                 onBlur={(e) => {
                                     formik.handleBlur(e);

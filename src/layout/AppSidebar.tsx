@@ -48,12 +48,12 @@ const navItems: NavItem[] = [
   {
     name: "Ca Courses",
     icon: <ListIcon />,
-    subItems: [{ name: "CA-Foundation", path: "/ca-foundation", pro: false },{ name: "CA-Intermediate", path: "/ca-Intermediate", pro: false },{ name: "CA Final", path: "/ca-final", pro: false }],
+    subItems: [{ name: "CA-Foundation", path: "/ca-foundation", pro: false },{ name: "CA-Intermediate", path: "/ca-Intermediate", pro: false },{ name: "CA Final", path: "/ca-final", pro: false },{ name: "Mandatory Training", path: "/mandatory-training", pro: false }],
   },
   {
     name: "Ca Courses List",
     icon: <ListIcon />,
-    subItems: [{ name: "CA-Foundation", path: "/ca-foundation-list", pro: false },{ name: "CA-Intermediate", path: "/ca-Intermediate-list", pro: false },{ name: "CA Final", path: "/cafinal-list", pro: false }],
+    subItems: [{ name: "CA-Foundation", path: "/ca-foundation-list", pro: false },{ name: "CA-Intermediate", path: "/ca-Intermediate-list", pro: false },{ name: "CA Final", path: "/cafinal-list", pro: false },{ name: "Mandatory Training", path: "/mandatory-training-list", pro: false }],
   },
   {
     name: "News",

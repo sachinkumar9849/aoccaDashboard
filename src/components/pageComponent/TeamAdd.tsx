@@ -24,7 +24,7 @@ const TeamAdd = () => {
     const queryClient = useQueryClient();
     const router = useRouter();
 
-   
+
 
     // Create page mutation
     const createPageMutation = useMutation({
@@ -82,6 +82,7 @@ const TeamAdd = () => {
             formData.append("name", values.name);
             formData.append("linkedin", values.linkedin);
             formData.append("status", values.status);
+            formData.append("sort_order", values.sort_order);
             // Add image to formData if available
             if (image) {
                 formData.append("image", image);
@@ -122,7 +123,7 @@ const TeamAdd = () => {
                             <Input
                                 id="name"
                                 name="name"
-                                type="text"
+                                type="number"
                                 onChange={formik.handleChange}
                                 onBlur={(e) => {
                                     formik.handleBlur(e);
@@ -185,6 +186,20 @@ const TeamAdd = () => {
                                 currentImage={image ? URL.createObjectURL(image) : null}
                             />
                         </div>
+                        <div className="col-span-1">
+                            <Label htmlFor="sort_order">Sort order</Label>
+                            <Input
+                                id="sort_order"
+                                name="sort_order"
+                                type="text"
+                                onChange={(e) => {
+                                    formik.handleChange(e);
+                                    console.log("New sort_order value:", e.target.value);
+                                }}
+                                value={formik.values.sort_order}
+                            />
+                        </div>
+
                         <div className="col-span-2">
                             <button
                                 type="submit"

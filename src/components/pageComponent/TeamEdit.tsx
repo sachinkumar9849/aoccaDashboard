@@ -323,6 +323,19 @@ const TeamEdit = () => {
                                 <p className="text-sm text-gray-500 mt-1">Current image will be kept unless a new one is selected</p>
                             )}
                         </div>
+                        <div className="col-span-1">
+                            <Label htmlFor="sort_order">Sort order</Label>
+                            <Input
+                                id="sort_order"
+                                name="sort_order"
+                                type="text"
+                                onChange={(e) => {
+                                    formik.handleChange(e);
+                                    console.log("New sort_order value:", e.target.value);
+                                }}
+                                value={formik.values.sort_order}
+                            />
+                        </div>
                     </div>
                 </ComponentCard>
                 <div className="col-span-2 flex gap-4">

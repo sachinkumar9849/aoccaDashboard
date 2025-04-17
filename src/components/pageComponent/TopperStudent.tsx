@@ -85,6 +85,7 @@ const router = useRouter();
       formData.append("type", values.type);
       formData.append("meta_title", values.meta_title);
       formData.append("meta_description", values.meta_description);
+      formData.append("sort_order", values.sort_order);
 
       // Add image to formData if available
       if (image) {
@@ -114,7 +115,7 @@ const router = useRouter();
     <form onSubmit={formik.handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 gap-5">
         <ComponentCard title="Topper student add">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div className="col-span-1">
               <Label htmlFor="title">Title</Label>
               <Input
@@ -176,8 +177,20 @@ const router = useRouter();
                 <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
               )}
             </div>
-
-            <div className="col-span-3">
+            <div className="col-span-1">
+                            <Label htmlFor="sort_order">Sort order</Label>
+                            <Input
+                                id="sort_order"
+                                name="sort_order"
+                                type="number"
+                                onChange={(e) => {
+                                    formik.handleChange(e);
+                                    console.log("New sort_order value:", e.target.value);
+                                }}
+                                value={formik.values.sort_order}
+                            />
+                        </div>
+            <div className="col-span-2">
               <Label htmlFor="description">Description</Label>
               {typeof window !== 'undefined' && (
                 <FroalaEditorWrapper
