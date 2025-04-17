@@ -84,6 +84,7 @@ const CaFinal = () => {
             formData.append("type", values.type);
             formData.append("meta_title", values.meta_title);
             formData.append("meta_description", values.meta_description);
+            formData.append("sort_order", values.sort_order);
 
             if (image) {
                 formData.append("image", image);

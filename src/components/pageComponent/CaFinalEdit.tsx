@@ -77,7 +77,7 @@ const CaFinalEdit = () => {
             name: "",
             linkedin: "",
             rating: "",
-            sort_order: "0",
+            sort_order: "",
             video: ""
         },
         validationSchema,
@@ -90,13 +90,13 @@ const CaFinalEdit = () => {
             formData.append("type", values.type);
             formData.append("meta_title", values.meta_title);
             formData.append("meta_description", values.meta_description);
-
+            formData.append("sort_order", values.sort_order);
             // Add optional fields if they exist
             if (values.subtitle) formData.append("subtitle", values.subtitle);
             if (values.name) formData.append("name", values.name);
             if (values.linkedin) formData.append("linkedin", values.linkedin);
             if (values.rating) formData.append("rating", values.rating);
-            if (values.sort_order) formData.append("sort_order", values.sort_order);
+           
 
             // Add image to formData if available
 
@@ -294,12 +294,30 @@ const CaFinalEdit = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
                             )}
                         </div>
-
+                        <div className="col-span-1">
+                            <Label htmlFor="sort_order">Sort Order</Label>
+                            <Input
+                                id="sort_order"
+                                name="sort_order"
+                                type="text"
+                                onChange={formik.handleChange}
+                                onBlur={(e) => {
+                                    formik.handleBlur(e);
+                                    if (formik.values.sort_order && !formik.values.slug) {
+                                        generateSlug();
+                                    }
+                                }}
+                                value={formik.values.sort_order}
+                            />
+                            {formik.touched.sort_order && formik.errors.sort_order && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.sort_order}</div>
+                            )}
+                        </div>
 
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
                                 <div className="col-span-1">
-                                    <div className="col-span-1 mt-3 dd">
+                                    <div className="col-span-1 dd">
                                         <Label htmlFor="status">Status</Label>
                                         <Select
                                             name="status"

@@ -296,7 +296,18 @@ const CaFoundationEdit = () => {
                             )}
                         </div>
 
-
+                        <div className="col-span-1">
+                            <Label htmlFor="sort_order">Sort Order</Label>
+                            <Input
+                                id="sort_order"
+                                name="sort_order"
+                                type="text"
+                                onChange={formik.handleChange}
+                               
+                                value={formik.values.sort_order}
+                            />
+                           
+                        </div>
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
                                 <div className="col-span-1">

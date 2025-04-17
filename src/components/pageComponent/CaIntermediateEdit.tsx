@@ -77,7 +77,7 @@ const CaIntermediateEdit = () => {
             name: "",
             linkedin: "",
             rating: "",
-            sort_order: "0",
+            sort_order: "",
             video: ""
         },
         validationSchema,
@@ -90,13 +90,13 @@ const CaIntermediateEdit = () => {
             formData.append("type", values.type);
             formData.append("meta_title", values.meta_title);
             formData.append("meta_description", values.meta_description);
-
+            formData.append("sort_order", values.sort_order);
             // Add optional fields if they exist
             if (values.subtitle) formData.append("subtitle", values.subtitle);
             if (values.name) formData.append("name", values.name);
             if (values.linkedin) formData.append("linkedin", values.linkedin);
             if (values.rating) formData.append("rating", values.rating);
-            if (values.sort_order) formData.append("sort_order", values.sort_order);
+
 
             // Add image to formData if available
 
@@ -321,6 +321,18 @@ const CaIntermediateEdit = () => {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div className="col-span-1">
+                            <Label htmlFor="title">Sort Order</Label>
+                            <Input
+                                id="sort_order"
+                                name="sort_order"
+                                type="number"
+                                onChange={formik.handleChange}
+                              
+                                value={formik.values.sort_order}
+                            />
+                           
                         </div>
                         <div className="col-span-2 flex gap-4">
                             <button

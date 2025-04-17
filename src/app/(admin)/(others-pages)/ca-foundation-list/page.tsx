@@ -28,6 +28,7 @@ interface NewsBlog {
   created_at: string;
   updated_at: string;
   seo: SEO;
+  sort_order: string;
 }
 
 const NewsBlogList: React.FC = () => {
@@ -119,6 +120,7 @@ const NewsBlogList: React.FC = () => {
           <thead>
             <tr className="border-b">
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Title</th>
+              <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Sort Order</th>
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Description</th>
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Published Date</th>
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Status</th>
@@ -133,6 +135,13 @@ const NewsBlogList: React.FC = () => {
                     <div className="flex items-center gap-3">
                       <div>
                         <p className="font-medium text-gray-800">{item.title}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="py-3 px-6 w-[150px]">
+                    <div className="flex items-center gap-3">
+                      <div>
+                        <p className="font-medium text-gray-800">{item.sort_order}</p>
                       </div>
                     </div>
                   </td>
