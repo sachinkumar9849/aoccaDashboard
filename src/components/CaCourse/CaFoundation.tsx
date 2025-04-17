@@ -52,7 +52,7 @@ const CaFoundation = () => {
         description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
-        sort_order: Yup.string().required("Sort order is required"),
+       
     });
 
     const formik = useFormik<PageFormValues>({
@@ -173,7 +173,7 @@ const CaFoundation = () => {
                             <Input
                                 id="sort_order"
                                 name="sort_order"
-                                type="text"
+                                type="number"
                                 onChange={formik.handleChange}
                                 onBlur={(e) => {
                                     formik.handleBlur(e);
@@ -183,9 +183,7 @@ const CaFoundation = () => {
                                 }}
                                 value={formik.values.sort_order}
                             />
-                            {formik.touched.sort_order && formik.errors.sort_order && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.sort_order}</div>
-                            )}
+                            
                         </div>
                         <div className="col-span-1">
                             <div className="col-span-1 dd">
