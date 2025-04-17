@@ -24,7 +24,7 @@ const FroalaEditorWrapper = dynamic(
   { ssr: false }
 );
 
-const CaFoundation = () => {
+const MandatoryTraining = () => {
     const [image, setImage] = useState<File | null>(null);
     const router = useRouter();
    const queryClient = useQueryClient();
@@ -34,12 +34,12 @@ const CaFoundation = () => {
             return await apiClient.createTeam(formData) as PageResponse;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['ca-foundation-list'] });
+            queryClient.invalidateQueries({ queryKey: ['mandatory-training-list'] });
             
             toast.success(data.message || "Page created successfully!");
             formik.resetForm();
             setImage(null);
-            router.push("/ca-foundation-list")
+            router.push("/mandatory-training-list")
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while creating the page");
@@ -58,7 +58,7 @@ const CaFoundation = () => {
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            type: "mandatory",
+            type: "foundation",
             slug: "",
             description: "",
             status: "published",
@@ -110,7 +110,7 @@ const CaFoundation = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="Mandatory Training">
+                <ComponentCard title="CA-FOUNDATION">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
@@ -222,4 +222,4 @@ const CaFoundation = () => {
     );
 };
 
-export default CaFoundation;
+export default MandatoryTraining;
