@@ -25,6 +25,7 @@ interface NewsBlog {
   slug: string;
   description: string;
   name: string;
+  sort_order:string;
   image_url: string;
   status: StatusType;
   type: NewsType;
@@ -120,6 +121,7 @@ const NewsBlogList: React.FC = () => {
             <tr className="border-b">
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Title</th>
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Name</th>
+              <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Sort Order</th>
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Published Date</th>
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Status</th>
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Actions</th>
@@ -149,6 +151,12 @@ const NewsBlogList: React.FC = () => {
                   <td className="py-3 px-6 w-[200px]">
                     <p className='capitalize text-gray-700 text-[13px]'>
                      {item?.name}
+                    </p>
+
+                  </td>
+                  <td className="py-3 px-6 w-[200px]">
+                    <p className='capitalize text-gray-700 text-[13px]'>
+                     {item?.sort_order}
                     </p>
 
                   </td>
