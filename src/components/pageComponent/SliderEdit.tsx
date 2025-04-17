@@ -57,11 +57,7 @@ const SliderEdit = () => {
 
     // Validation schema
     const validationSchema = Yup.object({
-        title: Yup.string().required("Title is required"),
-  
-
-        status: Yup.string().required("Status is required"),
-        type: Yup.string().required("Type is required"),
+       
       
     });
 
@@ -319,6 +315,19 @@ const SliderEdit = () => {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div className="col-span-1">
+                            <Label htmlFor="sort_order">Sort order</Label>
+                            <Input
+                                id="sort_order"
+                                name="sort_order"
+                                type="text"
+                                onChange={(e) => {
+                                    formik.handleChange(e);
+                                    console.log("New sort_order value:", e.target.value);
+                                }}
+                                value={formik.values.sort_order}
+                            />
                         </div>
                     </div>
                 </ComponentCard>

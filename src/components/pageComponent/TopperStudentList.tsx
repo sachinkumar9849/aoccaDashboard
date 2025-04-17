@@ -166,7 +166,7 @@ interface SEO {
 interface NewsBlog {
   id: number;
   title: string;
-
+  sort_order:string;
   slug: string;
   description: string;
   name: string;
@@ -265,6 +265,7 @@ const TopperStudentList: React.FC = () => {
             <tr className="border-b">
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Title</th>
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Name</th>
+              <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Short Order</th>
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Published Date</th>
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Status</th>
               <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Actions</th>
@@ -294,6 +295,12 @@ const TopperStudentList: React.FC = () => {
                   <td className="py-3 px-6 w-[200px]">
                     <p className='capitalize text-gray-700 text-[13px]'>
                      {item?.name}
+                    </p>
+
+                  </td>
+                  <td className="py-3 px-6 w-[200px]">
+                    <p className='capitalize text-gray-700 text-[13px]'>
+                     {item?.sort_order}
                     </p>
 
                   </td>

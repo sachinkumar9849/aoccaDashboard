@@ -337,6 +337,23 @@ const TopperStudentEdit = () => {
                                 </div>
                             </div>
                         </div>
+                        <div className="col-span-1">
+                            <Label htmlFor="sort_order">Sort Order</Label>
+                            <Input
+                                id="sort_order"
+                                name="sort_order"
+                                type="text"
+                                onChange={formik.handleChange}
+                                onBlur={(e) => {
+                                    formik.handleBlur(e);
+                                    if (formik.values.sort_order && !formik.values.slug) {
+                                        generateSlug();
+                                    }
+                                }}
+                                value={formik.values.sort_order}
+                            />
+                         
+                        </div>
                         <div className="col-span-2 flex gap-4">
                             <button
                                 type="submit"

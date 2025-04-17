@@ -91,7 +91,7 @@ const FaqEdit = () => {
             formData.append("type", values.type);
             formData.append("meta_title", values.meta_title);
             formData.append("meta_description", values.meta_description);
-            console.log("Submitting sort_order:", values.sort_order);
+          
             formData.append("sort_order", values.sort_order.toString());
             // Add optional fields if they exist
             if (values.subtitle) formData.append("subtitle", values.subtitle);
@@ -99,7 +99,7 @@ const FaqEdit = () => {
             if (values.linkedin) formData.append("linkedin", values.linkedin);
             if (values.rating) formData.append("rating", values.rating);
 
-            console.log("Submitting sort_order:", values.sort_order);
+          
 
             // Add image to formData if available
 
@@ -108,8 +108,8 @@ const FaqEdit = () => {
                 .split(",")
                 .map((keyword) => keyword.trim());
             formData.append("meta_keywords", JSON.stringify(keywordsArray));
-   
-            
+
+
             updateNewsMutation.mutate(formData);
         },
     });
@@ -143,7 +143,7 @@ const FaqEdit = () => {
                 throw new Error("News ID is required");
             }
             console.log("Final FormData sending to API:");
-     
+
             return await apiClient.request<UpdateNewsResponse>(`/update-toper-testimonial-team/${newsId}`, {
                 method: "PATCH",
                 body: formData,
@@ -267,15 +267,15 @@ const FaqEdit = () => {
                         <div className="col-span-1">
                             <Label htmlFor="sort_order">Sort order</Label>
                             <Input
-    id="sort_order"
-    name="sort_order"
-    type="text"
-    onChange={(e) => {
-        formik.handleChange(e);
-        console.log("New sort_order value:", e.target.value);
-    }}
-    value={formik.values.sort_order}
-/>
+                                id="sort_order"
+                                name="sort_order"
+                                type="text"
+                                onChange={(e) => {
+                                    formik.handleChange(e);
+                                    console.log("New sort_order value:", e.target.value);
+                                }}
+                                value={formik.values.sort_order}
+                            />
                         </div>
 
                         <div className="col-span-2">
