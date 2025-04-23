@@ -58,7 +58,7 @@ const CaFoundation = () => {
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
-            type: "mandatory",
+            type: "foundation",
             slug: "",
             description: "",
             status: "published",

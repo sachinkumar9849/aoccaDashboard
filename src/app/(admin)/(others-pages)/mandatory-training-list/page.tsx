@@ -111,7 +111,7 @@ const CaIntermediate: React.FC = () => {
 
       <div className="flex justify-between items-center">
       <h2 className="text-lg font-normal mb-4"> MANDATORY TRAINING</h2>
-      <Link href="/mandatory-training-list">
+      <Link href="/mandatory-training">
       <Button>Add</Button>
       </Link>
       </div>
