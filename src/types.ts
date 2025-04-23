@@ -42,6 +42,7 @@ export interface PageFormValues{
   linkedin: string;
   rating: string;
   sort_order: string;
+
 }
 export interface PageResponse {
   data: {

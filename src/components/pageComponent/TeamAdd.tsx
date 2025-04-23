@@ -18,6 +18,11 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
+import FroalaEditorWrapper from "../CaCourse/FroalaEditorWrapper";
+
+type TeamAddFormValues = PageFormValues & {
+    designation: string;
+};
 
 const TeamAdd = () => {
     const [image, setImage] = useState<File | null>(null);
@@ -56,7 +61,7 @@ const TeamAdd = () => {
     };
 
     // Initialize formik
-    const formik = useFormik<PageFormValues>({
+    const formik = useFormik<TeamAddFormValues>({
         initialValues: {
             title: "",
             name: "",
@@ -71,14 +76,17 @@ const TeamAdd = () => {
             subtitle: "",
             rating: "",
             sort_order: "",
-            video: ""
+            video: "",
+            designation: "" 
         },
 
         validationSchema,
         onSubmit: (values) => {
             const formData = new FormData();
             formData.append("title", values.title);
+            formData.append("description", values.description);
             formData.append("type", values.type);
+            formData.append("designation", values.designation);
             formData.append("name", values.name);
             formData.append("linkedin", values.linkedin);
             formData.append("status", values.status);
@@ -88,7 +96,7 @@ const TeamAdd = () => {
                 formData.append("image", image);
             }
 
-            // Convert comma-separated keywords to array
+          
 
 
             createPageMutation.mutate(formData);
@@ -102,7 +110,24 @@ const TeamAdd = () => {
                 <ComponentCard title="Team">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
-                            <Label htmlFor="title">Title</Label>
+                            <Label htmlFor="name">Name</Label>
+                            <Input
+                                id="name"
+                                name="name"
+                                type="text"
+                                onChange={formik.handleChange}
+                                onBlur={(e) => {
+                                    formik.handleBlur(e);
+
+                                }}
+                                value={formik.values.name}
+                            />
+                            {formik.touched.name && formik.errors.name && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
+                            )}
+                        </div>
+                        <div className="col-span-1">
+                            <Label htmlFor="title">Qualification</Label>
                             <Input
                                 id="title"
                                 name="title"
@@ -118,22 +143,33 @@ const TeamAdd = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.title}</div>
                             )}
                         </div>
+
+                        <div className="col-span-2">
+                            <Label htmlFor="description">Description</Label>
+                            {typeof window !== 'undefined' && (
+                                <FroalaEditorWrapper
+                                    value={formik.values.description}
+                                    onChange={(model: string) => formik.setFieldValue('description', model)}
+                                />
+                            )}
+                            {formik.touched.description && formik.errors.description && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
+                            )}
+                        </div>
                         <div className="col-span-1">
-                            <Label htmlFor="name">Name</Label>
+                            <Label htmlFor="designation">Designation</Label>
                             <Input
-                                id="name"
-                                name="name"
-                                type="number"
+                                id="designation"
+                                name="designation"
+                                type="text"
                                 onChange={formik.handleChange}
                                 onBlur={(e) => {
                                     formik.handleBlur(e);
 
                                 }}
-                                value={formik.values.name}
+                                value={formik.values.designation}
                             />
-                            {formik.touched.name && formik.errors.name && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
-                            )}
+ 
                         </div>
                         <div className="col-span-1">
                             <Label htmlFor="linkedin">linkedin</Label>
@@ -180,13 +216,6 @@ const TeamAdd = () => {
                             </div>
                         </div>
                         <div className="col-span-1">
-                            <Label htmlFor="image">Featured Image</Label>
-                            <ImageUploader
-                                onImageChange={handleImageChange}
-                                currentImage={image ? URL.createObjectURL(image) : null}
-                            />
-                        </div>
-                        <div className="col-span-1">
                             <Label htmlFor="sort_order">Sort order</Label>
                             <Input
                                 id="sort_order"
@@ -199,6 +228,14 @@ const TeamAdd = () => {
                                 value={formik.values.sort_order}
                             />
                         </div>
+                        <div className="col-span-1">
+                            <Label htmlFor="image">Featured Image</Label>
+                            <ImageUploader
+                                onImageChange={handleImageChange}
+                                currentImage={image ? URL.createObjectURL(image) : null}
+                            />
+                        </div>
+
 
                         <div className="col-span-2">
                             <button
