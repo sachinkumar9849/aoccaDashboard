@@ -42,7 +42,7 @@ const NewsBlogList: React.FC = () => {
 
 
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
-    queryKey: ['team-list'],
+    queryKey: ['management-team-list'],
     queryFn: () => apiClient.request<NewsBlog[]>('/toper-testimonial-team?type=team')
   });
 
@@ -55,7 +55,7 @@ const NewsBlogList: React.FC = () => {
         method: 'DELETE'
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['team-list'] });
+      queryClient.invalidateQueries({ queryKey: ['management-team-list'] });
       
     }
   });
@@ -114,7 +114,7 @@ const NewsBlogList: React.FC = () => {
 
   return (
     <div className="w-full p-4 bg-white rounded-lg shadow-sm">
-      <h2 className="text-lg font-normal mb-4">Blog List</h2>
+      <h2 className="text-lg font-normal mb-4">Management Team List</h2>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
@@ -170,7 +170,7 @@ const NewsBlogList: React.FC = () => {
                   </td>
                   <td className="py-3 px-6">
                     <div className="flex gap-2">
-                      <Link href={`/team-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
+                      <Link href={`/management-team-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
                         <Edit size={18} />
                       </Link>
                       <button

@@ -37,11 +37,11 @@ const TeamAdd = () => {
             return await apiClient.createTeam(formData) as PageResponse;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['team-list'] });
+            queryClient.invalidateQueries({ queryKey: ['management-team-list'] });
             toast.success(data.message || "Page created successfully!");
             formik.resetForm();
             setImage(null);
-            router.push("/team-list");
+            router.push("/management-team-list");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while creating the page");
@@ -77,7 +77,7 @@ const TeamAdd = () => {
             rating: "",
             sort_order: "",
             video: "",
-            designation: "" 
+            designation: ""
         },
 
         validationSchema,
@@ -96,7 +96,7 @@ const TeamAdd = () => {
                 formData.append("image", image);
             }
 
-          
+
 
 
             createPageMutation.mutate(formData);
@@ -107,7 +107,7 @@ const TeamAdd = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="Team">
+                <ComponentCard title="Management Team Add">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="name">Name</Label>
@@ -169,7 +169,7 @@ const TeamAdd = () => {
                                 }}
                                 value={formik.values.designation}
                             />
- 
+
                         </div>
                         <div className="col-span-1">
                             <Label htmlFor="linkedin">linkedin</Label>

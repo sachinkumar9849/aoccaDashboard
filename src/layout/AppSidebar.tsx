@@ -67,9 +67,9 @@ const navItems: NavItem[] = [
   
   },
   {
-    name: "Team",
+    name: "Management Team",
     icon: <ListIcon />,
-    subItems: [{ name: "Team List", path: "/team-list", pro: false }, { name: "Team Add", path: "/team-add", pro: false }],
+    subItems: [{ name: "Management team list", path: "/management-team-list", pro: false }, { name: "Management team add", path: "/management-team-add", pro: false }],
   },
   {
     name: "Testimonial",

@@ -116,7 +116,7 @@ const TeamEdit = () => {
 
     // Fetch news data
     const { data, isLoading, error } = useQuery<NewsData, Error>({
-        queryKey: ['team-list', newsId],
+        queryKey: ['management-team-list', newsId],
         queryFn: async () => {
             console.log("Fetching news with ID:", newsId);
             try {
@@ -149,9 +149,9 @@ const TeamEdit = () => {
             });
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['team-list'] });
+            queryClient.invalidateQueries({ queryKey: ['management-team-list'] });
             toast.success(data.message || "News updated successfully!");
-            router.push("/team-list");
+            router.push("/management-team-list");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while updating the news");
@@ -240,7 +240,7 @@ const TeamEdit = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="Team Edit">
+                <ComponentCard title="Management Team Edit">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
@@ -348,7 +348,7 @@ const TeamEdit = () => {
                     </button>
                     <button
                         type="button"
-                        onClick={() => router.push("/team-list")}
+                        onClick={() => router.push("/management-team-list")}
                         className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
                     >
                         Cancel
