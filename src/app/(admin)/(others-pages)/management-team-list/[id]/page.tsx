@@ -1,10 +1,10 @@
-import TeamEditTwo from '@/components/pageComponent/TeamEditTwo'
+import TeamEdit from '@/components/pageComponent/TeamEdit'
 import React from 'react'
 
 const page = () => {
   return (
     <>
-    <TeamEditTwo/>
+    <TeamEdit/>
     </>
   )
 }

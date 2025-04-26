@@ -5,10 +5,10 @@
 
 import dynamic from "next/dynamic";
 
-const TeamAddTwo = dynamic(() => import('@/components/pageComponent/TeamAddTwo'), {
+const TeamAdd = dynamic(() => import('@/components/pageComponent/TeamAdd'), {
   ssr: false,
 });
 
 export default function Page() {
-  return <TeamAddTwo/>;
+  return <TeamAdd/>;
 }

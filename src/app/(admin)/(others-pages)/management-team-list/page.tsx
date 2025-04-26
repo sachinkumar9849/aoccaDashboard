@@ -1,10 +1,10 @@
-import TeamListTow from '@/components/pageComponent/TeamListTow'
+import TeamList from '@/components/pageComponent/TeamList'
 import React from 'react'
 
 const page = () => {
   return (
    <>
-   <TeamListTow/>
+   <TeamList/>
    </>
   )
 }

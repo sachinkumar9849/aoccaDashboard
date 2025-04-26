@@ -1,8 +1,4 @@
-
-
 "use client";
-
-
 import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Edit, Trash, Eye } from 'lucide-react';
@@ -34,7 +30,7 @@ interface NewsBlog {
   seo: SEO;
 }
 
-const NewsBlogList: React.FC = () => {
+const TeamListTow: React.FC = () => {
   const [activeTab] = useState<'all' | NewsType>('all');
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
@@ -42,8 +38,8 @@ const NewsBlogList: React.FC = () => {
 
 
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
-    queryKey: ['management-team-list'],
-    queryFn: () => apiClient.request<NewsBlog[]>('/toper-testimonial-team?type=team')
+    queryKey: ['team-list'],
+    queryFn: () => apiClient.request<NewsBlog[]>('/toper-testimonial-team?type=teamTwo')
   });
 
   // delete function 
@@ -55,7 +51,7 @@ const NewsBlogList: React.FC = () => {
         method: 'DELETE'
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['management-team-list'] });
+      queryClient.invalidateQueries({ queryKey: ['team-list'] });
       
     }
   });
@@ -114,7 +110,7 @@ const NewsBlogList: React.FC = () => {
 
   return (
     <div className="w-full p-4 bg-white rounded-lg shadow-sm">
-      <h2 className="text-lg font-normal mb-4">Management Team List</h2>
+      <h2 className="text-lg font-normal mb-4">Team List</h2>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
@@ -170,7 +166,7 @@ const NewsBlogList: React.FC = () => {
                   </td>
                   <td className="py-3 px-6">
                     <div className="flex gap-2">
-                      <Link href={`/management-team-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
+                      <Link href={`/team-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
                         <Edit size={18} />
                       </Link>
                       <button
@@ -202,4 +198,4 @@ const NewsBlogList: React.FC = () => {
   );
 };
 
-export default NewsBlogList;
+export default TeamListTow;

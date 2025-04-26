@@ -18,7 +18,6 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useParams, useRouter } from "next/navigation";
-import FroalaEditorWrapper from "../CaCourse/FroalaEditorWrapper";
 
 type TeamAddFormValues = PageFormValues & {
     designation: string;
@@ -51,7 +50,7 @@ interface UpdateNewsResponse {
     data?: [];
 }
 
-const TeamEdit = () => {
+const TeamEditTwo = () => {
     const params = useParams();
     const router = useRouter();
     const newsId = params.id;
@@ -73,7 +72,7 @@ const TeamEdit = () => {
     const formik = useFormik<TeamAddFormValues>({
         initialValues: {
             title: "",
-            type: "management",
+            type: "teamTwo",
             designation:"",
             slug: "",
             description: "",
@@ -95,7 +94,7 @@ const TeamEdit = () => {
 
             formData.append("title", values.title);
             formData.append("designation", values.designation);
-            formData.append("description", values.description);
+           
             formData.append("name", values.name);
 
             formData.append("type", values.type);
@@ -124,7 +123,7 @@ const TeamEdit = () => {
 
     // Fetch news data
     const { data, isLoading, error } = useQuery<NewsData, Error>({
-        queryKey: ['management-team-list', newsId],
+        queryKey: ['team-list', newsId],
         queryFn: async () => {
             console.log("Fetching news with ID:", newsId);
             try {
@@ -157,9 +156,9 @@ const TeamEdit = () => {
             });
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['management-team-list'] });
+            queryClient.invalidateQueries({ queryKey: ['team-list'] });
             toast.success(data.message || "News updated successfully!");
-            router.push("/management-team-list");
+            router.push("/team-list");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while updating the news");
@@ -249,7 +248,7 @@ const TeamEdit = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="Management Team Edit">
+                <ComponentCard title="Team Edit">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="name">Name</Label>
@@ -266,7 +265,7 @@ const TeamEdit = () => {
                             )}
                         </div>
                         <div className="col-span-1">
-                            <Label htmlFor="title">Qualification</Label>
+                            <Label htmlFor="title">Title</Label>
                             <Input
                                 id="title"
                                 name="title"
@@ -280,49 +279,8 @@ const TeamEdit = () => {
                             )}
                         </div>
 
-                        <div className="col-span-2">
-                            <Label htmlFor="description">Description</Label>
-                            {/* Client-side only rendering with proper null/undefined checks */}
-                            {formik.values.description !== undefined && (
-                                <FroalaEditorWrapper
-                                    value={formik.values.description || ""}
-                                    onChange={(model: string) => formik.setFieldValue('description', model)}
-                                />
-                            )}
-                            {formik.touched.description && formik.errors.description && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
-                            )}
-                        </div>
-
-                        {/* <div className="col-span-1">
-                            <Label htmlFor="designation">Designation</Label>
-                            <Input
-                                id="designation"
-                                name="designation"
-                                type="text"
-                                onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-
-                                }}
-                                value={formik.values.designation}
-                            />
-
-                        </div> */}
-                        <div className="col-span-1">
-                            <Label htmlFor="designation">Designation</Label>
-                            <Input
-                                id="designation"
-                                name="designation"
-                                type="text"
-                                onChange={formik.handleChange}
-
-                                value={formik.values.designation}
-                            />
-                            {formik.touched.designation && formik.errors.designation && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.designation}</div>
-                            )}
-                        </div>
+                    
+                     
                         
                         <div className="col-span-1">
                             <Label htmlFor="linkedin">Linkedin</Label>
@@ -353,6 +311,17 @@ const TeamEdit = () => {
                             />
                         </div>
 
+                      
+                        <div className="col-span-1">
+                            <Label htmlFor="image">Featured Image</Label>
+                            <ImageUploader
+                                onImageChange={handleImageChange}
+                                currentImage={image ? URL.createObjectURL(image) : currentImageUrl}
+                            />
+                            {currentImageUrl && !image && (
+                                <p className="text-sm text-gray-500 mt-1">Current image will be kept unless a new one is selected</p>
+                            )}
+                        </div>
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
                                 <div className="col-span-1">
@@ -378,16 +347,6 @@ const TeamEdit = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="image">Featured Image</Label>
-                            <ImageUploader
-                                onImageChange={handleImageChange}
-                                currentImage={image ? URL.createObjectURL(image) : currentImageUrl}
-                            />
-                            {currentImageUrl && !image && (
-                                <p className="text-sm text-gray-500 mt-1">Current image will be kept unless a new one is selected</p>
-                            )}
-                        </div>
                        
                     </div>
                 </ComponentCard>
@@ -401,7 +360,7 @@ const TeamEdit = () => {
                     </button>
                     <button
                         type="button"
-                        onClick={() => router.push("/management-team-list")}
+                        onClick={() => router.push("/team-list")}
                         className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
                     >
                         Cancel
@@ -412,4 +371,4 @@ const TeamEdit = () => {
     );
 };
 
-export default TeamEdit;
+export default TeamEditTwo;
