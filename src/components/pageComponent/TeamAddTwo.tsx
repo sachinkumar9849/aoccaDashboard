@@ -18,13 +18,12 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
-import FroalaEditorWrapper from "../CaCourse/FroalaEditorWrapper";
 
 type TeamAddFormValues = PageFormValues & {
     designation: string;
 };
 
-const TeamAdd = () => {
+const TeamAddTwo = () => {
     const [image, setImage] = useState<File | null>(null);
     const queryClient = useQueryClient();
     const router = useRouter();
@@ -37,11 +36,11 @@ const TeamAdd = () => {
             return await apiClient.createTeam(formData) as PageResponse;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['management-team-list'] });
+            queryClient.invalidateQueries({ queryKey: ['team-list'] });
             toast.success(data.message || "Page created successfully!");
             formik.resetForm();
             setImage(null);
-            router.push("/management-team-list");
+            router.push("/team-list");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while creating the page");
@@ -65,7 +64,7 @@ const TeamAdd = () => {
         initialValues: {
             title: "",
             name: "",
-            type: "management",
+            type: "teamTwo",
             slug: "",
             description: "",
             linkedin: "",
@@ -84,7 +83,7 @@ const TeamAdd = () => {
         onSubmit: (values) => {
             const formData = new FormData();
             formData.append("title", values.title);
-            formData.append("description", values.description);
+
             formData.append("type", values.type);
             formData.append("designation", values.designation);
             formData.append("name", values.name);
@@ -107,7 +106,7 @@ const TeamAdd = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="Management Team Add">
+                <ComponentCard title="Team Add">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="name">Name</Label>
@@ -126,8 +125,11 @@ const TeamAdd = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
                             )}
                         </div>
+
+
+
                         <div className="col-span-1">
-                            <Label htmlFor="title">Qualification</Label>
+                            <Label htmlFor="title">Title</Label>
                             <Input
                                 id="title"
                                 name="title"
@@ -138,36 +140,6 @@ const TeamAdd = () => {
 
                                 }}
                                 value={formik.values.title}
-                            />
-                            {formik.touched.title && formik.errors.title && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.title}</div>
-                            )}
-                        </div>
-
-                        <div className="col-span-2">
-                            <Label htmlFor="description">Description</Label>
-                            {typeof window !== 'undefined' && (
-                                <FroalaEditorWrapper
-                                    value={formik.values.description}
-                                    onChange={(model: string) => formik.setFieldValue('description', model)}
-                                />
-                            )}
-                            {formik.touched.description && formik.errors.description && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
-                            )}
-                        </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="designation">Designation</Label>
-                            <Input
-                                id="designation"
-                                name="designation"
-                                type="text"
-                                onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-
-                                }}
-                                value={formik.values.designation}
                             />
 
                         </div>
@@ -188,6 +160,28 @@ const TeamAdd = () => {
                         </div>
 
 
+
+
+                        <div className="col-span-1">
+                            <Label htmlFor="sort_order">Sort order</Label>
+                            <Input
+                                id="sort_order"
+                                name="sort_order"
+                                type="text"
+                                onChange={(e) => {
+                                    formik.handleChange(e);
+                                    console.log("New sort_order value:", e.target.value);
+                                }}
+                                value={formik.values.sort_order}
+                            />
+                        </div>
+                        <div className="col-span-1">
+                            <Label htmlFor="image">Featured Image</Label>
+                            <ImageUploader
+                                onImageChange={handleImageChange}
+                                currentImage={image ? URL.createObjectURL(image) : null}
+                            />
+                        </div>
 
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
@@ -215,26 +209,6 @@ const TeamAdd = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="sort_order">Sort order</Label>
-                            <Input
-                                id="sort_order"
-                                name="sort_order"
-                                type="text"
-                                onChange={(e) => {
-                                    formik.handleChange(e);
-                                    console.log("New sort_order value:", e.target.value);
-                                }}
-                                value={formik.values.sort_order}
-                            />
-                        </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="image">Featured Image</Label>
-                            <ImageUploader
-                                onImageChange={handleImageChange}
-                                currentImage={image ? URL.createObjectURL(image) : null}
-                            />
-                        </div>
 
 
                         <div className="col-span-2">
@@ -255,4 +229,4 @@ const TeamAdd = () => {
     );
 };
 
-export default TeamAdd;
+export default TeamAddTwo;
