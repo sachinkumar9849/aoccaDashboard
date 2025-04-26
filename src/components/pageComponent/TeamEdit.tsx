@@ -18,9 +18,15 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useParams, useRouter } from "next/navigation";
+import FroalaEditorWrapper from "../CaCourse/FroalaEditorWrapper";
+
+type TeamAddFormValues = PageFormValues & {
+    designation: string;
+};
 
 interface NewsData {
     title: string;
+    designation:string;
     type: string;
     slug: string;
     description: string;
@@ -64,10 +70,11 @@ const TeamEdit = () => {
     });
 
     // Initialize formik with default values
-    const formik = useFormik<PageFormValues>({
+    const formik = useFormik<TeamAddFormValues>({
         initialValues: {
             title: "",
             type: "team",
+            designation:"",
             slug: "",
             description: "",
             status: "published",
@@ -87,7 +94,8 @@ const TeamEdit = () => {
             const formData = new FormData();
 
             formData.append("title", values.title);
-
+            formData.append("designation", values.designation);
+            formData.append("description", values.description);
             formData.append("name", values.name);
 
             formData.append("type", values.type);
@@ -201,9 +209,10 @@ const TeamEdit = () => {
                 }
             }
 
-            // Set form values based on the API response structure
+            // Set form values based on the API response structure designation
             formik.setValues({
                 title: data.title || "",
+                designation: data.designation || "",
                 name: data.name || "",
                 type: data.type || "team",
                 slug: data.slug || "",
@@ -243,7 +252,21 @@ const TeamEdit = () => {
                 <ComponentCard title="Management Team Edit">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
-                            <Label htmlFor="title">Title</Label>
+                            <Label htmlFor="name">Name</Label>
+                            <Input
+                                id="name"
+                                name="name"
+                                type="text"
+                                onChange={formik.handleChange}
+
+                                value={formik.values.name}
+                            />
+                            {formik.touched.name && formik.errors.name && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
+                            )}
+                        </div>
+                        <div className="col-span-1">
+                            <Label htmlFor="title">Qualification</Label>
                             <Input
                                 id="title"
                                 name="title"
@@ -256,18 +279,48 @@ const TeamEdit = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.title}</div>
                             )}
                         </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="name">Name</Label>
+
+                        <div className="col-span-2">
+                            <Label htmlFor="description">Description</Label>
+                            {/* Client-side only rendering with proper null/undefined checks */}
+                            {formik.values.description !== undefined && (
+                                <FroalaEditorWrapper
+                                    value={formik.values.description || ""}
+                                    onChange={(model: string) => formik.setFieldValue('description', model)}
+                                />
+                            )}
+                            {formik.touched.description && formik.errors.description && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
+                            )}
+                        </div>
+
+                        {/* <div className="col-span-1">
+                            <Label htmlFor="designation">Designation</Label>
                             <Input
-                                id="name"
-                                name="name"
+                                id="designation"
+                                name="designation"
+                                type="text"
+                                onChange={formik.handleChange}
+                                onBlur={(e) => {
+                                    formik.handleBlur(e);
+
+                                }}
+                                value={formik.values.designation}
+                            />
+
+                        </div> */}
+                        <div className="col-span-1">
+                            <Label htmlFor="designation">Designation</Label>
+                            <Input
+                                id="designation"
+                                name="designation"
                                 type="text"
                                 onChange={formik.handleChange}
 
-                                value={formik.values.name}
+                                value={formik.values.designation}
                             />
-                            {formik.touched.name && formik.errors.name && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
+                            {formik.touched.designation && formik.errors.designation && (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.designation}</div>
                             )}
                         </div>
                         
@@ -286,7 +339,19 @@ const TeamEdit = () => {
                             )}
                         </div>
 
-
+                        <div className="col-span-1">
+                            <Label htmlFor="sort_order">Sort order</Label>
+                            <Input
+                                id="sort_order"
+                                name="sort_order"
+                                type="text"
+                                onChange={(e) => {
+                                    formik.handleChange(e);
+                                    console.log("New sort_order value:", e.target.value);
+                                }}
+                                value={formik.values.sort_order}
+                            />
+                        </div>
 
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
@@ -323,19 +388,7 @@ const TeamEdit = () => {
                                 <p className="text-sm text-gray-500 mt-1">Current image will be kept unless a new one is selected</p>
                             )}
                         </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="sort_order">Sort order</Label>
-                            <Input
-                                id="sort_order"
-                                name="sort_order"
-                                type="text"
-                                onChange={(e) => {
-                                    formik.handleChange(e);
-                                    console.log("New sort_order value:", e.target.value);
-                                }}
-                                value={formik.values.sort_order}
-                            />
-                        </div>
+                       
                     </div>
                 </ComponentCard>
                 <div className="col-span-2 flex gap-4">
