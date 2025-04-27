@@ -17,7 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import FroalaEditorWrapper from "@/components/CaCourse/FroalaEditorWrapper";
 import { useRouter } from "next/navigation";
 
 const AlumniAdd = () => {

@@ -155,14 +155,7 @@ const GalleryEdit = () => {
         setImage(file);
     };
 
-    // Generate slug from title
-    const generateSlug = () => {
-        const slug = formik.values.title
-            .toLowerCase()
-            .replace(/[^\w\s]/gi, "")
-            .replace(/\s+/g, "-");
-        formik.setFieldValue("slug", slug);
-    };
+
 
     // Use useEffect to populate form data after fetching
     useEffect(() => {

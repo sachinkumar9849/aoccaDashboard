@@ -17,7 +17,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import FroalaEditorWrapper from "@/components/CaCourse/FroalaEditorWrapper";
 import { useParams, useRouter } from "next/navigation";
 
 interface NewsData {
