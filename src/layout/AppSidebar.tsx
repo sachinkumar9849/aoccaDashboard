@@ -87,6 +87,11 @@ const navItems: NavItem[] = [
     subItems: [{ name: "Topper student List", path: "/topper-list", pro: false }, { name: "Topper student add", path: "/topper-student", pro: false }],
   },
   {
+    name: "Alumni",
+    icon: <ListIcon />,
+    subItems: [{ name: "Alumni List", path: "/alumni-list", pro: false }, { name: "Alumni add", path: "/alumni-add", pro: false }],
+  },
+  {
     name: "Slider",
     icon: <ListIcon />,
     subItems: [{ name: "Slider List", path: "/slider-list", pro: false }, { name: "Slider Add", path: "/slider-add", pro: false }],
