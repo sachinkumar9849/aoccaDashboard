@@ -214,6 +214,15 @@ const AlumniAdd = () => {
                 <div className="text-red-500 text-sm mt-1">{formik.errors.status}</div>
               )}
             </div>
+            <div className="col-span-2">
+                            <button
+                                type="submit"
+                                disabled={createPageMutation.isPending}
+                                className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600 disabled:opacity-70"
+                            >
+                                {createPageMutation.isPending ? "Submitting..." : "Submit"}
+                            </button>
+                        </div>
 
           </div>
         </ComponentCard>

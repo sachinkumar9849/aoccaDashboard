@@ -775,3 +775,6 @@ a[style="padding: 10px 25px;color:#FFF;text-decoration:none;background:#EF5350;d
 .info .meta {
   margin-bottom: 5px;
 }
+svg.lucide.lucide-eye {
+  display: none;
+}
