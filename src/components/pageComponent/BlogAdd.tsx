@@ -17,8 +17,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import FroalaEditorWrapper from "@/components/CaCourse/FroalaEditorWrapper";
 import { useRouter } from "next/navigation";
+import dynamic from 'next/dynamic';
+
+// Dynamic import for the Editor component to avoid SSR issues
+const Editor = dynamic(() => import('../common/Editor'), {
+  ssr: false,
+  loading: () => <div className="h-48 border border-gray-300 rounded">Loading editor...</div>
+});
 
 const BlogAdd = () => {
     const [image, setImage] = useState<File | null>(null);
@@ -49,14 +55,11 @@ const BlogAdd = () => {
         description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
-      
     });
-
 
     const handleImageChange = (file: File | null) => {
         setImage(file);
     };
-
 
     const formik = useFormik<PageFormValues>({
         initialValues: {
@@ -75,20 +78,18 @@ const BlogAdd = () => {
             sort_order: "",
             video: ""
         },
-
         validationSchema,
         onSubmit: (values) => {
             console.log("form values before FormData:", values); // Log all values
 
             const formData = new FormData();
             formData.append("title", values.title);
-
             formData.append("slug", values.slug);
             formData.append("description", values.description);
             formData.append("status", values.status);
             formData.append("type", values.type);
-            formData.append("meta_title", values.meta_title);
-            formData.append("meta_description", values.meta_description);
+            formData.append("meta_title", values.meta_title || "");
+            formData.append("meta_description", values.meta_description || "");
 
             // Add image to formData if available
             if (image) {
@@ -97,8 +98,8 @@ const BlogAdd = () => {
 
             // Convert comma-separated keywords to array
             const keywordsArray = values.meta_keywords
-                .split(",")
-                .map((keyword) => keyword.trim());
+                ? values.meta_keywords.split(",").map((keyword) => keyword.trim())
+                : [];
             formData.append("meta_keywords", JSON.stringify(keywordsArray));
 
             createPageMutation.mutate(formData);
@@ -162,19 +163,24 @@ const BlogAdd = () => {
                             )}
                         </div>
 
-
                         <div className="col-span-2">
-                        <Label htmlFor="description">Description</Label>
-                            {typeof window !== 'undefined' && (
-                                <FroalaEditorWrapper
-                                    value={formik.values.description}
-                                    onChange={(model: string) => formik.setFieldValue('description', model)}
-                                />
-                            )}
+                            <Label htmlFor="description">Description</Label>
+                            {/* No need for window check since we're using dynamic import with ssr: false */}
+                            <Editor
+                                value={formik.values.description}
+                                onChange={(content: string) => {
+                                    formik.setFieldValue('description', content);
+                                    // Trigger validation after content change
+                                    formik.setFieldTouched('description', true, false);
+                                }}
+                                height="300px"
+                                placeholder="Enter blog content here..."
+                            />
                             {formik.touched.description && formik.errors.description && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
                             )}
                         </div>
+
                         <div className="col-span-1">
                             <Label htmlFor="image">Featured Image</Label>
                             <ImageUploader
@@ -184,7 +190,6 @@ const BlogAdd = () => {
                         </div>
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
-
                                 <div className="col-span-1">
                                     <div className="col-span-1 mt-3 dd">
                                         <Label htmlFor="status">Status</Label>
@@ -208,9 +213,9 @@ const BlogAdd = () => {
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </ComponentCard>
+                
                 <ComponentCard title="Seo">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
@@ -252,7 +257,6 @@ const BlogAdd = () => {
                                 value={formik.values.meta_description}
                                 className="w-full h-[200px] px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-brand-500 text-sm"
                             />
-
                             {formik.touched.meta_description && formik.errors.meta_description && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.meta_description}</div>
                             )}
