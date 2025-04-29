@@ -9,7 +9,7 @@ import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import { PageFormValues, PageResponse } from "@/types";
 import { apiClient } from "@/api/client";
-import dynamic from 'next/dynamic';
+
 import {
     Select,
     SelectContent,
@@ -19,10 +19,7 @@ import {
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 
-const FroalaEditorWrapper = dynamic(
-  () => import('./FroalaEditorWrapper'),
-  { ssr: false }
-);
+
 
 const Icai = () => {
     const [image, setImage] = useState<File | null>(null);
@@ -157,12 +154,12 @@ const Icai = () => {
 
                         <div className="col-span-2">
                             <Label htmlFor="description">Description</Label>
-                            {typeof window !== 'undefined' && (
+                            {/* {typeof window !== 'undefined' && (
                                 <FroalaEditorWrapper
                                     value={formik.values.description}
                                     onChange={(model: string) => formik.setFieldValue('description', model)}
                                 />
-                            )}
+                            )} */}
                             {formik.touched.description && formik.errors.description && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
                             )}

@@ -9,7 +9,7 @@ import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import { PageFormValues, PageResponse } from "@/types";
 import { apiClient } from "@/api/client";
-import dynamic from 'next/dynamic';
+
 import {
     Select,
     SelectContent,
@@ -18,11 +18,9 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
+import Editor from "../common/Editor";
 
-const FroalaEditorWrapper = dynamic(
-  () => import('./FroalaEditorWrapper'),
-  { ssr: false }
-);
+
 
 const CaFinal = () => {
     const [image, setImage] = useState<File | null>(null);
@@ -157,12 +155,18 @@ const CaFinal = () => {
 
                         <div className="col-span-2">
                             <Label htmlFor="description">Description</Label>
-                            {typeof window !== 'undefined' && (
-                                <FroalaEditorWrapper
-                                    value={formik.values.description}
-                                    onChange={(model: string) => formik.setFieldValue('description', model)}
-                                />
-                            )}
+                            {formik.values.description !== undefined && (
+                              
+                              <Editor
+                              value={formik.values.description}
+                              onChange={(content: string) => {
+                                  formik.setFieldValue('description', content);
+                                  formik.setFieldTouched('description', true, false);
+                              }}
+                              height="300px"
+                              placeholder="Enter blog content here..."
+                          />
+                          )}
                             {formik.touched.description && formik.errors.description && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
                             )}
