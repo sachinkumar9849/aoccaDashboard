@@ -778,3 +778,23 @@ a[style="padding: 10px 25px;color:#FFF;text-decoration:none;background:#EF5350;d
 svg.lucide.lucide-eye {
   display: none;
 }
+
+.editor-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.editor-content table td,
+.editor-content table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.editor-content table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.editor-content table tr:hover {
+  background-color: #e9e9e9;
+}
