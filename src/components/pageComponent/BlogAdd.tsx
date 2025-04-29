@@ -170,7 +170,6 @@ const BlogAdd = () => {
                                 value={formik.values.description}
                                 onChange={(content: string) => {
                                     formik.setFieldValue('description', content);
-                                    // Trigger validation after content change
                                     formik.setFieldTouched('description', true, false);
                                 }}
                                 height="300px"

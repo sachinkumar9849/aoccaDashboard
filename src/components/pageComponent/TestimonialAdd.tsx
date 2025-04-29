@@ -17,8 +17,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import FroalaEditorWrapper from "@/components/CaCourse/FroalaEditorWrapper";
 import { useRouter } from "next/navigation";
+import Editor from "../common/Editor";
 
 const TestimonialAdd = () => {
 
@@ -147,12 +147,18 @@ const TestimonialAdd = () => {
                         </div>
                         <div className="col-span-2">
                             <Label htmlFor="description">Description</Label>
-                            {typeof window !== 'undefined' && (
-                                <FroalaEditorWrapper
-                                    value={formik.values.description}
-                                    onChange={(model: string) => formik.setFieldValue('description', model)}
-                                />
-                            )}
+                            {formik.values.description !== undefined && (
+                              
+                              <Editor
+                              value={formik.values.description}
+                              onChange={(content: string) => {
+                                  formik.setFieldValue('description', content);
+                                  formik.setFieldTouched('description', true, false);
+                              }}
+                              height="300px"
+                              placeholder="Enter blog content here..."
+                          />
+                          )}
                             {formik.touched.description && formik.errors.description && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
                             )}

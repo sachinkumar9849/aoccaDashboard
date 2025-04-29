@@ -18,7 +18,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
-import FroalaEditorWrapper from "../CaCourse/FroalaEditorWrapper";
+import Editor from "../common/Editor";
 
 type TeamAddFormValues = PageFormValues & {
     designation: string;
@@ -146,12 +146,18 @@ const TeamAdd = () => {
 
                         <div className="col-span-2">
                             <Label htmlFor="description">Description</Label>
-                            {typeof window !== 'undefined' && (
-                                <FroalaEditorWrapper
-                                    value={formik.values.description}
-                                    onChange={(model: string) => formik.setFieldValue('description', model)}
-                                />
-                            )}
+                            {formik.values.description !== undefined && (
+                              
+                              <Editor
+                              value={formik.values.description}
+                              onChange={(content: string) => {
+                                  formik.setFieldValue('description', content);
+                                  formik.setFieldTouched('description', true, false);
+                              }}
+                              height="300px"
+                              placeholder="Enter blog content here..."
+                          />
+                          )}
                             {formik.touched.description && formik.errors.description && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
                             )}
