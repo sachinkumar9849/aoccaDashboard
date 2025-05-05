@@ -113,7 +113,7 @@ const AlumniAdd = () => {
         <ComponentCard title="Alumni add">
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-1">
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title">Current Working</Label>
               <Input
                 id="title"
                 name="title"
@@ -131,29 +131,7 @@ const AlumniAdd = () => {
                 <div className="text-red-500 text-sm mt-1">{formik.errors.title}</div>
               )}
             </div>
-            <div className="col-span-1">
-              <Label htmlFor="slug">Slug</Label>
-              <div className="flex">
-                <Input
-                  id="slug"
-                  name="slug"
-                  type="text"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.slug}
-                />
-                <button
-                  type="button"
-                  className="ml-2 px-3 py-2 bg-gray-200 rounded-md text-sm"
-                  onClick={generateSlug}
-                >
-                  Generate
-                </button>
-              </div>
-              {formik.touched.slug && formik.errors.slug && (
-                <div className="text-red-500 text-sm mt-1">{formik.errors.slug}</div>
-              )}
-            </div>
+         
             <div className="col-span-1">
               <Label htmlFor="name">Name</Label>
               <Input
@@ -171,6 +149,16 @@ const AlumniAdd = () => {
               />
               
             </div>
+        
+          
+
+            <div className="col-span-2">
+              <Label htmlFor="image">Featured Image</Label>
+              <ImageUploader
+                onImageChange={handleImageChange}
+                currentImage={image ? URL.createObjectURL(image) : null}
+              />
+            </div>
             <div className="col-span-1">
               <Label htmlFor="sort_order">Sort order</Label>
               <Input
@@ -184,16 +172,6 @@ const AlumniAdd = () => {
                 value={formik.values.sort_order}
               />
             </div>
-          
-
-            <div className="col-span-2">
-              <Label htmlFor="image">Featured Image</Label>
-              <ImageUploader
-                onImageChange={handleImageChange}
-                currentImage={image ? URL.createObjectURL(image) : null}
-              />
-            </div>
-
             <div className="col-span-1 dd">
               <Label htmlFor="status">Status</Label>
               <Select

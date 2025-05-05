@@ -205,7 +205,7 @@ const TestimonialAdd = () => {
                             <Input
                                 id="rating"
                                 name="rating"
-                                type="text"
+                                type="number"
                                 onChange={formik.handleChange}
                                 onBlur={(e) => {
                                     formik.handleBlur(e);
