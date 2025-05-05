@@ -336,6 +336,23 @@ const TestimonialEdit = () => {
                                 </div>
                             </div>
                         </div>
+                        <div className="col-span-1">
+                            <Label htmlFor="rating">rating</Label>
+                            <Input
+                                id="rating"
+                                name="rating"
+                                type="text"
+                                onChange={formik.handleChange}
+                                onBlur={(e) => {
+                                    formik.handleBlur(e);
+                                    if (formik.values.rating && !formik.values.slug) {
+                                        generateSlug();
+                                    }
+                                }}
+                                value={formik.values.rating}
+                            />
+                          
+                        </div>
                         <div className="col-span-2 flex gap-4">
                             <button
                                 type="submit"
