@@ -91,6 +91,7 @@ const CaIntermediateEdit = () => {
             formData.append("meta_title", values.meta_title);
             formData.append("meta_description", values.meta_description);
             formData.append("sort_order", values.sort_order);
+            formData.append("status", values.status || "published");
             // Add optional fields if they exist
             if (values.subtitle) formData.append("subtitle", values.subtitle);
             if (values.name) formData.append("name", values.name);

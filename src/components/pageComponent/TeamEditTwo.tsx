@@ -98,7 +98,7 @@ const TeamEditTwo = () => {
             formData.append("name", values.name);
 
             formData.append("type", values.type);
-
+            formData.append("status", values.status || "published");
             formData.append("linkedin", values.linkedin);
             // Add optional fields if they exist
 
@@ -217,6 +217,7 @@ const TeamEditTwo = () => {
                 slug: data.slug || "",
                 description: data.description || "",
                 status: data.status || "published",
+               
                 meta_title: data.seo?.meta_title || "",
                 meta_description: data.seo?.meta_description || "",
                 meta_keywords: metaKeywords,
