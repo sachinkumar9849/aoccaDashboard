@@ -97,7 +97,7 @@ const TeamEdit = () => {
             formData.append("designation", values.designation);
             formData.append("description", values.description);
             formData.append("name", values.name);
-
+            formData.append("status", values.status || "published");
             formData.append("type", values.type);
 
             formData.append("linkedin", values.linkedin);

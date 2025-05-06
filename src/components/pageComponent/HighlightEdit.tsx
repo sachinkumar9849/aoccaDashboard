@@ -92,7 +92,7 @@ const HighlightEdit = () => {
             formData.append("name", values.name);
             formData.append("type", values.type);
             formData.append("video", values.video);
-          
+            formData.append("status", values.status || "published");
 
             // Add optional fields if they exist
             
