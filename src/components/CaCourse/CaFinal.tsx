@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -97,32 +97,35 @@ const CaFinal = () => {
         },
     });
 
-    const generateSlug = () => {
-        const slug = formik.values.title
+    const generateSlug = (title: string) => {
+        return title
             .toLowerCase()
             .replace(/[^\w\s]/gi, "")
-            .replace(/\s+/g, "_");
-        formik.setFieldValue("slug", slug);
+            .replace(/\s+/g, "-");
     };
-
+    // Auto-generate slug when title changes
+    useEffect(() => {
+        if (formik.values.title) {
+            const slug = generateSlug(formik.values.title);
+            formik.setFieldValue("slug", slug);
+        }
+    }, [formik.values.title]);
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="CA-FINAL">
+                <ComponentCard title="CA Final">
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="col-span-1">
+                    <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
                             <Input
                                 id="title"
                                 name="title"
                                 type="text"
-                                onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-                                    if (formik.values.title && !formik.values.slug) {
-                                        generateSlug();
-                                    }
+                                onChange={(e) => {
+                                    formik.handleChange(e);
+                                    // No need to manually generate slug here as useEffect handles it
                                 }}
+                                onBlur={formik.handleBlur}
                                 value={formik.values.title}
                             />
                             {formik.touched.title && formik.errors.title && (
@@ -140,13 +143,7 @@ const CaFinal = () => {
                                     onBlur={formik.handleBlur}
                                     value={formik.values.slug}
                                 />
-                                <button
-                                    type="button"
-                                    className="ml-2 px-3 py-2 bg-gray-200 rounded-md text-sm"
-                                    onClick={generateSlug}
-                                >
-                                    Generate
-                                </button>
+                             
                             </div>
                             {formik.touched.slug && formik.errors.slug && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.slug}</div>
@@ -179,12 +176,7 @@ const CaFinal = () => {
                                 name="sort_order"
                                 type="number"
                                 onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-                                    if (formik.values.sort_order && !formik.values.slug) {
-                                        generateSlug();
-                                    }
-                                }}
+                              
                                 value={formik.values.sort_order}
                             />
                             {formik.touched.sort_order && formik.errors.sort_order && (

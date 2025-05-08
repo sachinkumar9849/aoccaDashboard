@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -103,13 +103,19 @@ const router = useRouter();
   });
 
   // Generate slug from title
-  const generateSlug = () => {
-    const slug = formik.values.title
-      .toLowerCase()
-      .replace(/[^\w\s]/gi, "")
-      .replace(/\s+/g, "_");
-    formik.setFieldValue("slug", slug);
-  };
+    const generateSlug = (title: string) => {
+        return title
+            .toLowerCase()
+            .replace(/[^\w\s]/gi, "")
+            .replace(/\s+/g, "-");
+    };
+    // Auto-generate slug when title changes
+    useEffect(() => {
+        if (formik.values.title) {
+            const slug = generateSlug(formik.values.title);
+            formik.setFieldValue("slug", slug);
+        }
+    }, [formik.values.title]);
 
   return (
     <form onSubmit={formik.handleSubmit} className="space-y-6">
@@ -123,12 +129,7 @@ const router = useRouter();
                 name="title"
                 type="text"
                 onChange={formik.handleChange}
-                onBlur={(e) => {
-                  formik.handleBlur(e);
-                  if (formik.values.title && !formik.values.slug) {
-                    generateSlug();
-                  }
-                }}
+                onBlur={formik.handleBlur}
                 value={formik.values.title}
               />
               {formik.touched.title && formik.errors.title && (
@@ -146,13 +147,7 @@ const router = useRouter();
                   onBlur={formik.handleBlur}
                   value={formik.values.slug}
                 />
-                <button
-                  type="button"
-                  className="ml-2 px-3 py-2 bg-gray-200 rounded-md text-sm"
-                  onClick={generateSlug}
-                >
-                  Generate
-                </button>
+               
               </div>
               {formik.touched.slug && formik.errors.slug && (
                 <div className="text-red-500 text-sm mt-1">{formik.errors.slug}</div>
@@ -165,12 +160,7 @@ const router = useRouter();
                 name="name"
                 type="text"
                 onChange={formik.handleChange}
-                onBlur={(e) => {
-                  formik.handleBlur(e);
-                  if (formik.values.name && !formik.values.slug) {
-                    generateSlug();
-                  }
-                }}
+               
                 value={formik.values.name}
               />
               {formik.touched.name && formik.errors.name && (

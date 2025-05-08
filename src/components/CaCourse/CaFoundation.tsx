@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -25,7 +25,7 @@ import Editor from "../common/Editor";
 const CaFoundation = () => {
     const [image, setImage] = useState<File | null>(null);
     const router = useRouter();
-   const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
     const createPageMutation = useMutation({
         mutationFn: async (formData: FormData) => {
@@ -33,7 +33,7 @@ const CaFoundation = () => {
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['ca-foundation-list'] });
-            
+
             toast.success(data.message || "Page created successfully!");
             formik.resetForm();
             setImage(null);
@@ -50,9 +50,14 @@ const CaFoundation = () => {
         description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
-       
-    });
 
+    });
+    const generateSlug = (title: string) => {
+        return title
+            .toLowerCase()
+            .replace(/[^\w\s]/gi, "")
+            .replace(/\s+/g, "-");
+    };
     const formik = useFormik<PageFormValues>({
         initialValues: {
             title: "",
@@ -97,32 +102,30 @@ const CaFoundation = () => {
         },
     });
 
-    const generateSlug = () => {
-        const slug = formik.values.title
-            .toLowerCase()
-            .replace(/[^\w\s]/gi, "")
-            .replace(/\s+/g, "_");
-        formik.setFieldValue("slug", slug);
-    };
-
+ 
+    // Auto-generate slug when title changes
+    useEffect(() => {
+        if (formik.values.title) {
+            const slug = generateSlug(formik.values.title);
+            formik.setFieldValue("slug", slug);
+        }
+    }, [formik.values.title]);
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="Mandatory Training">
+                <ComponentCard title="CA Foundation">
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="col-span-1">
+                    <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
                             <Input
                                 id="title"
                                 name="title"
                                 type="text"
-                                onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-                                    if (formik.values.title && !formik.values.slug) {
-                                        generateSlug();
-                                    }
+                                onChange={(e) => {
+                                    formik.handleChange(e);
+                                    // No need to manually generate slug here as useEffect handles it
                                 }}
+                                onBlur={formik.handleBlur}
                                 value={formik.values.title}
                             />
                             {formik.touched.title && formik.errors.title && (
@@ -140,13 +143,6 @@ const CaFoundation = () => {
                                     onBlur={formik.handleBlur}
                                     value={formik.values.slug}
                                 />
-                                <button
-                                    type="button"
-                                    className="ml-2 px-3 py-2 bg-gray-200 rounded-md text-sm"
-                                    onClick={generateSlug}
-                                >
-                                    Generate
-                                </button>
                             </div>
                             {formik.touched.slug && formik.errors.slug && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.slug}</div>
@@ -155,35 +151,24 @@ const CaFoundation = () => {
 
                         <div className="col-span-2">
                             <Label htmlFor="description">Description</Label>
-                            {/* {typeof window !== 'undefined' && (
-                              
-                                <Editor
-                                value={formik.values.description}
-                                onChange={(content: string) => {
-                                    formik.setFieldValue('description', content);
-                                    formik.setFieldTouched('description', true, false);
-                                }}
-                                height="300px"
-                                placeholder="Enter blog content here..."
-                            />
-                            )} */}
+
                             {formik.values.description !== undefined && (
-                              
-                              <Editor
-                              value={formik.values.description}
-                              onChange={(content: string) => {
-                                  formik.setFieldValue('description', content);
-                                  formik.setFieldTouched('description', true, false);
-                              }}
-                              height="300px"
-                              placeholder="Enter blog content here..."
-                          />
-                          )}
+
+                                <Editor
+                                    value={formik.values.description}
+                                    onChange={(content: string) => {
+                                        formik.setFieldValue('description', content);
+                                        formik.setFieldTouched('description', true, false);
+                                    }}
+                                    height="300px"
+                                    placeholder="Enter blog content here..."
+                                />
+                            )}
                             {formik.touched.description && formik.errors.description && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
                             )}
                         </div>
-                        
+
                         <div className="col-span-1">
                             <Label htmlFor="sort_order">Sort Order</Label>
                             <Input
@@ -191,15 +176,10 @@ const CaFoundation = () => {
                                 name="sort_order"
                                 type="number"
                                 onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-                                    if (formik.values.sort_order && !formik.values.slug) {
-                                        generateSlug();
-                                    }
-                                }}
+
                                 value={formik.values.sort_order}
                             />
-                            
+
                         </div>
                         <div className="col-span-1">
                             <div className="col-span-1 dd">

@@ -54,7 +54,7 @@ const BlogEdit = () => {
     const [image, setImage] = useState<File | null>(null);
     const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
     const queryClient = useQueryClient();
-    
+
 
     // Validation schema
     const validationSchema = Yup.object({
@@ -63,7 +63,7 @@ const BlogEdit = () => {
         description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
-       
+
     });
 
     // Initialize formik with default values
@@ -165,13 +165,7 @@ const BlogEdit = () => {
     };
 
     // Generate slug from title
-    const generateSlug = () => {
-        const slug = formik.values.title
-            .toLowerCase()
-            .replace(/[^\w\s]/gi, "")
-            .replace(/\s+/g, "-");
-        formik.setFieldValue("slug", slug);
-    };
+
 
     // Use useEffect to populate form data after fetching
     useEffect(() => {
@@ -237,6 +231,22 @@ const BlogEdit = () => {
         }
     }, [data]);
 
+
+
+    const generateSlug = (title: string) => {
+        return title
+            .toLowerCase()
+            .replace(/[^\w\s]/gi, "")
+            .replace(/\s+/g, "-");
+    };
+    // Auto-generate slug when title changes
+    useEffect(() => {
+        if (formik.values.title) {
+            const slug = generateSlug(formik.values.title);
+            formik.setFieldValue("slug", slug);
+        }
+    }, [formik.values.title]);
+    
     if (error) {
         return <div className="text-red-500">Error loading news: {(error as Error).message}</div>;
     }
@@ -257,12 +267,7 @@ const BlogEdit = () => {
                                 name="title"
                                 type="text"
                                 onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-                                    if (formik.values.title && !formik.values.slug) {
-                                        generateSlug();
-                                    }
-                                }}
+                                onBlur={formik.handleBlur}
                                 value={formik.values.title}
                             />
                             {formik.touched.title && formik.errors.title && (
@@ -280,13 +285,7 @@ const BlogEdit = () => {
                                     onBlur={formik.handleBlur}
                                     value={formik.values.slug}
                                 />
-                                <button
-                                    type="button"
-                                    className="ml-2 px-3 py-2 bg-gray-200 rounded-md text-sm"
-                                    onClick={generateSlug}
-                                >
-                                    Generate
-                                </button>
+
                             </div>
                             {formik.touched.slug && formik.errors.slug && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.slug}</div>
@@ -296,18 +295,18 @@ const BlogEdit = () => {
                             <Label htmlFor="description">Description</Label>
                             {/* Client-side only rendering with proper null/undefined checks */}
                             {formik.values.description !== undefined && (
-                              
+
                                 <Editor
-                                value={formik.values.description}
-                                onChange={(content: string) => {
-                                    formik.setFieldValue('description', content);
-                                    formik.setFieldTouched('description', true, false);
-                                }}
-                                height="300px"
-                                placeholder="Enter blog content here..."
-                            />
+                                    value={formik.values.description}
+                                    onChange={(content: string) => {
+                                        formik.setFieldValue('description', content);
+                                        formik.setFieldTouched('description', true, false);
+                                    }}
+                                    height="300px"
+                                    placeholder="Enter blog content here..."
+                                />
                             )}
-                            
+
                         </div>
                         <div className="col-span-1">
                             <Label htmlFor="image">Featured Image</Label>

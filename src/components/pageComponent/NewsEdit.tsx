@@ -33,7 +33,7 @@ interface NewsData {
     rating?: string;
     sort_order?: string;
     image_url?: string;
-    video?:string;
+    video?: string;
     seo?: {
         meta_title: string;
         meta_description: string;
@@ -54,8 +54,9 @@ const NewsEdit = () => {
 
     const [image, setImage] = useState<File | null>(null);
     const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
     const queryClient = useQueryClient();
-    
+
 
     // Validation schema
     const validationSchema = Yup.object({
@@ -64,8 +65,15 @@ const NewsEdit = () => {
         description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
-       
+
     });
+    // Generate slug from title - fixed function
+    const generateSlug = (title: string) => {
+        return title
+            .toLowerCase()
+            .replace(/[^\w\s]/gi, "")
+            .replace(/\s+/g, "-");
+    };
 
     // Initialize formik with default values
     const formik = useFormik<PageFormValues>({
@@ -165,14 +173,7 @@ const NewsEdit = () => {
         setImage(file);
     };
 
-    // Generate slug from title
-    const generateSlug = () => {
-        const slug = formik.values.title
-            .toLowerCase()
-            .replace(/[^\w\s]/gi, "")
-            .replace(/\s+/g, "-");
-        formik.setFieldValue("slug", slug);
-    };
+
 
     // Use useEffect to populate form data after fetching
     useEffect(() => {
@@ -226,7 +227,7 @@ const NewsEdit = () => {
                 linkedin: data.linkedin || "",
                 rating: data.rating || "",
                 sort_order: data.sort_order || "",
-                  video: data.video || "",
+                video: data.video || "",
             });
 
             // Set current image URL if available
@@ -237,6 +238,19 @@ const NewsEdit = () => {
             console.log("Form values after setting:", formik.values);
         }
     }, [data]);
+    useEffect(() => {
+        // Skip the first render when data is initially loaded
+        if (isInitialLoad) {
+            setIsInitialLoad(false);
+            return;
+        }
+
+        // Only update slug if title exists and we're past initial data loading
+        if (formik.values.title) {
+            const newSlug = generateSlug(formik.values.title);
+            formik.setFieldValue("slug", newSlug);
+        }
+    }, [formik.values.title, isInitialLoad]);
 
     if (error) {
         return <div className="text-red-500">Error loading news: {(error as Error).message}</div>;
@@ -258,12 +272,7 @@ const NewsEdit = () => {
                                 name="title"
                                 type="text"
                                 onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-                                    if (formik.values.title && !formik.values.slug) {
-                                        generateSlug();
-                                    }
-                                }}
+                                onBlur={formik.handleBlur}
                                 value={formik.values.title}
                             />
                             {formik.touched.title && formik.errors.title && (
@@ -281,13 +290,7 @@ const NewsEdit = () => {
                                     onBlur={formik.handleBlur}
                                     value={formik.values.slug}
                                 />
-                                <button
-                                    type="button"
-                                    className="ml-2 px-3 py-2 bg-gray-200 rounded-md text-sm"
-                                    onClick={generateSlug}
-                                >
-                                    Generate
-                                </button>
+
                             </div>
                             {formik.touched.slug && formik.errors.slug && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.slug}</div>
@@ -297,17 +300,17 @@ const NewsEdit = () => {
                             <Label htmlFor="description">Description</Label>
                             {/* Client-side only rendering with proper null/undefined checks */}
                             {formik.values.description !== undefined && (
-                              
-                              <Editor
-                              value={formik.values.description}
-                              onChange={(content: string) => {
-                                  formik.setFieldValue('description', content);
-                                  formik.setFieldTouched('description', true, false);
-                              }}
-                              height="300px"
-                              placeholder="Enter blog content here..."
-                          />
-                          )}
+
+                                <Editor
+                                    value={formik.values.description}
+                                    onChange={(content: string) => {
+                                        formik.setFieldValue('description', content);
+                                        formik.setFieldTouched('description', true, false);
+                                    }}
+                                    height="300px"
+                                    placeholder="Enter blog content here..."
+                                />
+                            )}
                             {formik.touched.description && formik.errors.description && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.description}</div>
                             )}
