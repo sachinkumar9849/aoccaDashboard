@@ -158,15 +158,6 @@ const CaIntermediateEdit = () => {
 
 
 
-    // Generate slug from title
-    const generateSlug = () => {
-        const slug = formik.values.title
-            .toLowerCase()
-            .replace(/[^\w\s]/gi, "")
-            .replace(/\s+/g, "-");
-        formik.setFieldValue("slug", slug);
-    };
-
     // Use useEffect to populate form data after fetching
     useEffect(() => {
         console.log("Component mounted with newsId:", newsId);
@@ -227,7 +218,19 @@ const CaIntermediateEdit = () => {
             console.log("Form values after setting:", formik.values);
         }
     }, [data]);
-
+   const generateSlug = (title: string) => {
+            return title
+                .toLowerCase()
+                .replace(/[^\w\s]/gi, "")
+                .replace(/\s+/g, "-");
+        };
+        // Auto-generate slug when title changes
+        useEffect(() => {
+            if (formik.values.title) {
+                const slug = generateSlug(formik.values.title);
+                formik.setFieldValue("slug", slug);
+            }
+        }, [formik.values.title]);
     if (error) {
         return <div className="text-red-500">Error loading news: {(error as Error).message}</div>;
     }
@@ -239,7 +242,7 @@ const CaIntermediateEdit = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="CA-INTERMEDIATE">
+                <ComponentCard title="CA Mandatory edit">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
@@ -248,12 +251,7 @@ const CaIntermediateEdit = () => {
                                 name="title"
                                 type="text"
                                 onChange={formik.handleChange}
-                                onBlur={(e) => {
-                                    formik.handleBlur(e);
-                                    if (formik.values.title && !formik.values.slug) {
-                                        generateSlug();
-                                    }
-                                }}
+                                onBlur={formik.handleBlur}
                                 value={formik.values.title}
                             />
                             {formik.touched.title && formik.errors.title && (
@@ -271,13 +269,7 @@ const CaIntermediateEdit = () => {
                                     onBlur={formik.handleBlur}
                                     value={formik.values.slug}
                                 />
-                                <button
-                                    type="button"
-                                    className="ml-2 px-3 py-2 bg-gray-200 rounded-md text-sm"
-                                    onClick={generateSlug}
-                                >
-                                    Generate
-                                </button>
+                             
                             </div>
                             {formik.touched.slug && formik.errors.slug && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.slug}</div>
