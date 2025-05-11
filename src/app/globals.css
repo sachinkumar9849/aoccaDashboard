@@ -798,3 +798,16 @@ svg.lucide.lucide-eye {
 .editor-content table tr:hover {
   background-color: #e9e9e9;
 }
+span.userHome {
+  transform: translateY(-3px);
+}
+a.visitWebsite {
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #0c55a2;
+  font-weight: 600;
+  border: 1px solid #e5e7eb;
+  padding: 10px 17px;
+  border-radius: 5px;
+  font-size: 14px;
+}
