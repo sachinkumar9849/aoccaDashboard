@@ -154,6 +154,7 @@ const AppHeader: React.FC = () => {
               </div>
             </form>
           </div>
+        
         </div>
         <div
           className={`${
@@ -161,6 +162,7 @@ const AppHeader: React.FC = () => {
           } items-center justify-between w-full gap-4 px-5 py-4 lg:flex shadow-theme-md lg:justify-end lg:px-0 lg:shadow-none`}
         >
           <div className="flex items-center gap-2 2xsm:gap-3">
+          <Link className="visitWebsite" target="_" prefetch href="http://156.67.104.182:3003/">Visit Website</Link>
             {/* <!-- Dark Mode Toggler --> */}
             <ThemeToggleButton />
             {/* <!-- Dark Mode Toggler --> */}
