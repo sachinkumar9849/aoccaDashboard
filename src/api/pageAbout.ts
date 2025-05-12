@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { PageFormValues, PageResponse, ApiErrorResponse } from '@/types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://156.67.104.182:8081/api/v1';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.aoc.edu.np/api/v1';
 
 export const createPage = async (pageData: PageFormValues): Promise<PageResponse> => {
   try {

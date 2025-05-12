@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_URL || 'http://156.67.104.182:8081/api/v1';
+const API_URL = process.env.NEXT_PUBLIC_URL || 'https://api.aoc.edu.np/api/v1';
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
