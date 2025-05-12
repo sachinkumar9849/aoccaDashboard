@@ -7,7 +7,7 @@ export const apiClient = {
   /**
    * Base URL for API requests
    */
-  baseUrl: "http://156.67.104.182:8081/api/v1",
+  baseUrl: "https://api.aoc.edu.np/api/v1",
 
   /**
    * Get the authentication token from localStorage
