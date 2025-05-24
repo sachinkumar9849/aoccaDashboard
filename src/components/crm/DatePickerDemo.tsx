@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 interface DatePickerProps {
-  value?: Date;
+  value?: Date | string;
   onChange?: (date: Date) => void;
   label?: string;
   placeholder?: string;

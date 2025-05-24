@@ -21,7 +21,7 @@ export const NotesMenu = () => {
 
   return (
     <>
- 
+
       <button
         onClick={openDrawer}
         className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#0e569d] rounded-lg hover:bg-[#0e569d] focus:outline-none"
@@ -45,25 +45,23 @@ export const NotesMenu = () => {
 
       {/* Drawer / Sidebar */}
       <div
-        className={`fixed inset-0 z-50 ${
-          open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        } transition-opacity duration-300`}
+        className={`fixed inset-0 z-50 ${open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          } transition-opacity duration-300`}
       >
 
-        <div 
+        <div
           className="fixed inset-0 bg-black/50"
           onClick={closeDrawer}
         ></div>
-        
- 
-        <div className={`fixed right-0 top-0 h-full w-80 max-w-full bg-white shadow-xl transform ${
-          open ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300`}>
+
+
+        <div className={`fixed right-0 top-0 h-full w-80 max-w-full bg-white shadow-xl transform ${open ? "translate-x-0" : "translate-x-full"
+          } transition-transform duration-300`}>
           <div className="flex flex-col h-full">
-   
+
             <div className="flex items-center justify-between p-4 border-b">
               <h5 className="text-lg font-medium">Notes</h5>
-              <button 
+              <button
                 onClick={closeDrawer}
                 className="p-1 rounded-full hover:bg-gray-200"
               >
@@ -83,13 +81,13 @@ export const NotesMenu = () => {
                 </svg>
               </button>
             </div>
-            
-           
-        
-            
-  
+
+
+
+
+
             <div className="p-4 border-t">
-              <div className="flex gap-2">
+              <div className="flex gap-2 mb-2">
                 <textarea
                   value={newNote}
                   onChange={(e) => setNewNote(e.target.value)}
@@ -98,11 +96,7 @@ export const NotesMenu = () => {
                   rows={3}
                 ></textarea>
               </div>
-              <div className="my-2">
-                <Input placeholder="Created By"/>
-              </div>
-             
-              <DatePicker/>
+              <DatePicker />
               <button
                 onClick={handleAddNote}
                 className="w-full px-4 py-2 mt-2 text-sm font-medium text-white bg-[#0e569d] rounded-md focus:outline-none"

@@ -11,14 +11,16 @@ interface SelectFieldProps {
   label?: string;
   onChange: (value: string) => void;
   value?: string;
+  className?: string;
 }
 
-const SelectField: React.FC<SelectFieldProps> = ({
+export const SelectField: React.FC<SelectFieldProps> = ({
   options,
   placeholder = "Select an option",
   label,
   onChange,
-  value
+  value,
+  className = ''
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -66,7 +68,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
   }, []);
 
   return (
-    <div className="relative w-full">
+    <div className={`relative w-full ${className}`}>
       {label && (
         <label className="block text-sm font-medium text-gray-700 mb-1">
           {label}
