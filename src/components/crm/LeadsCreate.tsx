@@ -1,18 +1,17 @@
-// src/components/crm/LeadsCreate.tsx
+
 "use client";
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import { useMutation } from "@tanstack/react-query";
  import { useRouter } from 'next/navigation';
-// import { createLead } from "@/services/leadService";
-// import { leadSchema } from "@/schemas/leadSchema";
+
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import { SelectField } from "@/components/common/SelectFieldDemo";
 import { NotesMenu } from "@/components/crm/NotesMenu";
 import DatePicker from "@/components/crm/DatePickerDemo";
-// import { toast } from "react-toastify";
+
 import { AxiosError } from "axios";
 import { createLead } from "./leadService";
 import toast from "react-hot-toast";
@@ -50,7 +49,7 @@ const LeadsCreate = () => {
       inquiry: "",
       amount: 0,
       status: "new",
-      follow_up_date: "2024-05-21T00:00:00Z",
+      follow_up_date: null,
       tag: "warm",
     },
     validationSchema: leadSchema,
@@ -99,6 +98,9 @@ const LeadsCreate = () => {
     { value: "warm", label: "Warm" },
     { value: "cold", label: "Cold" },
   ];
+   const handleDateChange = (date: Date | null) => {
+        formik.setFieldValue("follow_up_date", date);
+    };
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -289,12 +291,22 @@ const LeadsCreate = () => {
                 </p>
               )}
             </div>
-            <div className="col-span-1">
-              <Label>Follow Up Date</Label>
-              <DatePicker
-              />
-              
-            </div>
+          <div className="col-span-1">
+                            <Label>Follow Up Date</Label>
+                            <DatePicker
+                                selected={formik.values.follow_up_date}
+                                onChange={handleDateChange}
+                                minDate={new Date()}
+                                className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                                dateFormat="yyyy-MM-dd"
+                                placeholderText="Select follow up date"
+                            />
+                            {formik.touched.follow_up_date && formik.errors.follow_up_date && (
+                                <p className="mt-1 text-sm text-red-600">
+                                    {formik.errors.follow_up_date}
+                                </p>
+                            )}
+                        </div>
             <div className="col-span-3">
               <button
                 type="submit"
