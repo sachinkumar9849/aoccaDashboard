@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import { useMutation } from "@tanstack/react-query";
- import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
@@ -17,10 +17,11 @@ import { createLead } from "./leadService";
 import toast from "react-hot-toast";
 import { leadSchema } from "./leadSchema";
 
+
+
 const LeadsCreate = () => {
-    const router = useRouter();
-     useEffect(() => {
-    // Check if user is authenticated
+  const router = useRouter();
+  useEffect(() => {
     const token = localStorage.getItem('authToken');
     if (!token) {
       router.push('/signin');
@@ -49,8 +50,8 @@ const LeadsCreate = () => {
       inquiry: "",
       amount: 0,
       status: "new",
-      follow_up_date: null,
-      tag: "warm",
+      follow_up_date: "",
+      tag: "",
     },
     validationSchema: leadSchema,
     onSubmit: (values) => {
@@ -98,9 +99,11 @@ const LeadsCreate = () => {
     { value: "warm", label: "Warm" },
     { value: "cold", label: "Cold" },
   ];
-   const handleDateChange = (date: Date | null) => {
-        formik.setFieldValue("follow_up_date", date);
-    };
+  const handleDateChange = (date: Date | null) => {
+    // Format the date as ISO string or empty string if null
+    const formattedDate = date ? date.toISOString() : "";
+    formik.setFieldValue("follow_up_date", formattedDate);
+  };
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -121,11 +124,8 @@ const LeadsCreate = () => {
                 value={formik.values.full_name}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                error={
-                  formik.touched.full_name && formik.errors.full_name
-                    ? formik.errors.full_name
-                    : undefined
-                }
+
+                error={!!(formik.touched.full_name && formik.errors.full_name)}
               />
             </div>
             <div className="col-span-1">
@@ -136,11 +136,7 @@ const LeadsCreate = () => {
                 value={formik.values.phone}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                error={
-                  formik.touched.phone && formik.errors.phone
-                    ? formik.errors.phone
-                    : undefined
-                }
+                error={!!(formik.touched.phone && formik.errors.phone)}
               />
             </div>
             <div className="col-span-1">
@@ -151,11 +147,12 @@ const LeadsCreate = () => {
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                error={
-                  formik.touched.email && formik.errors.email
-                    ? formik.errors.email
-                    : undefined
-                }
+                // error={
+                //   formik.touched.email && formik.errors.email
+                //     ? formik.errors.email
+                //     : undefined
+                // }
+                error={!!(formik.touched.email && formik.errors.email)}
               />
             </div>
             <div className="col-span-1">
@@ -166,11 +163,8 @@ const LeadsCreate = () => {
                 value={formik.values.address}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                error={
-                  formik.touched.address && formik.errors.address
-                    ? formik.errors.address
-                    : undefined
-                }
+
+                error={!!(formik.touched.address && formik.errors.address)}
               />
             </div>
           </div>
@@ -256,11 +250,8 @@ const LeadsCreate = () => {
                 value={formik.values.amount}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                error={
-                  formik.touched.amount && formik.errors.amount
-                    ? formik.errors.amount
-                    : undefined
-                }
+
+                error={!!(formik.touched.amount && formik.errors.amount)}
               />
             </div>
             <div className="col-span-1">
@@ -291,22 +282,22 @@ const LeadsCreate = () => {
                 </p>
               )}
             </div>
-          <div className="col-span-1">
-                            <Label>Follow Up Date</Label>
-                            <DatePicker
-                                selected={formik.values.follow_up_date}
-                                onChange={handleDateChange}
-                                minDate={new Date()}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
-                                dateFormat="yyyy-MM-dd"
-                                placeholderText="Select follow up date"
-                            />
-                            {formik.touched.follow_up_date && formik.errors.follow_up_date && (
-                                <p className="mt-1 text-sm text-red-600">
-                                    {formik.errors.follow_up_date}
-                                </p>
-                            )}
-                        </div>
+            <div className="col-span-1">
+              <Label>Follow Up Date</Label>
+          <DatePicker
+  value={formik.values.follow_up_date ? new Date(formik.values.follow_up_date) : null}
+  onChange={handleDateChange}
+  minDate={new Date()}
+  className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+  dateFormat="yyyy-MM-dd"
+
+/>
+              {formik.touched.follow_up_date && formik.errors.follow_up_date && (
+                <p className="mt-1 text-sm text-red-600">
+                  {formik.errors.follow_up_date}
+                </p>
+              )}
+            </div>
             <div className="col-span-3">
               <button
                 type="submit"

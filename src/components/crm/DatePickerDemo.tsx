@@ -2,38 +2,53 @@
 import React, { useState, useEffect, useRef } from "react";
 
 interface DatePickerProps {
-  value?: Date | string;
-  onChange?: (date: Date) => void;
+  value?: Date | string | null;  // Add null as a possible type
+  selected?: Date | null;
+  onChange?: (date: Date | null) => void;
   label?: string;
   placeholder?: string;
   className?: string;
   disablePast?: boolean;
   disableFuture?: boolean;
-  format?: string; 
+  format?: string;
+   minDate?: Date; // Add minDate prop
+  dateFormat?: string; // Add dateFormat prop
+ 
 }
 
 const DatePicker: React.FC<DatePickerProps> = ({
   value,
+  selected, // Add selected prop
   onChange,
   label,
   placeholder = "Select date",
+ 
   className = "",
   disablePast = false,
   disableFuture = false,
   format = "MM/DD/YYYY",
+
+ 
 }) => {
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(value);
+  const initialDate = selected || value;
+  
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(() => {
+    if (!initialDate) return undefined;
+    if (initialDate instanceof Date) return initialDate;
+    if (typeof initialDate === 'string') return new Date(initialDate);
+    return undefined;
+  });
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [displayValue, setDisplayValue] = useState("");
   const calendarRef = useRef<HTMLDivElement>(null);
-  
+
 
   const formatDate = (date: Date): string => {
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear();
-    
+
     switch (format) {
       case "DD/MM/YYYY":
         return `${day}/${month}/${year}`;
@@ -44,7 +59,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
         return `${month}/${day}/${year}`;
     }
   };
-  
+
 
   useEffect(() => {
     if (selectedDate) {
@@ -53,15 +68,18 @@ const DatePicker: React.FC<DatePickerProps> = ({
       setDisplayValue("");
     }
   }, [selectedDate, format]);
-  
+
 
   useEffect(() => {
     if (value) {
-      setSelectedDate(value);
-      setCurrentMonth(new Date(value.getFullYear(), value.getMonth(), 1));
+      const date = typeof value === 'string' ? new Date(value) : value;
+      setSelectedDate(date);
+      setCurrentMonth(new Date(date.getFullYear(), date.getMonth(), 1));
+    } else {
+      setSelectedDate(undefined);
     }
   }, [value]);
-  
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -69,23 +87,23 @@ const DatePicker: React.FC<DatePickerProps> = ({
         setIsOpen(false);
       }
     };
-    
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
+
 
   const getDaysInMonth = (year: number, month: number) => {
     return new Date(year, month + 1, 0).getDate();
   };
-  
+
 
   const getFirstDayOfMonth = (year: number, month: number) => {
     return new Date(year, month, 1).getDay();
   };
-  
+
 
   const handleDateSelect = (day: number) => {
     const newDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
@@ -95,86 +113,85 @@ const DatePicker: React.FC<DatePickerProps> = ({
     }
     setIsOpen(false);
   };
-  
+
 
   const previousMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
   };
-  
+
 
   const nextMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
   };
-  
+
 
   const isDateDisabled = (day: number): boolean => {
     const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     if (disablePast && date < today) {
       return true;
     }
-    
+
     if (disableFuture && date > today) {
       return true;
     }
-    
+
     return false;
   };
-  
+
 
   const getMonthName = (month: number): string => {
     const monthNames = ["January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"];
     return monthNames[month];
   };
-  
 
-const buildCalendar = () => {
-  const year = currentMonth.getFullYear();
-  const month = currentMonth.getMonth();
-  const daysInMonth = getDaysInMonth(year, month);
-  const firstDayOfMonth = getFirstDayOfMonth(year, month);
-  
-  const days = [];
-  
-  // Add empty cells for days before the first day of the month
-  for (let i = 0; i < firstDayOfMonth; i++) {
-    days.push(
-      <div key={`empty-${i}`} className="w-10 h-10"></div>
-    );
-  }
 
-  // Add cells for each day of the month
-  for (let day = 1; day <= daysInMonth; day++) {
-    const isSelected = selectedDate?.getDate() === day && 
-                       selectedDate?.getMonth() === month && 
-                       selectedDate?.getFullYear() === year;
-    const isDisabled = isDateDisabled(day);
-    
-    days.push(
-      <button
-        key={`day-${day}`}
-        type="button"
-        onClick={() => !isDisabled && handleDateSelect(day)}
-        disabled={isDisabled}
-        className={`w-10 h-10 flex items-center justify-center rounded-full text-sm focus:outline-none ${
-          isSelected
-            ? "bg-blue-500 text-white"
-            : isDisabled
-              ? "text-gray-300 cursor-not-allowed"
-              : "hover:bg-gray-100 text-gray-700"
-        }`}
-      >
-        {day}
-      </button>
-    );
-  }
-  
-  return days;
-};
-  
+  const buildCalendar = () => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    const daysInMonth = getDaysInMonth(year, month);
+    const firstDayOfMonth = getFirstDayOfMonth(year, month);
+
+    const days = [];
+
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < firstDayOfMonth; i++) {
+      days.push(
+        <div key={`empty-${i}`} className="w-10 h-10"></div>
+      );
+    }
+
+    // Add cells for each day of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const isSelected = selectedDate?.getDate() === day &&
+        selectedDate?.getMonth() === month &&
+        selectedDate?.getFullYear() === year;
+      const isDisabled = isDateDisabled(day);
+
+      days.push(
+        <button
+          key={`day-${day}`}
+          type="button"
+          onClick={() => !isDisabled && handleDateSelect(day)}
+          disabled={isDisabled}
+          className={`w-10 h-10 flex items-center justify-center rounded-full text-sm focus:outline-none ${isSelected
+              ? "bg-blue-500 text-white"
+              : isDisabled
+                ? "text-gray-300 cursor-not-allowed"
+                : "hover:bg-gray-100 text-gray-700"
+            }`}
+        >
+          {day}
+        </button>
+      );
+    }
+
+    return days;
+  };
+
   return (
     <div className={`relative ${className}`}>
       {label && (
@@ -182,7 +199,7 @@ const buildCalendar = () => {
           {label}
         </label>
       )}
-      
+
       <div className="relative">
         <input
           type="text"
@@ -192,7 +209,7 @@ const buildCalendar = () => {
           onClick={() => setIsOpen(!isOpen)}
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
         />
-        <div 
+        <div
           className="absolute top-0 right-0 h-full px-3 flex items-center justify-center cursor-pointer"
           onClick={() => setIsOpen(!isOpen)}
         >
@@ -211,7 +228,7 @@ const buildCalendar = () => {
           </svg>
         </div>
       </div>
-      
+
       {isOpen && (
         <div
           ref={calendarRef}
@@ -260,7 +277,7 @@ const buildCalendar = () => {
               </svg>
             </button>
           </div>
-          
+
           <div className="grid grid-cols-7 gap-1 mb-2">
             {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day, index) => (
               <div
@@ -271,18 +288,18 @@ const buildCalendar = () => {
               </div>
             ))}
           </div>
-          
+
           <div className="grid grid-cols-7 gap-1">
             {buildCalendar()}
           </div>
-          
+
           <div className="mt-4 flex justify-end">
             <button
               type="button"
               onClick={() => {
                 setSelectedDate(undefined);
                 if (onChange) {
-                  onChange(new Date(0));
+                  onChange(null);  // Send null instead of new Date(0)
                 }
                 setIsOpen(false);
               }}

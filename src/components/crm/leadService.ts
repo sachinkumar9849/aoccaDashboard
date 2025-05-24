@@ -27,10 +27,7 @@ export const createLead = async (leadData: Omit<Lead, 'id' | 'created_at' | 'upd
     console.log("API Response:", response);
     return response.data;
   } catch (error) {
-    if (axiosInstance.isAxiosError(error)) {
-      console.error("API Error:", error.response?.data);
-      throw new Error(error.response?.data?.message || 'Failed to create lead');
-    }
+  
     console.error("Unexpected Error:", error);
     throw new Error('Failed to create lead');
   }
