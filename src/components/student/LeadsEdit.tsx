@@ -189,6 +189,7 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
               Cancel
             </Button>
             <Button
+            className='bg-[#0c55a2] text-white'
               type="submit"
               disabled={updateLeadMutation.isPending}
             >
