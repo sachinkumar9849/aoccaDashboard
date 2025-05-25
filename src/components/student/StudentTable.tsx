@@ -5,7 +5,6 @@ import NoteAction from './NoteAction';
 import ViewDetail from './ViewDetail';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 
 // types/lead.ts
 export interface Lead {
@@ -57,19 +56,11 @@ const fetchLeads = async (page: number = 1): Promise<LeadsResponse> => {
 
 const StudentTable = () => {
   const [page, setPage] = React.useState(1);
-  const router = useRouter(); 
 
  const { data, isLoading, isError, error } = useQuery<LeadsResponse, Error>({
     queryKey: ['leads', page],
     queryFn: () => fetchLeads(page),
-    keepPreviousData: true,
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        // Handle unauthorized access
-        console.error('Unauthorized access - redirecting to login');
-        router.push('/login'); // Redirect to login page
-      }
-    }
+    
   });
 
    const handlePrevious = () => {
@@ -143,7 +134,7 @@ const StudentTable = () => {
                 </td>
                 <td className="flex items-center px-6 py-4 space-x-3">
                   <Note />
-                  <ViewDetail leadId={lead.id} />
+                  <ViewDetail />
                   <NoteAction />
                 </td>
               </tr>
