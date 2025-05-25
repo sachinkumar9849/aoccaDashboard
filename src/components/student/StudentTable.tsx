@@ -1,6 +1,6 @@
 "use client";
 import React from 'react'
-import Note from './Note'
+import Note from './Action'
 import ViewDetail from './ViewDetail';
 import axios from 'axios';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import Action from './Action';
 
 
 // types/lead.ts
@@ -64,7 +65,7 @@ const fetchLeads = async (page: number = 1): Promise<LeadsResponse> => {
 
 const StudentTable = () => {
   const [page, setPage] = React.useState(1);
-const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   const { data, isLoading, isError, error } = useQuery<LeadsResponse, Error>({
     queryKey: ['leads', page],
     queryFn: () => fetchLeads(page),
@@ -87,24 +88,24 @@ const queryClient = useQueryClient();
     return <div>Error: {error?.message}</div>;
   }
 
-const updateLeadStatus = async (leadId: string, newStatus: string) => {
-  const token = localStorage.getItem('authToken') || '';
-  try {
-    await axios.patch(
-      `${process.env.NEXT_PUBLIC_URL}/leads/${leadId}`,
-      { status: newStatus },
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+  const updateLeadStatus = async (leadId: string, newStatus: string) => {
+    const token = localStorage.getItem('authToken') || '';
+    try {
+      await axios.patch(
+        `${process.env.NEXT_PUBLIC_URL}/leads/${leadId}`,
+        { status: newStatus },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         }
-      }
-    );
-    queryClient.invalidateQueries({ queryKey: ['leads', page] });
-  } catch (error) {
-    console.error('Error updating lead status:', error);
-  }
-};
+      );
+      queryClient.invalidateQueries({ queryKey: ['leads', page] });
+    } catch (error) {
+      console.error('Error updating lead status:', error);
+    }
+  };
 
   return (
     <div>
@@ -150,22 +151,22 @@ const updateLeadStatus = async (leadId: string, newStatus: string) => {
                 </th>
                 <td className="px-6 py-4">{lead.phone}</td>
                 <td className="px-6 py-4">
-                <Select 
-    value={lead.status} 
-    onValueChange={(value) => updateLeadStatus(lead.id, value)}
-  >
-    <SelectTrigger className="w-full">
-      <SelectValue placeholder={lead.status || "Select status"} />
-    </SelectTrigger>
-    <SelectContent className='bg-white'>
-      <SelectItem value="active">Active</SelectItem>
-      <SelectItem value="pending">Pending</SelectItem>
-      <SelectItem value="watingForResult">Waiting for result</SelectItem>
-    </SelectContent>
-  </Select>
+                  <Select
+                    value={lead.status}
+                    onValueChange={(value) => updateLeadStatus(lead.id, value)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder={lead.status || "Select status"} />
+                    </SelectTrigger>
+                    <SelectContent className='bg-white'>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="watingForResult">Waiting for result</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </td>
                 <td className="flex items-center px-6 py-4 space-x-3">
-                  <Note />
+                 <Action lead={lead} />
                   <ViewDetail
                     leadId={lead.id}
                     leadData={{
