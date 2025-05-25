@@ -19,6 +19,7 @@ interface Lead {
   full_name: string;
   phone: string;
   email: string;
+   status: string;
   // Add other lead properties you need
 }
 
@@ -27,7 +28,7 @@ interface ActionProps {
 }
 
 const Action: React.FC<ActionProps> = ({ lead }) => {
-    const [isEditOpen, setIsEditOpen] = React.useState(false);
+     const [isEditOpen, setIsEditOpen] = React.useState(false);
 
     return (
         <div className="p-2">
@@ -38,7 +39,7 @@ const Action: React.FC<ActionProps> = ({ lead }) => {
                     </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-white w-64 shadow-md rounded-md p-2">
-                    <DropdownMenuItem 
+                   <DropdownMenuItem 
                         className="flex items-center gap-3 py-3 px-4 hover:bg-gray-100 cursor-pointer"
                         onClick={() => setIsEditOpen(true)}
                     >

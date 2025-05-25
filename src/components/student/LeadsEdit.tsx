@@ -34,6 +34,9 @@ interface LeadsEditProps {
 }
 
 const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => {
+     const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+
   const queryClient = useQueryClient();
 
   const updateLeadMutation = useMutation({
@@ -53,10 +56,11 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
       toast.success('Lead updated successfully');
+      setIsSubmitting(false);
       onOpenChange(false);
     },
-    onError: (error: any) => {
-      toast.error(`Error updating lead: ${error.response?.data?.message || error.message}`);
+    onError: (error) => {
+      console.log(error)
     }
   });
 
@@ -78,8 +82,27 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
   });
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[80vh] overflow-y-auto">
+      <Dialog 
+      open={isOpen} 
+      onOpenChange={(open) => {
+        if (!isSubmitting) {
+          onOpenChange(open);
+        }
+      }}
+    >
+      <DialogContent 
+        className="max-h-[80vh] overflow-y-auto"
+        onInteractOutside={(e) => {
+          if (isSubmitting) {
+            e.preventDefault();
+          }
+        }}
+        onEscapeKeyDown={(e) => {
+          if (isSubmitting) {
+            e.preventDefault();
+          }
+        }}
+      >
         <DialogHeader>
           <DialogTitle>Edit Lead</DialogTitle>
         </DialogHeader>

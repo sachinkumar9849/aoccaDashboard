@@ -1,6 +1,5 @@
 "use client";
 import React from 'react'
-import Note from './Action'
 import ViewDetail from './ViewDetail';
 import axios from 'axios';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
