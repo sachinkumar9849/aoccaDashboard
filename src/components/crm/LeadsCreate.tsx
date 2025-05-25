@@ -112,7 +112,7 @@ const LeadsCreate = () => {
           <NotesMenu />
         </div>
         <div className="space-y-6">
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div className="col-span-1">
               <Label>Full Name</Label>
               <Input
@@ -136,7 +136,7 @@ const LeadsCreate = () => {
                 error={!!(formik.touched.phone && formik.errors.phone)}
               />
             </div>
-            <div className="col-span-1">
+            {/* <div className="col-span-1">
               <Label>Email</Label>
               <Input
                 type="email"
@@ -146,7 +146,7 @@ const LeadsCreate = () => {
                 onBlur={formik.handleBlur}
                 error={!!(formik.touched.email && formik.errors.email)}
               />
-            </div>
+            </div> */}
             <div className="col-span-1">
               <Label>Address</Label>
               <Input
@@ -280,7 +280,7 @@ const LeadsCreate = () => {
                 value={formik.values.follow_up_date ? new Date(formik.values.follow_up_date) : null}
                 onChange={handleDateChange}
                 minDate={new Date()}
-                className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                className=""
                 dateFormat="yyyy-MM-dd"
 
               />
