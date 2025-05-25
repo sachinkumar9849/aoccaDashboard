@@ -1,5 +1,3 @@
-// src/services/leadService.ts
-// import axiosInstance from '@/lib/axios'; // Import your configured axios instance
 
 import axiosInstance from "@/lib/axios";
 
@@ -23,12 +21,13 @@ export interface Lead {
 
 export const createLead = async (leadData: Omit<Lead, 'id' | 'created_at' | 'updated_at'>): Promise<Lead> => {
   try {
-    const response = await axiosInstance.post('/leads', leadData); // Use axiosInstance instead of axios
+    const response = await axiosInstance.post('/leads', leadData);
     console.log("API Response:", response);
     return response.data;
   } catch (error) {
-  
+
     console.error("Unexpected Error:", error);
     throw new Error('Failed to create lead');
   }
 };
+

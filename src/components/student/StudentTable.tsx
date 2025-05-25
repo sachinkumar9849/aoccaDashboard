@@ -134,26 +134,26 @@ const StudentTable = () => {
                 </td>
                 <td className="flex items-center px-6 py-4 space-x-3">
                   <Note />
-                <ViewDetail
-  leadId={lead.id}
-  leadData={{
-    id: lead.id,
-    full_name: lead.full_name,
-    phone: lead.phone,
-    email: lead.email,
-    address: lead.address,
-    previous_qualification: lead.previous_qualification,
-    current_status: lead.current_status,
-    lead_source: lead.lead_source,
-    inquiry: lead.inquiry,
-    amount: lead.amount,
-    status: lead.status,
-    follow_up_date: lead.follow_up_date,
-    tag: lead.tag,
-    created_at: lead.created_at,
-    updated_at: lead.updated_at
-  }}
-/>
+                  <ViewDetail
+                    leadId={lead.id}
+                    leadData={{
+                      id: lead.id,
+                      full_name: lead.full_name,
+                      phone: lead.phone,
+                      email: lead.email,
+                      address: lead.address,
+                      previous_qualification: lead.previous_qualification,
+                      current_status: lead.current_status,
+                      lead_source: lead.lead_source,
+                      inquiry: lead.inquiry,
+                      amount: lead.amount,
+                      status: lead.status,
+                      follow_up_date: lead.follow_up_date,
+                      tag: lead.tag,
+                      created_at: lead.created_at,
+                      updated_at: lead.updated_at
+                    }}
+                  />
                   <NoteList leadId={lead.id} />
                 </td>
               </tr>

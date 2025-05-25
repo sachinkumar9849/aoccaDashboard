@@ -78,11 +78,6 @@ export const NotesMenu = () => {
                 </svg>
               </button>
             </div>
-
-
-
-
-
             <div className="p-4 border-t">
               <div className="flex gap-2 mb-2">
                 <textarea
