@@ -3,8 +3,16 @@ import React from 'react'
 import Note from './Note'
 import ViewDetail from './ViewDetail';
 import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import NoteList from './NoteList';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 
 // types/lead.ts
 export interface Lead {
@@ -56,7 +64,7 @@ const fetchLeads = async (page: number = 1): Promise<LeadsResponse> => {
 
 const StudentTable = () => {
   const [page, setPage] = React.useState(1);
-
+const queryClient = useQueryClient();
   const { data, isLoading, isError, error } = useQuery<LeadsResponse, Error>({
     queryKey: ['leads', page],
     queryFn: () => fetchLeads(page),
@@ -78,6 +86,25 @@ const StudentTable = () => {
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
+
+const updateLeadStatus = async (leadId: string, newStatus: string) => {
+  const token = localStorage.getItem('authToken') || '';
+  try {
+    await axios.patch(
+      `${process.env.NEXT_PUBLIC_URL}/leads/${leadId}`,
+      { status: newStatus },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    queryClient.invalidateQueries({ queryKey: ['leads', page] });
+  } catch (error) {
+    console.error('Error updating lead status:', error);
+  }
+};
 
   return (
     <div>
@@ -123,14 +150,19 @@ const StudentTable = () => {
                 </th>
                 <td className="px-6 py-4">{lead.phone}</td>
                 <td className="px-6 py-4">
-                  <select
-                    id={`status-${lead.id}`}
-                    defaultValue={lead.current_status}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  >
-                    <option value="Active">Active</option>
-                    <option value="Pending">Pending</option>
-                  </select>
+                <Select 
+    value={lead.status} 
+    onValueChange={(value) => updateLeadStatus(lead.id, value)}
+  >
+    <SelectTrigger className="w-full">
+      <SelectValue placeholder={lead.status || "Select status"} />
+    </SelectTrigger>
+    <SelectContent className='bg-white'>
+      <SelectItem value="active">Active</SelectItem>
+      <SelectItem value="pending">Pending</SelectItem>
+      <SelectItem value="watingForResult">Waiting for result</SelectItem>
+    </SelectContent>
+  </Select>
                 </td>
                 <td className="flex items-center px-6 py-4 space-x-3">
                   <Note />
