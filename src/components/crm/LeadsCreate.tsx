@@ -4,14 +4,12 @@ import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from 'next/navigation';
-
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import { SelectField } from "@/components/common/SelectFieldDemo";
 import { NotesMenu } from "@/components/crm/NotesMenu";
 import DatePicker from "@/components/crm/DatePickerDemo";
-
 import { AxiosError } from "axios";
 import { createLead } from "./leadService";
 import toast from "react-hot-toast";
@@ -100,7 +98,6 @@ const LeadsCreate = () => {
     { value: "cold", label: "Cold" },
   ];
   const handleDateChange = (date: Date | null) => {
-    // Format the date as ISO string or empty string if null
     const formattedDate = date ? date.toISOString() : "";
     formik.setFieldValue("follow_up_date", formattedDate);
   };
@@ -147,11 +144,6 @@ const LeadsCreate = () => {
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                // error={
-                //   formik.touched.email && formik.errors.email
-                //     ? formik.errors.email
-                //     : undefined
-                // }
                 error={!!(formik.touched.email && formik.errors.email)}
               />
             </div>
@@ -284,14 +276,14 @@ const LeadsCreate = () => {
             </div>
             <div className="col-span-1">
               <Label>Follow Up Date</Label>
-          <DatePicker
-  value={formik.values.follow_up_date ? new Date(formik.values.follow_up_date) : null}
-  onChange={handleDateChange}
-  minDate={new Date()}
-  className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
-  dateFormat="yyyy-MM-dd"
+              <DatePicker
+                value={formik.values.follow_up_date ? new Date(formik.values.follow_up_date) : null}
+                onChange={handleDateChange}
+                minDate={new Date()}
+                className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                dateFormat="yyyy-MM-dd"
 
-/>
+              />
               {formik.touched.follow_up_date && formik.errors.follow_up_date && (
                 <p className="mt-1 text-sm text-red-600">
                   {formik.errors.follow_up_date}
