@@ -1,10 +1,10 @@
 "use client";
 import React from 'react'
 import Note from './Note'
-import NoteAction from './NoteAction';
 import ViewDetail from './ViewDetail';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
+import NoteList from './NoteList';
 
 // types/lead.ts
 export interface Lead {
@@ -133,9 +133,9 @@ const StudentTable = () => {
                   </select>
                 </td>
                 <td className="flex items-center px-6 py-4 space-x-3">
-                  <Note />
+                 <Note  />
                   <ViewDetail />
-                  <NoteAction />
+                  <NoteList leadId={lead.id}/>
                 </td>
               </tr>
             ))}

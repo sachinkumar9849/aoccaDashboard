@@ -1,9 +1,6 @@
 "use client";
 import React, { useState } from "react";
 
-
-import DatePicker from "./DatePickerDemo";
-
 export const NotesMenu = () => {
   const [open, setOpen] = useState(false);
   const [notes, setNotes] = useState<string[]>([]);
@@ -96,7 +93,7 @@ export const NotesMenu = () => {
                   rows={3}
                 ></textarea>
               </div>
-              <DatePicker />
+
               <button
                 onClick={handleAddNote}
                 className="w-full px-4 py-2 mt-2 text-sm font-medium text-white bg-[#0e569d] rounded-md focus:outline-none"
