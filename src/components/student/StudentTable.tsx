@@ -38,10 +38,10 @@ export interface LeadsResponse {
 const fetchLeads = async (page: number = 1): Promise<LeadsResponse> => {
   const fromDate = '2024-01-01';
   const toDate = '2029-03-20';
-  
+
   // Get your auth token (modify this based on how you store your token)
   const token = localStorage.getItem('authToken') || '';
-  
+
   const response = await axios.get(
     `${process.env.NEXT_PUBLIC_URL}/leads?from_date=${fromDate}&to_date=${toDate}&page=${page}&page_size=10`,
     {
@@ -57,13 +57,13 @@ const fetchLeads = async (page: number = 1): Promise<LeadsResponse> => {
 const StudentTable = () => {
   const [page, setPage] = React.useState(1);
 
- const { data, isLoading, isError, error } = useQuery<LeadsResponse, Error>({
+  const { data, isLoading, isError, error } = useQuery<LeadsResponse, Error>({
     queryKey: ['leads', page],
     queryFn: () => fetchLeads(page),
-    
+
   });
 
-   const handlePrevious = () => {
+  const handlePrevious = () => {
     if (page > 1) setPage(page - 1);
   };
 
@@ -106,7 +106,7 @@ const StudentTable = () => {
             </tr>
           </thead>
           <tbody>
-          {data?.data.map((lead, index) => (
+            {data?.data.map((lead, index) => (
               <tr
                 key={lead.id}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -133,9 +133,28 @@ const StudentTable = () => {
                   </select>
                 </td>
                 <td className="flex items-center px-6 py-4 space-x-3">
-                 <Note  />
-                  <ViewDetail />
-                  <NoteList leadId={lead.id}/>
+                  <Note />
+                <ViewDetail
+  leadId={lead.id}
+  leadData={{
+    id: lead.id,
+    full_name: lead.full_name,
+    phone: lead.phone,
+    email: lead.email,
+    address: lead.address,
+    previous_qualification: lead.previous_qualification,
+    current_status: lead.current_status,
+    lead_source: lead.lead_source,
+    inquiry: lead.inquiry,
+    amount: lead.amount,
+    status: lead.status,
+    follow_up_date: lead.follow_up_date,
+    tag: lead.tag,
+    created_at: lead.created_at,
+    updated_at: lead.updated_at
+  }}
+/>
+                  <NoteList leadId={lead.id} />
                 </td>
               </tr>
             ))}
@@ -143,41 +162,39 @@ const StudentTable = () => {
         </table>
       </div>
       <>
-      <nav
-        aria-label="Page navigation example mt-5 mx-auto d-flex justify-center"
-        style={{ display: 'flex', justifyContent: 'center' }}
-      >
-        <ul className="inline-flex -space-x-px text-sm">
-          <li>
-            <button
-              onClick={handlePrevious}
-              disabled={page === 1}
-              className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
-                page === 1 ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-            >
-              Previous
-            </button>
-          </li>
+        <nav
+          aria-label="Page navigation example mt-5 mx-auto d-flex justify-center"
+          style={{ display: 'flex', justifyContent: 'center' }}
+        >
+          <ul className="inline-flex -space-x-px text-sm">
+            <li>
+              <button
+                onClick={handlePrevious}
+                disabled={page === 1}
+                className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${page === 1 ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+              >
+                Previous
+              </button>
+            </li>
 
-          <li>
-            <div className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-              Page {page} of {data?.meta.total_pages || 1}
-            </div>
-          </li>
-          <li>
-            <button
-              onClick={handleNext}
-              disabled={page === data?.meta.total_pages}
-              className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
-                page === data?.meta.total_pages ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-            >
-              Next
-            </button>
-          </li>
-        </ul>
-      </nav>
+            <li>
+              <div className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                Page {page} of {data?.meta.total_pages || 1}
+              </div>
+            </li>
+            <li>
+              <button
+                onClick={handleNext}
+                disabled={page === data?.meta.total_pages}
+                className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${page === data?.meta.total_pages ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+              >
+                Next
+              </button>
+            </li>
+          </ul>
+        </nav>
       </>
     </div>
   )

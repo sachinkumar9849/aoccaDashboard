@@ -815,8 +815,8 @@ div#radix-\:R5l7rrrnd7\: {
     background: white;
 }
 [role="dialog"] {
-  /* your styles here */
-  background-color: #ffff;
-  padding: 1rem;
-  border-radius: 8px;
+    background-color: #ffff;
+    padding: 1rem;
+    border-radius: 8px;
+    min-width: 764px;
 }
