@@ -820,3 +820,6 @@ div#radix-\:R5l7rrrnd7\: {
     border-radius: 8px;
   min-width: 711px;
 }
+button.border-input {
+    width: 100%;
+}
