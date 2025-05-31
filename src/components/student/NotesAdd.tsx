@@ -157,7 +157,7 @@ const NotesAdd: React.FC<NotesAddProps> = ({ isOpen, onOpenChange, lead }) => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             placeholder="Add a note about this lead..."
-                            className={`w-full p-3 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                            className={`w-full p-3 border rounded-lg resize-none focus:outline-none ${
                                 formik.touched.content && formik.errors.content
                                     ? 'border-red-500 focus:ring-red-500'
                                     : 'border-gray-300'

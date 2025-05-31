@@ -2,13 +2,13 @@
 "use client";
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from 'next/navigation';
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import { SelectField } from "@/components/common/SelectFieldDemo";
-import { NotesMenu } from "@/components/crm/NotesMenu";
+
 import DatePicker from "@/components/crm/DatePickerDemo";
 import { AxiosError } from "axios";
 import { createLead } from "./leadService";
@@ -18,6 +18,7 @@ import { leadSchema } from "./leadSchema";
 
 
 const LeadsCreate = () => {
+  const queryClient = useQueryClient();
   const router = useRouter();
   useEffect(() => {
     const token = localStorage.getItem('authToken');
@@ -26,11 +27,21 @@ const LeadsCreate = () => {
     }
   }, [router]);
   const mutation = useMutation({
+    
     mutationFn: createLead,
     onSuccess: () => {
       toast.success("Lead created successfully!");
+
+      queryClient.invalidateQueries({ 
+        queryKey: ['leads'] 
+      });
+
+
       formik.resetForm();
+       router.push("/leads")
     },
+   
+    
     onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || "Failed to create lead");
     },
@@ -66,8 +77,10 @@ const LeadsCreate = () => {
   const current_status = [
     { value: "active", label: "Active" },
     { value: "pending", label: "Pending" },
-    { value: "waitingForesult", label: "Waiting for result" },
+    { value: "watingForResult", label: "Waiting for result" },
   ];
+
+
 
   const lead_source = [
     { value: "phone", label: "Phone" },
@@ -109,7 +122,7 @@ const LeadsCreate = () => {
           <p className="text-base font-medium text-gray-800 dark:text-white/90">
             Student Details
           </p>
-          <NotesMenu />
+        
         </div>
         <div className="space-y-6">
           <div className="grid grid-cols-3 gap-4">

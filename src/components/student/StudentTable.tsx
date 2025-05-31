@@ -134,10 +134,22 @@ const StudentTable = () => {
 
   const updateLeadStatus = async (leadId: string, newStatus: string) => {
     const token = localStorage.getItem('authToken') || '';
+    const previousLeads = queryClient.getQueryData<LeadsResponse>(['leads', page, activeFilters]);
+
+    if (previousLeads) {
+      const updatedLeads = {
+        ...previousLeads,
+        data: previousLeads.data.map(lead =>
+          lead.id === leadId ? { ...lead, current_status: newStatus } : lead
+        )
+      };
+      queryClient.setQueryData(['leads', page, activeFilters], updatedLeads);
+    }
+
     try {
       await axios.patch(
         `${process.env.NEXT_PUBLIC_URL}/leads/${leadId}`,
-        { status: newStatus },
+        { current_status: newStatus },
         {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -145,9 +157,13 @@ const StudentTable = () => {
           }
         }
       );
-      queryClient.invalidateQueries({ queryKey: ['leads', page, activeFilters] });
     } catch (error) {
+      // Revert on error
+      if (previousLeads) {
+        queryClient.setQueryData(['leads', page, activeFilters], previousLeads);
+      }
       console.error('Error updating lead status:', error);
+      throw error;
     }
   };
 
@@ -170,9 +186,9 @@ const StudentTable = () => {
     <>
       <div className='p-6 rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] mb-6'>
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Advanced Search</h3>
+          <h3 className="text-base font-medium text-gray-800 dark:text-white/90">Advanced Search</h3>
           <Button
-          className='bg-[#0e54a1] text-white p-5'
+            className='bg-[#0e54a1] text-white p-5'
             variant="outline"
             size="sm"
             onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}
@@ -245,10 +261,10 @@ const StudentTable = () => {
                   onChange={(e) => handleFilterChange('phone', e.target.value)}
                 />
               </div>
-                <div className="col-span-1">
+              <div className="col-span-1">
                 <Label htmlFor="lead_source">Lead Source</Label>
                 <Select
-                
+
                   value={searchFilters.lead_source || undefined}
                   onValueChange={(value) => handleFilterChange('lead_source', value === 'all' ? '' : value)}
                 >
@@ -256,7 +272,7 @@ const StudentTable = () => {
                     <SelectValue placeholder="Select lead source" />
                   </SelectTrigger>
                   <SelectContent>
-                 
+
                     {leadSources.map((source) => (
                       <SelectItem key={source} value={source}>
                         {source.charAt(0).toUpperCase() + source.slice(1).replace('_', ' ')}
@@ -275,7 +291,7 @@ const StudentTable = () => {
                     <SelectValue placeholder="Select tag" />
                   </SelectTrigger>
                   <SelectContent>
-                   
+
                     {tags.map((tag) => (
                       <SelectItem key={tag} value={tag}>
                         {tag.charAt(0).toUpperCase() + tag.slice(1).replace('_', ' ')}
@@ -296,7 +312,7 @@ const StudentTable = () => {
               </div>
             </div>
 
-          
+
             <div className="flex gap-3 pt-2 justify-end">
               <Button onClick={handleSearch} className="flex items-center gap-2 bg-[#0c559f] text-white">
                 <SearchIcon className="h-4 w-6" />
@@ -334,8 +350,8 @@ const StudentTable = () => {
       {/* search end  */}
 
       <div className='p-4 rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] '>
-
-        <div className="relative overflow-x-auto mb-5" >
+        <h3 className="text-base font-medium text-gray-800 dark:text-white/90">Leads</h3>
+        <div className="relative overflow-x-auto mb-5 mt-4" >
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
@@ -376,20 +392,22 @@ const StudentTable = () => {
                     {lead.full_name}
                   </th>
                   <td className="px-6 py-4">{lead.phone}</td>
+
                   <td className="px-6 py-4">
                     <Select
-                      value={lead.status}
+                      value={lead.current_status}
                       onValueChange={(value) => updateLeadStatus(lead.id, value)}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder={lead.status || "Select status"} />
+                        <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                       <SelectContent className='bg-white'>
                         <SelectItem value="active">Active</SelectItem>
                         <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="watingForResult">Waiting for result</SelectItem>
+                        <SelectItem value="waitingForesult">Waiting for Result</SelectItem>
                       </SelectContent>
                     </Select>
+
                   </td>
 
                   <td className="flex items-center px-6 py-4 space-x-3">
