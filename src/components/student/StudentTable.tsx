@@ -271,3 +271,7 @@ const StudentTable = () => {
 }
 
 export default StudentTable
+
+
+
+// leads?from_date=2025-05-29&to_date=2025-05-29&email=kapil.tandukar@gmail.com&phone=9851053405&tag=warm&full_name=kapil&address=putalisadak&lead_source=phone&page=1&page_size=5

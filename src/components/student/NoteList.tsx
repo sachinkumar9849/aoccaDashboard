@@ -60,7 +60,9 @@ const NoteList: React.FC<NoteProps> = ({ leadId }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="bg-white w-64 shadow-md rounded-md p-2 max-h-96 overflow-y-auto">
           <DropdownMenuItem className="flex items-center gap-3 py-3 px-4 hover:bg-gray-100 cursor-default">
+           
             <ol className="relative border-s border-gray-200 dark:border-gray-700">
+            
               {isLoading ? (
                 <li className="mb-10 ms-4">
                   <p>Loading notes...</p>
