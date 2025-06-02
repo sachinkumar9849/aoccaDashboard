@@ -140,7 +140,7 @@ const StudentTable = () => {
       const updatedLeads = {
         ...previousLeads,
         data: previousLeads.data.map(lead =>
-          lead.id === leadId ? { ...lead, current_status: newStatus } : lead
+          lead.id === leadId ? { ...lead, status: newStatus } : lead
         )
       };
       queryClient.setQueryData(['leads', page, activeFilters], updatedLeads);
@@ -149,7 +149,7 @@ const StudentTable = () => {
     try {
       await axios.patch(
         `${process.env.NEXT_PUBLIC_URL}/leads/${leadId}`,
-        { current_status: newStatus },
+        { status: newStatus },
         {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -395,16 +395,19 @@ const StudentTable = () => {
 
                   <td className="px-6 py-4">
                     <Select
-                      value={lead.current_status}
+                      value={lead.status}
                       onValueChange={(value) => updateLeadStatus(lead.id, value)}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                       <SelectContent className='bg-white'>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="waitingForesult">Waiting for Result</SelectItem>
+                        <SelectItem value="new">New</SelectItem>
+                        <SelectItem value="followUp">Follow Up</SelectItem>
+                        <SelectItem value="interested">Interested</SelectItem>
+                         <SelectItem value="converted">Converted</SelectItem>
+                          <SelectItem value="notInterested">Not Interested</SelectItem>
+                          <SelectItem value="canceled">NCanceled</SelectItem>
                       </SelectContent>
                     </Select>
 
@@ -421,11 +424,11 @@ const StudentTable = () => {
                         email: lead.email,
                         address: lead.address,
                         previous_qualification: lead.previous_qualification,
-                        current_status: lead.current_status,
+                        status: lead.status,
                         lead_source: lead.lead_source,
                         inquiry: lead.inquiry,
                         amount: lead.amount,
-                        status: lead.status,
+                        current_status: lead.status,
                         follow_up_date: lead.follow_up_date,
                         tag: lead.tag,
                         created_at: lead.created_at,
