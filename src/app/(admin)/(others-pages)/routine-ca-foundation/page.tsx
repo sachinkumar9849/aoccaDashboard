@@ -45,7 +45,7 @@ const CreateClassForm = () => {
         total_student: Yup.number()
             .required("Total students is required")
             .min(1, "Must be at least 1 student"),
-        type: Yup.string().required("Type is required"),
+    
         status: Yup.boolean().required("Status is required"),
     });
 
@@ -150,25 +150,7 @@ const CreateClassForm = () => {
                             )}
                         </div>
 
-                        <div className="col-span-1">
-                            <Label htmlFor="type">Type</Label>
-                            <Select
-                                name="type"
-                                value={formik.values.type}
-                                onValueChange={(value) => formik.setFieldValue("type", value)}
-                            >
-                                <SelectTrigger className="w-full" style={{ height: "44px" }}>
-                                    <SelectValue placeholder="Select type" />
-                                </SelectTrigger>
-                                <SelectContent className="bg-white">
-                                    <SelectItem value="CA-Foundation">CA Foundation</SelectItem>
-                                    {/* Add other types if needed */}
-                                </SelectContent>
-                            </Select>
-                            {formik.touched.type && formik.errors.type && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.type}</div>
-                            )}
-                        </div>
+                       
 
                         <div className="col-span-1">
                             <Label htmlFor="status">Status</Label>

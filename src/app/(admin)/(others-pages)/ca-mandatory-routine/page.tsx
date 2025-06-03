@@ -84,10 +84,10 @@ const CreateClassForm = () => {
             return response.json();
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['routine-ca-intermediate'] });
+            queryClient.invalidateQueries({ queryKey: ['ca-mandatory-training-list'] });
             toast.success(data.message || "Class created successfully!");
             formik.resetForm();
-            router.push("/routine-ca-intermediate");
+            router.push("/routine-ca-mandatory");
         },
         onError: (error: Error) => {
             toast.error(error.message || "An error occurred while creating the class");
@@ -106,7 +106,7 @@ const CreateClassForm = () => {
         initialValues: {
             session: "",
             total_student: 0,
-            type: "CA-Intermediate",
+            type: "CA-mandatory",
             status: true, // true for published, false for draft
         },
         validationSchema,
@@ -118,7 +118,7 @@ const CreateClassForm = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-5">
-                <ComponentCard title="CA Intermediate Routine Add">
+                <ComponentCard title="CA Mandatory Routine Add">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <Label htmlFor="session">Session</Label>
