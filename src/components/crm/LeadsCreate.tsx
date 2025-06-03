@@ -27,21 +27,25 @@ const LeadsCreate = () => {
     }
   }, [router]);
   const mutation = useMutation({
-    
     mutationFn: createLead,
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       toast.success("Lead created successfully!");
-
+      
+      // Invalidate both leads and followUpList queries
       queryClient.invalidateQueries({ 
         queryKey: ['leads'] 
       });
-
+      
+      // If the created lead has status 'followUp', invalidate followUpList
+      if (variables.status === 'followUp') {
+        queryClient.invalidateQueries({ 
+          queryKey: ['followUpList'] 
+        });
+      }
 
       formik.resetForm();
-       router.push("/leads")
+      router.push("/leads");
     },
-   
-    
     onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || "Failed to create lead");
     },

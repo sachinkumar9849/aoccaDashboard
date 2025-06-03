@@ -33,7 +33,7 @@ const navItems: NavItem[] = [
     {
     name: "Student Management",
     icon: <ListIcon />,
-    subItems: [{ name: "Leads", path: "/leads", pro: false }, { name: "Leads Create", path: "/leads-create", pro: false }],
+    subItems: [{ name: "Leads", path: "/leads", pro: false },{ name: "Follow up leads", path: "/follow-up-leads", pro: false }, { name: "Leads Create", path: "/leads-create", pro: false }],
   },
    {
     name: "Class Management",
