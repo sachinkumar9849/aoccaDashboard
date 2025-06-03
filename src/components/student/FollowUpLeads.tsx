@@ -10,7 +10,7 @@ import Label from '../form/Label';
 import DatePicker from '../crm/DatePickerDemo';
 
 
-// types/lead.ts
+
 export interface Lead {
   id: string;
   full_name: string;

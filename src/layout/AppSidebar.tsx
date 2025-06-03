@@ -38,7 +38,7 @@ const navItems: NavItem[] = [
    {
     name: "Class Management",
     icon: <ListIcon />,
-    subItems: [{ name: "CA Foundation", path: "/routine-foundation", pro: false }],
+    subItems: [{ name: "CA Foundation List", path: "/routine-ca-foundation-list", pro: false }],
   },
 
   // {
