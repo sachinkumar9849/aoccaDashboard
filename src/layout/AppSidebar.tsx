@@ -33,12 +33,12 @@ const navItems: NavItem[] = [
     {
     name: "Student Management",
     icon: <ListIcon />,
-    subItems: [{ name: "Leads", path: "/leads", pro: false }, { name: "Leads Create", path: "/leads-create", pro: false }],
+    subItems: [{ name: "Leads", path: "/leads", pro: false },{ name: "Follow up leads", path: "/follow-up-leads", pro: false }, { name: "Leads Create", path: "/leads-create", pro: false }],
   },
    {
     name: "Class Management",
     icon: <ListIcon />,
-    subItems: [{ name: "CA Foundation", path: "/routine-foundation", pro: false }],
+    subItems: [{ name: "CA Foundation ", path: "/routine-ca-foundation-list", pro: false },{ name: "CA Intermediate ", path: "/routine-ca-intermediate", pro: false },{ name: "CA Final ", path: "/routine-ca-final", pro: false },{ name: "CA Mandatory ", path: "/routine-ca-mandatory", pro: false }],
   },
 
   // {

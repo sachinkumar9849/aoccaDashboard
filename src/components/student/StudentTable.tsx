@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import ViewDetail from './ViewDetail';
 import axios from 'axios';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { CalendarIcon, SearchIcon, RefreshCwIcon } from "lucide-react"
+import { SearchIcon, RefreshCwIcon } from "lucide-react"
 import NoteList from './NoteList';
 import {
   Select,
@@ -17,6 +17,7 @@ import { Button } from '../ui/button';
 // import { Label } from '@radix-ui/react-select';
 import Input from '../form/input/InputField';
 import Label from '../form/Label';
+import DatePicker from '../crm/DatePickerDemo';
 
 
 // types/lead.ts
@@ -140,7 +141,7 @@ const StudentTable = () => {
       const updatedLeads = {
         ...previousLeads,
         data: previousLeads.data.map(lead =>
-          lead.id === leadId ? { ...lead, current_status: newStatus } : lead
+          lead.id === leadId ? { ...lead, status: newStatus } : lead
         )
       };
       queryClient.setQueryData(['leads', page, activeFilters], updatedLeads);
@@ -149,7 +150,7 @@ const StudentTable = () => {
     try {
       await axios.patch(
         `${process.env.NEXT_PUBLIC_URL}/leads/${leadId}`,
-        { current_status: newStatus },
+        { status: newStatus },
         {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -180,6 +181,20 @@ const StudentTable = () => {
 
   const leadSources = ['phone', 'pyysicalVisit', 'website', 'whatsapp'];
   const tags = ['hot', 'warm', 'cold'];
+  const handleDateChange = (field: keyof SearchFilters, date: string | Date | null) => {
+    let dateString = '';
+
+    // Handle different date formats
+    if (date) {
+      if (typeof date === 'string') {
+        dateString = date;
+      } else if (date instanceof Date) {
+        dateString = date.toISOString().split('T')[0];
+      }
+    }
+
+    handleFilterChange(field, dateString);
+  };
 
 
   return (
@@ -204,27 +219,27 @@ const StudentTable = () => {
               <div className="space-y-2">
                 <Label htmlFor="from_date">From Date</Label>
                 <div className="relative">
-                  <Input
-                    id="from_date"
-                    type="date"
+
+                  <DatePicker
                     value={searchFilters.from_date || ''}
-                    onChange={(e) => handleFilterChange('from_date', e.target.value)}
-                    className="pl-10"
+                    onChange={(date) => handleDateChange('from_date', date)}
+                    minDate={new Date()}
+                    className=""
+                    dateFormat="yyyy-MM-dd"
                   />
-                  <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="to_date">To Date</Label>
                 <div className="relative">
-                  <Input
-                    id="to_date"
-                    type="date"
+
+                  <DatePicker
                     value={searchFilters.to_date || ''}
-                    onChange={(e) => handleFilterChange('to_date', e.target.value)}
-                    className="pl-10"
+                    onChange={(date) => handleDateChange('to_date', date)}
+                    className=""
+                    dateFormat="yyyy-MM-dd"
                   />
-                  <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+
                 </div>
               </div>
             </div>
@@ -395,16 +410,19 @@ const StudentTable = () => {
 
                   <td className="px-6 py-4">
                     <Select
-                      value={lead.current_status}
+                      value={lead.status}
                       onValueChange={(value) => updateLeadStatus(lead.id, value)}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                       <SelectContent className='bg-white'>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="waitingForesult">Waiting for Result</SelectItem>
+                        <SelectItem value="new">New</SelectItem>
+                        <SelectItem value="followUp">Follow Up</SelectItem>
+                        <SelectItem value="interested">Interested</SelectItem>
+                        <SelectItem value="converted">Converted</SelectItem>
+                        <SelectItem value="notInterested">Not Interested</SelectItem>
+                        <SelectItem value="canceled">NCanceled</SelectItem>
                       </SelectContent>
                     </Select>
 
@@ -421,11 +439,11 @@ const StudentTable = () => {
                         email: lead.email,
                         address: lead.address,
                         previous_qualification: lead.previous_qualification,
-                        current_status: lead.current_status,
+                        status: lead.status,
                         lead_source: lead.lead_source,
                         inquiry: lead.inquiry,
                         amount: lead.amount,
-                        status: lead.status,
+                        current_status: lead.status,
                         follow_up_date: lead.follow_up_date,
                         tag: lead.tag,
                         created_at: lead.created_at,

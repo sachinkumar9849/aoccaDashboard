@@ -94,7 +94,7 @@ const ViewDetail: React.FC<ViewDetailProps> = ({ leadId, leadData }) => {
                                 </div>
                                 <div>
                                     <DialogTitle>{leadData.full_name}</DialogTitle>
-                                    <p className="text-sm text-gray-600">Lead Status: <span className="font-semibold capitalize">{leadData.current_status}</span></p>
+                                    <p className="text-sm text-gray-600">Lead Status: <span className="font-semibold capitalize">{leadData.status}</span></p>
                                     <p className="text-sm text-gray-600">Tag: <span className="font-semibold capitalize">{leadData.tag || 'None'}</span></p>
                                 </div>
                             </div>

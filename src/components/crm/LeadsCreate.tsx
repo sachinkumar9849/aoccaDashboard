@@ -27,21 +27,25 @@ const LeadsCreate = () => {
     }
   }, [router]);
   const mutation = useMutation({
-    
     mutationFn: createLead,
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       toast.success("Lead created successfully!");
-
+      
+      // Invalidate both leads and followUpList queries
       queryClient.invalidateQueries({ 
         queryKey: ['leads'] 
       });
-
+      
+      // If the created lead has status 'followUp', invalidate followUpList
+      if (variables.status === 'followUp') {
+        queryClient.invalidateQueries({ 
+          queryKey: ['followUpList'] 
+        });
+      }
 
       formik.resetForm();
-       router.push("/leads")
+      router.push("/leads");
     },
-   
-    
     onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || "Failed to create lead");
     },
@@ -118,7 +122,7 @@ const LeadsCreate = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <ComponentCard title="">
-        <div className="flex justify-between mt-[-1px]">
+        <div className="flex justify-between mt-[-10px]">
           <p className="text-base font-medium text-gray-800 dark:text-white/90">
             Student Details
           </p>
@@ -176,7 +180,7 @@ const LeadsCreate = () => {
         </div>
       </ComponentCard>
 
-      <ComponentCard className="mt-4" title="Academic Background">
+      <ComponentCard className="mt-4 " title="Academic Background">
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-1">
@@ -216,7 +220,7 @@ const LeadsCreate = () => {
         </div>
       </ComponentCard>
 
-      <ComponentCard className="mt-4" title="Student Inquiry Management">
+      <ComponentCard className="mt-4 mb-[100px]" title="Student Inquiry Management">
         <div className="space-y-6">
           <div className="grid grid-cols-3 gap-4">
             <div className="col-span-1">
