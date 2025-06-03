@@ -1,21 +1,11 @@
 "use client";
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import ViewDetail from './ViewDetail';
 import axios from 'axios';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { SearchIcon, RefreshCwIcon } from "lucide-react"
+import { useQuery } from '@tanstack/react-query';
 import NoteList from './NoteList';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import Action from './Action';
 import { Button } from '../ui/button';
-// import { Label } from '@radix-ui/react-select';
-import Input from '../form/input/InputField';
 import Label from '../form/Label';
 import DatePicker from '../crm/DatePickerDemo';
 
@@ -61,29 +51,24 @@ interface SearchFilters {
 }
 
 const fetchLeads = async (page: number = 1, filters: Partial<SearchFilters> = {}): Promise<LeadsResponse> => {
-
-
-
-  // Get your auth token (modify this based on how you store your token)
   const token = localStorage.getItem('authToken') || '';
 
   const params = new URLSearchParams();
   params.append("page", page.toString());
   params.append("page_size", "10");
+  params.append("status", "followUp");
+
+  params.append("from_date", filters.from_date || '2020-01-30');
+  params.append("to_date", filters.to_date || new Date().toISOString().split('T')[0]);
 
   Object.entries(filters).forEach(([key, value]) => {
-    if (value && value.trim() !== '') {
+    if (value && value.trim() !== '' && key !== 'from_date' && key !== 'to_date') {
       params.append(key, value.trim());
     }
   });
 
-  if (!filters.from_date && !filters.to_date) {
-    params.append('from_date', '2024-01-01');
-    params.append('to_date', '2029-03-20');
-  }
-
   const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/leads?page=1&page_size=10&status=followUp`,
+    `${process.env.NEXT_PUBLIC_URL}/leads?${params.toString()}`,
     {
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -94,36 +79,31 @@ const fetchLeads = async (page: number = 1, filters: Partial<SearchFilters> = {}
   return response.data;
 };
 
+
+
 const FollowUpLeads = () => {
   const [page, setPage] = useState(1);
-  const [searchFilters, setSearchFilters] = useState<Partial<SearchFilters>>({});
-  const [activeFilters, setActiveFilters] = useState<Partial<SearchFilters>>({});
-  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+  const [searchFilters, setSearchFilters] = useState<Partial<SearchFilters>>({
+    from_date: '2020-01-30',
+    to_date: new Date().toISOString().split('T')[0]
+  });
+  const [activeFilters, setActiveFilters] = useState<Partial<SearchFilters>>({
+    from_date: '2020-01-30',
+    to_date: new Date().toISOString().split('T')[0]
+  });
 
-  const queryClient = useQueryClient();
+
 
   const { data, isLoading, isError, error } = useQuery<LeadsResponse, Error>({
     queryKey: ['followUpList', page, activeFilters],
     queryFn: () => fetchLeads(page, activeFilters),
   });
 
-  const handleFilterChange = (field: keyof SearchFilters, value: string) => {
-    setSearchFilters(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
 
-  const handleSearch = () => {
-    setActiveFilters(searchFilters);
-    setPage(1); // Reset to first page when searching
-  };
 
-  const handleReset = () => {
-    setSearchFilters({});
-    setActiveFilters({});
-    setPage(1);
-  };
+
+
+
 
   const handlePrevious = () => {
     if (page > 1) setPage(page - 1);
@@ -133,40 +113,7 @@ const FollowUpLeads = () => {
     if (data && page < data.meta.total_pages) setPage(page + 1);
   };
 
-  const updateLeadStatus = async (leadId: string, newStatus: string) => {
-    const token = localStorage.getItem('authToken') || '';
-    const previousLeads = queryClient.getQueryData<LeadsResponse>(['leads', page, activeFilters]);
 
-    if (previousLeads) {
-      const updatedLeads = {
-        ...previousLeads,
-        data: previousLeads.data.map(lead =>
-          lead.id === leadId ? { ...lead, status: newStatus } : lead
-        )
-      };
-      queryClient.setQueryData(['followUpList', page, activeFilters], updatedLeads);
-    }
-
-    try {
-      await axios.patch(
-        `${process.env.NEXT_PUBLIC_URL}/leads/${leadId}`,
-        { status: newStatus },
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-    } catch (error) {
-      // Revert on error
-      if (previousLeads) {
-        queryClient.setQueryData(['leads', page, activeFilters], previousLeads);
-      }
-      console.error('Error updating lead status:', error);
-      throw error;
-    }
-  };
 
   if (isLoading) {
     return <div className="flex items-center justify-center p-8">
@@ -179,8 +126,7 @@ const FollowUpLeads = () => {
     return <div className="text-red-600 p-4">Error: {error?.message}</div>;
   }
 
-  const leadSources = ['phone', 'pyysicalVisit', 'website', 'whatsapp'];
-  const tags = ['hot', 'warm', 'cold'];
+
   const handleDateChange = (field: keyof SearchFilters, date: string | Date | null) => {
     let dateString = '';
 
@@ -193,16 +139,57 @@ const FollowUpLeads = () => {
       }
     }
 
-    handleFilterChange(field, dateString);
-  };
+    const newFilters = {
+      ...searchFilters,
+      [field]: dateString
+    };
 
+    setSearchFilters(newFilters);
+    setActiveFilters(newFilters);
+    setPage(1);
+  };
 
   return (
     <>
-     
+
 
       <div className='p-4 rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] '>
-        <h3 className="text-base font-medium text-gray-800 dark:text-white/90">Leads</h3>
+
+        <div className="grid grid-cols-2 items-center">
+          <div className="col-span-1">
+            <h3 className="text-base font-medium text-gray-800 dark:text-white/90">Leads</h3>
+          </div>
+
+          <div className="col-span-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="col-span-1">
+                <Label htmlFor="from_date">From Date</Label>
+                <div className="relative">
+                  <DatePicker
+                    value={searchFilters.from_date || '2020-01-30'}
+                    onChange={(date) => handleDateChange('from_date', date)}
+                    className=""
+                    dateFormat="yyyy-MM-dd"
+                  />
+                </div>
+              </div>
+              <div className="col-span-1">
+                <Label htmlFor="to_date">To Date</Label>
+                <div className="relative">
+                  <DatePicker
+                    value={searchFilters.to_date || new Date().toISOString().split('T')[0]}
+                    onChange={(date) => handleDateChange('to_date', date)}
+                    className=""
+                    dateFormat="yyyy-MM-dd"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+
         <div className="relative overflow-x-auto mb-5 mt-4" >
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -244,9 +231,9 @@ const FollowUpLeads = () => {
                     {lead.full_name}
                   </th>
                   <td className="px-6 py-4">{lead.phone}</td>
-                   <td className="px-6 py-4">{lead.status}</td>
+                  <td className="px-6 py-4 capitalize">{lead.status}</td>
 
-                 
+
 
                   <td className="flex items-center px-6 py-4 space-x-3">
                     <Action lead={lead} />
