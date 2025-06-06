@@ -182,19 +182,21 @@ const StudentTable = () => {
   const leadSources = ['phone', 'pyysicalVisit', 'website', 'whatsapp'];
   const tags = ['hot', 'warm', 'cold'];
   const handleDateChange = (field: keyof SearchFilters, date: string | Date | null) => {
-    let dateString = '';
+  let dateString = '';
 
-    // Handle different date formats
-    if (date) {
-      if (typeof date === 'string') {
-        dateString = date;
-      } else if (date instanceof Date) {
-        dateString = date.toISOString().split('T')[0];
-      }
+  if (date) {
+    if (typeof date === 'string') {
+      dateString = date;
+    } else if (date instanceof Date) {
+      // Use UTC methods to avoid timezone issues
+      dateString = new Date(
+        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+      ).toISOString().split('T')[0];
     }
+  }
 
-    handleFilterChange(field, dateString);
-  };
+  handleFilterChange(field, dateString);
+};
 
 
   return (
