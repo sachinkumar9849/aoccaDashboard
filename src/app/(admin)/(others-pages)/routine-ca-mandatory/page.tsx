@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Edit, Trash, Eye } from 'lucide-react';
+import { Edit, Eye } from 'lucide-react';
 import { apiClient } from '@/api/client';
 import Link from 'next/link';
 import DeleteConfirmationDialog from '@/components/common/DeleteConfirmationDialog';
@@ -52,7 +52,7 @@ const CaFoundationList: React.FC = () => {
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
     queryKey: ['ca-mandatory-training-list'],
     queryFn: async () => {
-      const response = await apiClient.request<ApiResponse>('/classes?status=true&type=CA-mandatory');
+      const response = await apiClient.request<ApiResponse>('/classes?type=CA-mandatory');
       return response.data; // Extract the data array from the response
     }
   });
@@ -154,16 +154,10 @@ const CaFoundationList: React.FC = () => {
                   </td>
                   <td className="py-3 px-6">
                     <div className="flex gap-2">
-                      <Link href={`/routine-ca-foundation-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
+                      <Link href={`/routine-ca-mandatory/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
                         <Edit size={18} />
                       </Link>
-                      <button 
-                        className="p-1 text-red-500 hover:text-red-700" 
-                        title="Delete"
-                        onClick={() => handleDeleteClick(item.id)}
-                      >
-                        <Trash size={18} />
-                      </button>
+                   
                       <button className="p-1 text-green-500 hover:text-green-700" title="View">
                         <Eye size={18} />
                       </button>
