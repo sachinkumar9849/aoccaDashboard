@@ -58,7 +58,7 @@ const fetchLeads = async (page: number = 1, filters: Partial<SearchFilters> = {}
   params.append("page_size", "10");
   params.append("status", "followUp");
 
-  params.append("from_date", filters.from_date || '2020-01-30');
+  params.append("from_date", filters.from_date || '2025-05-30');
   params.append("to_date", filters.to_date || new Date().toISOString().split('T')[0]);
 
   Object.entries(filters).forEach(([key, value]) => {
@@ -84,11 +84,11 @@ const fetchLeads = async (page: number = 1, filters: Partial<SearchFilters> = {}
 const FollowUpLeads = () => {
   const [page, setPage] = useState(1);
   const [searchFilters, setSearchFilters] = useState<Partial<SearchFilters>>({
-    from_date: '2020-01-30',
+    from_date: '2025-05-30',
     to_date: new Date().toISOString().split('T')[0]
   });
   const [activeFilters, setActiveFilters] = useState<Partial<SearchFilters>>({
-    from_date: '2020-01-30',
+    from_date: '2025-05-30',
     to_date: new Date().toISOString().split('T')[0]
   });
 
@@ -127,17 +127,23 @@ const FollowUpLeads = () => {
   }
 
 
+  
+
+
   const handleDateChange = (field: keyof SearchFilters, date: string | Date | null) => {
     let dateString = '';
 
-    // Handle different date formats
-    if (date) {
-      if (typeof date === 'string') {
-        dateString = date;
-      } else if (date instanceof Date) {
-        dateString = date.toISOString().split('T')[0];
-      }
+
+      if (date) {
+    if (typeof date === 'string') {
+      dateString = date;
+    } else if (date instanceof Date) {
+      // Use UTC methods to avoid timezone issues
+      dateString = new Date(
+        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+      ).toISOString().split('T')[0];
     }
+  }
 
     const newFilters = {
       ...searchFilters,
@@ -166,7 +172,7 @@ const FollowUpLeads = () => {
                 <Label htmlFor="from_date">From Date</Label>
                 <div className="relative">
                   <DatePicker
-                    value={searchFilters.from_date || '2020-01-30'}
+                    value={searchFilters.from_date || '2025-05-30'}
                     onChange={(date) => handleDateChange('from_date', date)}
                     className=""
                     dateFormat="yyyy-MM-dd"

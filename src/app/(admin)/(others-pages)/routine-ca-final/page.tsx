@@ -52,7 +52,7 @@ const CaFoundationList: React.FC = () => {
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
     queryKey: ['routine-ca-final-list'],
     queryFn: async () => {
-      const response = await apiClient.request<ApiResponse>('/classes?status=true&type=CA-Final');
+      const response = await apiClient.request<ApiResponse>('/classes?=CA-Final');
       return response.data; // Extract the data array from the response
     }
   });
@@ -154,16 +154,10 @@ const CaFoundationList: React.FC = () => {
                   </td>
                   <td className="py-3 px-6">
                     <div className="flex gap-2">
-                      <Link href={`/routine-ca-foundation-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
+                      <Link href={`/routine-ca-final/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
                         <Edit size={18} />
                       </Link>
-                      <button 
-                        className="p-1 text-red-500 hover:text-red-700" 
-                        title="Delete"
-                        onClick={() => handleDeleteClick(item.id)}
-                      >
-                        <Trash size={18} />
-                      </button>
+                     
                       <button className="p-1 text-green-500 hover:text-green-700" title="View">
                         <Eye size={18} />
                       </button>
