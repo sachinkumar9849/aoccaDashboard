@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Edit, Trash, Eye } from 'lucide-react';
+import { Edit, Eye } from 'lucide-react';
 import { apiClient } from '@/api/client';
 import Link from 'next/link';
 import DeleteConfirmationDialog from '@/components/common/DeleteConfirmationDialog';
@@ -46,7 +46,7 @@ interface ApiResponse {
 const CaFoundationList: React.FC = () => {
   const [activeTab] = useState<'all' | CAFoundation>('all');
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState<string | null>(null); // Changed to string
+  const [itemToDelete] = useState<string | null>(null); // Changed to string
   const queryClient = useQueryClient();
 
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
