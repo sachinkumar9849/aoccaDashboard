@@ -43,6 +43,7 @@ interface ApiResponse {
   };
 }
 
+
 const CaFoundationList: React.FC = () => {
   const [activeTab] = useState<'all' | CAFoundation>('all');
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
