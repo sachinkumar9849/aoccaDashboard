@@ -8,14 +8,11 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import { SelectField } from "@/components/common/SelectFieldDemo";
-
 import DatePicker from "@/components/crm/DatePickerDemo";
 import { AxiosError } from "axios";
 import { createLead } from "./leadService";
 import toast from "react-hot-toast";
 import { leadSchema } from "./leadSchema";
-
-
 
 const LeadsCreate = () => {
   const queryClient = useQueryClient();
@@ -26,30 +23,58 @@ const LeadsCreate = () => {
       router.push('/signin');
     }
   }, [router]);
+
   const mutation = useMutation({
     mutationFn: createLead,
     onSuccess: (data, variables) => {
       toast.success("Lead created successfully!");
-      
+
       // Invalidate both leads and followUpList queries
-      queryClient.invalidateQueries({ 
-        queryKey: ['leads'] 
+      queryClient.invalidateQueries({
+        queryKey: ['leads']
       });
-      
+
       // If the created lead has status 'followUp', invalidate followUpList
       if (variables.status === 'followUp') {
-        queryClient.invalidateQueries({ 
-          queryKey: ['followUpList'] 
+        queryClient.invalidateQueries({
+          queryKey: ['followUpList']
         });
       }
 
       formik.resetForm();
       router.push("/leads");
     },
-    onError: (error: AxiosError<{ message?: string }>) => {
-      toast.error(error.response?.data?.message || "Failed to create lead");
-    },
-  });
+    onError: (error: AxiosError<{ error?: string; message?: string }>) => {
+    console.log('Error details:', {
+      message: error.message,
+      response: error.response,
+      data: error.response?.data,
+      status: error.response?.status
+    });
+
+    // Get the error message from various possible locations
+    let errorMessage = 
+      error.response?.data?.error || 
+      error.response?.data?.message || 
+      error.message || 
+      "Failed to create lead";
+
+    // Handle specific error cases
+    if (errorMessage.includes('parsing time')) {
+      errorMessage = "Please enter a valid follow-up date or leave it empty";
+    }
+
+    // Show the error in toast
+    toast.error(errorMessage);
+
+    // Special handling for phone number exists
+    if (errorMessage.toLowerCase().includes('phone')) {
+      const phoneInput = document.querySelector('input[name="phone"]');
+      if (phoneInput) (phoneInput as HTMLElement).focus();
+    }
+  },
+});
+
 
   const formik = useFormik({
     initialValues: {
@@ -114,10 +139,10 @@ const LeadsCreate = () => {
     { value: "warm", label: "Warm" },
     { value: "cold", label: "Cold" },
   ];
-  const handleDateChange = (date: Date | null) => {
-    const formattedDate = date ? date.toISOString() : "";
-    formik.setFieldValue("follow_up_date", formattedDate);
-  };
+const handleDateChange = (date: Date | null) => {
+  // Only set the date if it's not null, otherwise set to empty string
+  formik.setFieldValue("follow_up_date", date ? date.toISOString() : "");
+};
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -126,10 +151,10 @@ const LeadsCreate = () => {
           <p className="text-base font-medium text-gray-800 dark:text-white/90">
             Student Details
           </p>
-        
+
         </div>
         <div className="space-y-6">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-4 gap-4">
             <div className="col-span-1">
               <Label>Full Name</Label>
               <Input
@@ -153,7 +178,7 @@ const LeadsCreate = () => {
                 error={!!(formik.touched.phone && formik.errors.phone)}
               />
             </div>
-            {/* <div className="col-span-1">
+            <div className="col-span-1">
               <Label>Email</Label>
               <Input
                 type="email"
@@ -163,7 +188,7 @@ const LeadsCreate = () => {
                 onBlur={formik.handleBlur}
                 error={!!(formik.touched.email && formik.errors.email)}
               />
-            </div> */}
+            </div>
             <div className="col-span-1">
               <Label>Address</Label>
               <Input
@@ -293,19 +318,15 @@ const LeadsCreate = () => {
             </div>
             <div className="col-span-1">
               <Label>Follow Up Date</Label>
-              <DatePicker
-                value={formik.values.follow_up_date ? new Date(formik.values.follow_up_date) : null}
-                onChange={handleDateChange}
-                minDate={new Date()}
-                className=""
-                dateFormat="yyyy-MM-dd"
+           <DatePicker
+  value={formik.values.follow_up_date ? new Date(formik.values.follow_up_date) : null}
+  onChange={handleDateChange}
+  minDate={new Date()}
 
-              />
-              {formik.touched.follow_up_date && formik.errors.follow_up_date && (
-                <p className="mt-1 text-sm text-red-600">
-                  {formik.errors.follow_up_date}
-                </p>
-              )}
+  className=""
+  dateFormat="yyyy-MM-dd"
+/>
+
             </div>
             <div className="col-span-3">
               <button
