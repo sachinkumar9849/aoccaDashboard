@@ -68,7 +68,7 @@ const UpdateClassPage = () => {
         },
         body: JSON.stringify(values),
       }),
-    onMutate: async (newData) => {
+    onMutate: async () => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries({ queryKey: ['routine-ca-intermediate'] });
       

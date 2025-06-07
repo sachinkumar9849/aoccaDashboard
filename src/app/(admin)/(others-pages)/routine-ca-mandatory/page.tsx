@@ -46,7 +46,7 @@ interface ApiResponse {
 const CaFoundationList: React.FC = () => {
   const [activeTab] = useState<'all' | CAFoundation>('all');
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState<string | null>(null); // Changed to string
+  const [itemToDelete] = useState<string | null>(null); // Changed to string
   const queryClient = useQueryClient();
 
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
@@ -67,10 +67,7 @@ const CaFoundationList: React.FC = () => {
     }
   });
 
-  const handleDeleteClick = (id: string) => { // Changed to string
-    setItemToDelete(id);
-    setIsDeleteDialogOpen(true);
-  };
+
 
   const handleConfirmDelete = () => {
     if (itemToDelete) {
