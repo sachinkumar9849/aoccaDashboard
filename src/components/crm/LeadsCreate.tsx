@@ -45,35 +45,35 @@ const LeadsCreate = () => {
       router.push("/leads");
     },
     onError: (error: AxiosError<{ error?: string; message?: string }>) => {
-    console.log('Error details:', {
-      message: error.message,
-      response: error.response,
-      data: error.response?.data,
-      status: error.response?.status
-    });
+      console.log('Error details:', {
+        message: error.message,
+        response: error.response,
+        data: error.response?.data,
+        status: error.response?.status
+      });
 
-    // Get the error message from various possible locations
-    let errorMessage = 
-      error.response?.data?.error || 
-      error.response?.data?.message || 
-      error.message || 
-      "Failed to create lead";
+      // Get the error message from various possible locations
+      let errorMessage =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to create lead";
 
-    // Handle specific error cases
-    if (errorMessage.includes('parsing time')) {
-      errorMessage = "Please enter a valid follow-up date or leave it empty";
-    }
+      // Handle specific error cases
+      if (errorMessage.includes('parsing time')) {
+        errorMessage = "Please enter a valid follow-up date or leave it empty";
+      }
 
-    // Show the error in toast
-    toast.error(errorMessage);
+      // Show the error in toast
+      toast.error(errorMessage);
 
-    // Special handling for phone number exists
-    if (errorMessage.toLowerCase().includes('phone')) {
-      const phoneInput = document.querySelector('input[name="phone"]');
-      if (phoneInput) (phoneInput as HTMLElement).focus();
-    }
-  },
-});
+      // Special handling for phone number exists
+      if (errorMessage.toLowerCase().includes('phone')) {
+        const phoneInput = document.querySelector('input[name="phone"]');
+        if (phoneInput) (phoneInput as HTMLElement).focus();
+      }
+    },
+  });
 
 
   const formik = useFormik({
@@ -139,10 +139,10 @@ const LeadsCreate = () => {
     { value: "warm", label: "Warm" },
     { value: "cold", label: "Cold" },
   ];
-const handleDateChange = (date: Date | null) => {
-  // Only set the date if it's not null, otherwise set to empty string
-  formik.setFieldValue("follow_up_date", date ? date.toISOString() : "");
-};
+  const handleDateChange = (date: Date | null) => {
+    // Only set the date if it's not null, otherwise set to empty string
+    formik.setFieldValue("follow_up_date", date ? date.toISOString() : "");
+  };
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -316,17 +316,25 @@ const handleDateChange = (date: Date | null) => {
                 </p>
               )}
             </div>
+
             <div className="col-span-1">
-              <Label>Follow Up Date</Label>
-           <DatePicker
-  value={formik.values.follow_up_date ? new Date(formik.values.follow_up_date) : null}
-  onChange={handleDateChange}
-  minDate={new Date()}
-
-  className=""
-  dateFormat="yyyy-MM-dd"
-/>
-
+              {(formik.values.status === 'interested' || formik.values.status === 'followUp') && (
+                <>
+                  <Label>Follow Up Date</Label>
+                  <DatePicker
+                    value={formik.values.follow_up_date ? new Date(formik.values.follow_up_date) : null}
+                    onChange={handleDateChange}
+                    minDate={new Date()}
+                    className=""
+                    dateFormat="yyyy-MM-dd"
+                  />
+                  {formik.touched.follow_up_date && formik.errors.follow_up_date && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {formik.errors.follow_up_date}
+                    </p>
+                  )}
+                </>
+              )}
             </div>
             <div className="col-span-3">
               <button
