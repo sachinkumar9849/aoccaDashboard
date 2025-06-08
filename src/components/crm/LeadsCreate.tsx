@@ -15,14 +15,18 @@ import toast from "react-hot-toast";
 import { leadSchema } from "./leadSchema";
 
 const LeadsCreate = () => {
+  const [classRoutines, setClassRoutines] = React.useState<Array<{value: string, label: string}>>([]);
+  const [isLoadingRoutines, setIsLoadingRoutines] = React.useState(false);
   const queryClient = useQueryClient();
   const router = useRouter();
+
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     if (!token) {
       router.push('/signin');
     }
   }, [router]);
+
 
   const mutation = useMutation({
     mutationFn: createLead,
@@ -90,12 +94,75 @@ const LeadsCreate = () => {
       status: "new",
       follow_up_date: "",
       tag: "",
+      class_routine: "",
     },
     validationSchema: leadSchema,
     onSubmit: (values) => {
       mutation.mutate(values);
     },
   });
+
+useEffect(() => {
+  const fetchClassRoutines = async () => {
+    if (formik.values.status === 'converted' && formik.values.inquiry) {
+      try {
+        setIsLoadingRoutines(true);
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          throw new Error('No authentication token found');
+        }
+
+        // Get the raw inquiry value without modification
+        const inquiryType = formik.values.inquiry;
+        
+        const response = await fetch(
+          `http://156.67.104.182:8081/api/v1/classes?status=true&type=${inquiryType}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        
+        if (!response.ok) {
+          if (response.status === 401) {
+            throw new Error('Session expired. Please login again.');
+          }
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (!data || !Array.isArray(data.data)) {
+          throw new Error('Invalid data format received from API');
+        }
+        
+        const routines = data.data.map((classItem: any) => ({
+          value: classItem.id,
+          label: classItem.session || `Class ${classItem.id}`
+        }));
+        
+        setClassRoutines(routines);
+      } catch (error) {
+        console.error('Error fetching class routines:', error);
+        toast.error(error instanceof Error ? error.message : 'Failed to load class routines');
+        setClassRoutines([]);
+        
+        if (error instanceof Error && error.message.includes('Session expired')) {
+          router.push('/signin');
+        }
+      } finally {
+        setIsLoadingRoutines(false);
+      }
+    } else {
+      setClassRoutines([]);
+    }
+  };
+
+  fetchClassRoutines();
+}, [formik.values.inquiry, formik.values.status, router]);
+
 
   const previous_qualification = [
     { value: "ssc", label: "Secondary School Certificate" },
@@ -119,10 +186,10 @@ const LeadsCreate = () => {
   ];
 
   const inquiryType = [
-    { value: "caFoundation", label: "CA Foundation" },
-    { value: "caIntermediate", label: "CA Intermediate" },
-    { value: "caFinal", label: "CA Final" },
-    { value: "mandatoryTraining", label: "Mandatory Training" },
+    { value: "CA-Foundation", label: "CA Foundation" },
+    { value: "CA-Intermediate", label: "CA Intermediate" },
+    { value: "CA-Final", label: "CA Final" },
+    { value: "CA-mandatory", label: "Mandatory Training" },
   ];
 
   const status = [
@@ -288,20 +355,50 @@ const LeadsCreate = () => {
                 error={!!(formik.touched.amount && formik.errors.amount)}
               />
             </div>
-            <div className="col-span-1">
-              <SelectField
-                options={status}
-                value={formik.values.status}
-                onChange={(value) => formik.setFieldValue("status", value)}
-                label="Status"
-                placeholder="Choose a status"
-              />
-              {formik.touched.status && formik.errors.status && (
-                <p className="mt-1 text-sm text-red-600">
-                  {formik.errors.status}
-                </p>
-              )}
-            </div>
+           <div className="col-span-1">
+  <SelectField
+    options={status}
+    value={formik.values.status}
+    onChange={(value) => formik.setFieldValue("status", value)}
+    label="Status"
+    placeholder="Choose a status"
+  />
+  {formik.touched.status && formik.errors.status && (
+    <p className="mt-1 text-sm text-red-600">
+      {formik.errors.status}
+    </p>
+  )}
+</div>
+
+{formik.values.status === 'converted' && (
+  <div className="col-span-1">
+    <SelectField
+      options={classRoutines}
+      value={formik.values.class_routine}
+      onChange={(value) => formik.setFieldValue("class_routine", value)}
+      label="Class Routine"
+      placeholder={
+        isLoadingRoutines 
+          ? "Loading..." 
+          : formik.values.inquiry 
+            ? classRoutines.length > 0 
+              ? "Select class routine" 
+              : "No routines available"
+            : "Select inquiry type first"
+      }
+      isDisabled={isLoadingRoutines || !formik.values.inquiry || classRoutines.length === 0}
+      isLoading={isLoadingRoutines}
+    />
+    {formik.touched.class_routine && formik.errors.class_routine && (
+      <p className="mt-1 text-sm text-red-600">
+        {formik.errors.class_routine}
+      </p>
+    )}
+  </div>
+)}
+
+
+           
             <div className="col-span-1">
               <SelectField
                 options={tag}

@@ -6,32 +6,36 @@ interface Option {
 }
 
 interface SelectFieldProps {
-  options: Option[];
+  options?: Option[];
   placeholder?: string;
   label?: string;
   onChange: (value: string) => void;
   value?: string;
   className?: string;
+  isDisabled?: boolean;
+  isLoading?: boolean;
 }
 
 export const SelectField: React.FC<SelectFieldProps> = ({
-  options,
+  options=[],
   placeholder = "Select an option",
   label,
   onChange,
   value,
-  className = ''
+  className = '',
+   isDisabled = false,
+  isLoading = false,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const filteredOptions = options.filter(option =>
+  const filteredOptions = (options || []).filter(option =>
     option.label.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const selectedOption = options.find(option => option.value === value);
+  const selectedOption = (options || []).find(option => option.value === value);
 
   const handleSelect = (option: Option): void => {
     onChange(option.value);
@@ -77,18 +81,28 @@ export const SelectField: React.FC<SelectFieldProps> = ({
 
       <div ref={dropdownRef} className="w-full">
         {/* Selection display */}
-        <button
+     <button
           type="button"
           onClick={toggleDropdown}
-          className="relative w-full flex items-center justify-between bg-white border border-gray-300 rounded-md py-2 px-3 text-left cursor-pointer focus:outline-none "
+          disabled={isDisabled || isLoading}
+          className={`relative w-full flex items-center justify-between bg-white border border-gray-300 rounded-md py-2 px-3 text-left cursor-pointer focus:outline-none ${
+            isDisabled || isLoading ? 'opacity-70 cursor-not-allowed' : ''
+          }`}
         >
           <span className={`block truncate ${!selectedOption ? 'text-gray-500' : ''}`}>
-            {selectedOption ? selectedOption.label : placeholder}
+            {isLoading ? 'Loading...' : (selectedOption ? selectedOption.label : placeholder)}
           </span>
           <span className="pointer-events-none">
-            <svg className={`h-5 w-5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-            </svg>
+            {isLoading ? (
+              <svg className="animate-spin h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            ) : (
+              <svg className={`h-5 w-5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            )}
           </span>
         </button>
 
