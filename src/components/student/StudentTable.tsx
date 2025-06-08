@@ -404,13 +404,14 @@ const StudentTable = () => {
                   </td>
                   <th
                     scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    className="capitalize px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
                     {lead.full_name}
                   </th>
-                  <td className="px-6 py-4">{lead.phone}</td>
+                  <td className="px-6 py-4 ">{lead.phone}</td>
+                    <td className="px-6 py-4 capitalize">{lead.status}</td>
 
-                  <td className="px-6 py-4">
+                  {/* <td className="px-6 py-4">
                     <Select
                       value={lead.status}
                       onValueChange={(value) => updateLeadStatus(lead.id, value)}
@@ -428,7 +429,7 @@ const StudentTable = () => {
                       </SelectContent>
                     </Select>
 
-                  </td>
+                  </td> */}
 
                   <td className="flex items-center px-6 py-4 space-x-3">
                     <Action lead={lead} />
