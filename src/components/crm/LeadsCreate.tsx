@@ -14,8 +14,34 @@ import { createLead } from "./leadService";
 import toast from "react-hot-toast";
 import { leadSchema } from "./leadSchema";
 
+interface ClassRoutine {
+  id: string;
+  session?: string;
+  // Add other properties you expect from the API
+}
+
+interface ApiResponse<T> {
+  data: T[];
+  // Add other properties from your API response if needed
+}
+interface FormValues {
+  full_name: string;
+  phone: string;
+  email: string;
+  address: string;
+  previous_qualification: string;
+  current_status: string;
+  lead_source: string;
+  inquiry: string;
+  amount: number;
+  status: string;
+  follow_up_date: string;
+  tag: string;
+  class_routine: string;
+}
+
 const LeadsCreate = () => {
-  const [classRoutines, setClassRoutines] = React.useState<Array<{value: string, label: string}>>([]);
+const [classRoutines, setClassRoutines] = React.useState<{value: string, label: string}[]>([]);
   const [isLoadingRoutines, setIsLoadingRoutines] = React.useState(false);
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -80,7 +106,7 @@ const LeadsCreate = () => {
   });
 
 
-  const formik = useFormik({
+  const formik = useFormik<FormValues>({
     initialValues: {
       full_name: "",
       phone: "",
@@ -112,7 +138,6 @@ useEffect(() => {
           throw new Error('No authentication token found');
         }
 
-        // Get the raw inquiry value without modification
         const inquiryType = formik.values.inquiry;
         
         const response = await fetch(
@@ -132,13 +157,13 @@ useEffect(() => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         
-        const data = await response.json();
+        const data: ApiResponse<ClassRoutine> = await response.json();
         
         if (!data || !Array.isArray(data.data)) {
           throw new Error('Invalid data format received from API');
         }
         
-        const routines = data.data.map((classItem: any) => ({
+        const routines = data.data.map((classItem: ClassRoutine) => ({
           value: classItem.id,
           label: classItem.session || `Class ${classItem.id}`
         }));
@@ -162,8 +187,6 @@ useEffect(() => {
 
   fetchClassRoutines();
 }, [formik.values.inquiry, formik.values.status, router]);
-
-
   const previous_qualification = [
     { value: "ssc", label: "Secondary School Certificate" },
     { value: "hsc", label: "Higher Secondary Certificate (HSC)" },
