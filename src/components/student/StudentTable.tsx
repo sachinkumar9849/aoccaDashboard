@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import ViewDetail from './ViewDetail';
 import axios from 'axios';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { SearchIcon, RefreshCwIcon } from "lucide-react"
 import NoteList from './NoteList';
 import {
@@ -100,7 +100,6 @@ const StudentTable = () => {
   const [activeFilters, setActiveFilters] = useState<Partial<SearchFilters>>({});
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
 
-  const queryClient = useQueryClient();
 
   const { data, isLoading, isError, error } = useQuery<LeadsResponse, Error>({
     queryKey: ['leads', page, activeFilters],
@@ -133,40 +132,6 @@ const StudentTable = () => {
     if (data && page < data.meta.total_pages) setPage(page + 1);
   };
 
-  const updateLeadStatus = async (leadId: string, newStatus: string) => {
-    const token = localStorage.getItem('authToken') || '';
-    const previousLeads = queryClient.getQueryData<LeadsResponse>(['leads', page, activeFilters]);
-
-    if (previousLeads) {
-      const updatedLeads = {
-        ...previousLeads,
-        data: previousLeads.data.map(lead =>
-          lead.id === leadId ? { ...lead, status: newStatus } : lead
-        )
-      };
-      queryClient.setQueryData(['leads', page, activeFilters], updatedLeads);
-    }
-
-    try {
-      await axios.patch(
-        `${process.env.NEXT_PUBLIC_URL}/leads/${leadId}`,
-        { status: newStatus },
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-    } catch (error) {
-      // Revert on error
-      if (previousLeads) {
-        queryClient.setQueryData(['leads', page, activeFilters], previousLeads);
-      }
-      console.error('Error updating lead status:', error);
-      throw error;
-    }
-  };
 
   if (isLoading) {
     return <div className="flex items-center justify-center p-8">
