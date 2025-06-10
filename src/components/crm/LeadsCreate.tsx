@@ -8,50 +8,105 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import { SelectField } from "@/components/common/SelectFieldDemo";
-
 import DatePicker from "@/components/crm/DatePickerDemo";
 import { AxiosError } from "axios";
 import { createLead } from "./leadService";
 import toast from "react-hot-toast";
 import { leadSchema } from "./leadSchema";
 
+interface ClassRoutine {
+  id: string;
+  session?: string;
+  // Add other properties you expect from the API
+}
 
+interface ApiResponse<T> {
+  data: T[];
+  // Add other properties from your API response if needed
+}
+interface FormValues {
+  full_name: string;
+  phone: string;
+  email: string;
+  address: string;
+  previous_qualification: string;
+  current_status: string;
+  lead_source: string;
+  inquiry: string;
+  amount: number;
+  status: string;
+  follow_up_date: string;
+  tag: string;
+  class_routine: string;
+}
 
 const LeadsCreate = () => {
+const [classRoutines, setClassRoutines] = React.useState<{value: string, label: string}[]>([]);
+  const [isLoadingRoutines, setIsLoadingRoutines] = React.useState(false);
   const queryClient = useQueryClient();
   const router = useRouter();
+
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     if (!token) {
       router.push('/signin');
     }
   }, [router]);
+
+
   const mutation = useMutation({
     mutationFn: createLead,
     onSuccess: (data, variables) => {
       toast.success("Lead created successfully!");
-      
+
       // Invalidate both leads and followUpList queries
-      queryClient.invalidateQueries({ 
-        queryKey: ['leads'] 
+      queryClient.invalidateQueries({
+        queryKey: ['leads']
       });
-      
+
       // If the created lead has status 'followUp', invalidate followUpList
       if (variables.status === 'followUp') {
-        queryClient.invalidateQueries({ 
-          queryKey: ['followUpList'] 
+        queryClient.invalidateQueries({
+          queryKey: ['followUpList']
         });
       }
 
       formik.resetForm();
       router.push("/leads");
     },
-    onError: (error: AxiosError<{ message?: string }>) => {
-      toast.error(error.response?.data?.message || "Failed to create lead");
+    onError: (error: AxiosError<{ error?: string; message?: string }>) => {
+      console.log('Error details:', {
+        message: error.message,
+        response: error.response,
+        data: error.response?.data,
+        status: error.response?.status
+      });
+
+      // Get the error message from various possible locations
+      let errorMessage =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to create lead";
+
+      // Handle specific error cases
+      if (errorMessage.includes('parsing time')) {
+        errorMessage = "Please enter a valid follow-up date or leave it empty";
+      }
+
+      // Show the error in toast
+      toast.error(errorMessage);
+
+      // Special handling for phone number exists
+      if (errorMessage.toLowerCase().includes('phone')) {
+        const phoneInput = document.querySelector('input[name="phone"]');
+        if (phoneInput) (phoneInput as HTMLElement).focus();
+      }
     },
   });
 
-  const formik = useFormik({
+
+  const formik = useFormik<FormValues>({
     initialValues: {
       full_name: "",
       phone: "",
@@ -65,6 +120,7 @@ const LeadsCreate = () => {
       status: "new",
       follow_up_date: "",
       tag: "",
+      class_routine: "",
     },
     validationSchema: leadSchema,
     onSubmit: (values) => {
@@ -72,6 +128,65 @@ const LeadsCreate = () => {
     },
   });
 
+useEffect(() => {
+  const fetchClassRoutines = async () => {
+    if (formik.values.status === 'converted' && formik.values.inquiry) {
+      try {
+        setIsLoadingRoutines(true);
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          throw new Error('No authentication token found');
+        }
+
+        const inquiryType = formik.values.inquiry;
+        
+        const response = await fetch(
+          `http://156.67.104.182:8081/api/v1/classes?status=true&type=${inquiryType}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        
+        if (!response.ok) {
+          if (response.status === 401) {
+            throw new Error('Session expired. Please login again.');
+          }
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data: ApiResponse<ClassRoutine> = await response.json();
+        
+        if (!data || !Array.isArray(data.data)) {
+          throw new Error('Invalid data format received from API');
+        }
+        
+        const routines = data.data.map((classItem: ClassRoutine) => ({
+          value: classItem.id,
+          label: classItem.session || `Class ${classItem.id}`
+        }));
+        
+        setClassRoutines(routines);
+      } catch (error) {
+        console.error('Error fetching class routines:', error);
+        toast.error(error instanceof Error ? error.message : 'Failed to load class routines');
+        setClassRoutines([]);
+        
+        if (error instanceof Error && error.message.includes('Session expired')) {
+          router.push('/signin');
+        }
+      } finally {
+        setIsLoadingRoutines(false);
+      }
+    } else {
+      setClassRoutines([]);
+    }
+  };
+
+  fetchClassRoutines();
+}, [formik.values.inquiry, formik.values.status, router]);
   const previous_qualification = [
     { value: "ssc", label: "Secondary School Certificate" },
     { value: "hsc", label: "Higher Secondary Certificate (HSC)" },
@@ -94,10 +209,10 @@ const LeadsCreate = () => {
   ];
 
   const inquiryType = [
-    { value: "caFoundation", label: "CA Foundation" },
-    { value: "caIntermediate", label: "CA Intermediate" },
-    { value: "caFinal", label: "CA Final" },
-    { value: "mandatoryTraining", label: "Mandatory Training" },
+    { value: "CA-Foundation", label: "CA Foundation" },
+    { value: "CA-Intermediate", label: "CA Intermediate" },
+    { value: "CA-Final", label: "CA Final" },
+    { value: "CA-mandatory", label: "Mandatory Training" },
   ];
 
   const status = [
@@ -115,8 +230,8 @@ const LeadsCreate = () => {
     { value: "cold", label: "Cold" },
   ];
   const handleDateChange = (date: Date | null) => {
-    const formattedDate = date ? date.toISOString() : "";
-    formik.setFieldValue("follow_up_date", formattedDate);
+    // Only set the date if it's not null, otherwise set to empty string
+    formik.setFieldValue("follow_up_date", date ? date.toISOString() : "");
   };
 
   return (
@@ -126,10 +241,10 @@ const LeadsCreate = () => {
           <p className="text-base font-medium text-gray-800 dark:text-white/90">
             Student Details
           </p>
-        
+
         </div>
         <div className="space-y-6">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-4 gap-4">
             <div className="col-span-1">
               <Label>Full Name</Label>
               <Input
@@ -153,7 +268,7 @@ const LeadsCreate = () => {
                 error={!!(formik.touched.phone && formik.errors.phone)}
               />
             </div>
-            {/* <div className="col-span-1">
+            <div className="col-span-1">
               <Label>Email</Label>
               <Input
                 type="email"
@@ -163,7 +278,7 @@ const LeadsCreate = () => {
                 onBlur={formik.handleBlur}
                 error={!!(formik.touched.email && formik.errors.email)}
               />
-            </div> */}
+            </div>
             <div className="col-span-1">
               <Label>Address</Label>
               <Input
@@ -263,20 +378,50 @@ const LeadsCreate = () => {
                 error={!!(formik.touched.amount && formik.errors.amount)}
               />
             </div>
-            <div className="col-span-1">
-              <SelectField
-                options={status}
-                value={formik.values.status}
-                onChange={(value) => formik.setFieldValue("status", value)}
-                label="Status"
-                placeholder="Choose a status"
-              />
-              {formik.touched.status && formik.errors.status && (
-                <p className="mt-1 text-sm text-red-600">
-                  {formik.errors.status}
-                </p>
-              )}
-            </div>
+           <div className="col-span-1">
+  <SelectField
+    options={status}
+    value={formik.values.status}
+    onChange={(value) => formik.setFieldValue("status", value)}
+    label="Status"
+    placeholder="Choose a status"
+  />
+  {formik.touched.status && formik.errors.status && (
+    <p className="mt-1 text-sm text-red-600">
+      {formik.errors.status}
+    </p>
+  )}
+</div>
+
+{formik.values.status === 'converted' && (
+  <div className="col-span-1">
+    <SelectField
+      options={classRoutines}
+      value={formik.values.class_routine}
+      onChange={(value) => formik.setFieldValue("class_routine", value)}
+      label="Class Routine"
+      placeholder={
+        isLoadingRoutines 
+          ? "Loading..." 
+          : formik.values.inquiry 
+            ? classRoutines.length > 0 
+              ? "Select class routine" 
+              : "No routines available"
+            : "Select inquiry type first"
+      }
+      isDisabled={isLoadingRoutines || !formik.values.inquiry || classRoutines.length === 0}
+      isLoading={isLoadingRoutines}
+    />
+    {formik.touched.class_routine && formik.errors.class_routine && (
+      <p className="mt-1 text-sm text-red-600">
+        {formik.errors.class_routine}
+      </p>
+    )}
+  </div>
+)}
+
+
+           
             <div className="col-span-1">
               <SelectField
                 options={tag}
@@ -291,20 +436,24 @@ const LeadsCreate = () => {
                 </p>
               )}
             </div>
-            <div className="col-span-1">
-              <Label>Follow Up Date</Label>
-              <DatePicker
-                value={formik.values.follow_up_date ? new Date(formik.values.follow_up_date) : null}
-                onChange={handleDateChange}
-                minDate={new Date()}
-                className=""
-                dateFormat="yyyy-MM-dd"
 
-              />
-              {formik.touched.follow_up_date && formik.errors.follow_up_date && (
-                <p className="mt-1 text-sm text-red-600">
-                  {formik.errors.follow_up_date}
-                </p>
+            <div className="col-span-1">
+              {(formik.values.status === 'interested' || formik.values.status === 'followUp') && (
+                <>
+                  <Label>Follow Up Date</Label>
+                  <DatePicker
+                    value={formik.values.follow_up_date ? new Date(formik.values.follow_up_date) : null}
+                    onChange={handleDateChange}
+                    minDate={new Date()}
+                    className=""
+                    dateFormat="yyyy-MM-dd"
+                  />
+                  {formik.touched.follow_up_date && formik.errors.follow_up_date && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {formik.errors.follow_up_date}
+                    </p>
+                  )}
+                </>
               )}
             </div>
             <div className="col-span-3">

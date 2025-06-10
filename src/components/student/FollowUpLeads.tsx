@@ -1,16 +1,28 @@
+
+
 "use client";
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import ViewDetail from './ViewDetail';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
+import { SearchIcon, RefreshCwIcon } from "lucide-react"
 import NoteList from './NoteList';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import Action from './Action';
 import { Button } from '../ui/button';
+// import { Label } from '@radix-ui/react-select';
+import Input from '../form/input/InputField';
 import Label from '../form/Label';
 import DatePicker from '../crm/DatePickerDemo';
 
 
-
+// types/lead.ts
 export interface Lead {
   id: string;
   full_name: string;
@@ -51,21 +63,26 @@ interface SearchFilters {
 }
 
 const fetchLeads = async (page: number = 1, filters: Partial<SearchFilters> = {}): Promise<LeadsResponse> => {
+
+
+
+  // Get your auth token (modify this based on how you store your token)
   const token = localStorage.getItem('authToken') || '';
 
   const params = new URLSearchParams();
   params.append("page", page.toString());
   params.append("page_size", "10");
-  params.append("status", "followUp");
-
-  params.append("from_date", filters.from_date || '2025-05-30');
-  params.append("to_date", filters.to_date || new Date().toISOString().split('T')[0]);
-
+ params.append("status", "followUp");
   Object.entries(filters).forEach(([key, value]) => {
-    if (value && value.trim() !== '' && key !== 'from_date' && key !== 'to_date') {
+    if (value && value.trim() !== '') {
       params.append(key, value.trim());
     }
   });
+
+  if (!filters.from_date && !filters.to_date) {
+    params.append('from_date', '2024-01-01');
+    params.append('to_date', '2029-03-20');
+  }
 
   const response = await axios.get(
     `${process.env.NEXT_PUBLIC_URL}/leads?${params.toString()}`,
@@ -79,31 +96,41 @@ const fetchLeads = async (page: number = 1, filters: Partial<SearchFilters> = {}
   return response.data;
 };
 
-
-
 const FollowUpLeads = () => {
   const [page, setPage] = useState(1);
-  const [searchFilters, setSearchFilters] = useState<Partial<SearchFilters>>({
-    from_date: '2025-05-30',
-    to_date: new Date().toISOString().split('T')[0]
-  });
-  const [activeFilters, setActiveFilters] = useState<Partial<SearchFilters>>({
-    from_date: '2025-05-30',
-    to_date: new Date().toISOString().split('T')[0]
-  });
+  const [searchFilters, setSearchFilters] = useState<Partial<SearchFilters>>({});
+  const [activeFilters, setActiveFilters] = useState<Partial<SearchFilters>>({});
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
 
 
+  // const { data, isLoading, isError, error } = useQuery<LeadsResponse, Error>({
+  //   queryKey: ['leads', page, activeFilters],
+  //   queryFn: () => fetchLeads(page, activeFilters),
+  // });
 
-  const { data, isLoading, isError, error } = useQuery<LeadsResponse, Error>({
+
+    const { data, isLoading, isError, error } = useQuery<LeadsResponse, Error>({
     queryKey: ['followUpList', page, activeFilters],
     queryFn: () => fetchLeads(page, activeFilters),
   });
 
+  const handleFilterChange = (field: keyof SearchFilters, value: string) => {
+    setSearchFilters(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
 
+  const handleSearch = () => {
+    setActiveFilters(searchFilters);
+    setPage(1); // Reset to first page when searching
+  };
 
-
-
-
+  const handleReset = () => {
+    setSearchFilters({});
+    setActiveFilters({});
+    setPage(1);
+  };
 
   const handlePrevious = () => {
     if (page > 1) setPage(page - 1);
@@ -112,7 +139,6 @@ const FollowUpLeads = () => {
   const handleNext = () => {
     if (data && page < data.meta.total_pages) setPage(page + 1);
   };
-
 
 
   if (isLoading) {
@@ -126,15 +152,12 @@ const FollowUpLeads = () => {
     return <div className="text-red-600 p-4">Error: {error?.message}</div>;
   }
 
-
-  
-
-
+  const leadSources = ['phone', 'pyysicalVisit', 'website', 'whatsapp'];
+  const tags = ['hot', 'warm', 'cold'];
   const handleDateChange = (field: keyof SearchFilters, date: string | Date | null) => {
-    let dateString = '';
+  let dateString = '';
 
-
-      if (date) {
+  if (date) {
     if (typeof date === 'string') {
       dateString = date;
     } else if (date instanceof Date) {
@@ -145,57 +168,179 @@ const FollowUpLeads = () => {
     }
   }
 
-    const newFilters = {
-      ...searchFilters,
-      [field]: dateString
-    };
+  handleFilterChange(field, dateString);
+};
 
-    setSearchFilters(newFilters);
-    setActiveFilters(newFilters);
-    setPage(1);
-  };
 
   return (
     <>
+      <div className='p-6 rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] mb-6'>
+        <div className="flex items-center justify-between">
+          <h3 className="text-base font-medium text-gray-800 dark:text-white/90">Advanced Search</h3>
+          <Button
+            className='bg-[#0e54a1] text-white p-5'
+            variant="outline"
+            size="sm"
+            onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}
+          >
+            {showAdvancedSearch ? 'Hide Filters' : 'Show Filters'}
+          </Button>
+        </div>
 
-
-      <div className='p-4 rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] '>
-
-        <div className="grid grid-cols-2 items-center">
-          <div className="col-span-1">
-            <h3 className="text-base font-medium text-gray-800 dark:text-white/90">Leads</h3>
-          </div>
-
-          <div className="col-span-1">
+        {showAdvancedSearch && (
+          <div className="space-y-4">
+            {/* Date Range */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="col-span-1">
+              <div className="space-y-2">
                 <Label htmlFor="from_date">From Date</Label>
                 <div className="relative">
+
                   <DatePicker
-                    value={searchFilters.from_date || '2025-05-30'}
+                    value={searchFilters.from_date || ''}
                     onChange={(date) => handleDateChange('from_date', date)}
+                    minDate={new Date()}
                     className=""
                     dateFormat="yyyy-MM-dd"
                   />
                 </div>
               </div>
-              <div className="col-span-1">
+              <div className="space-y-2">
                 <Label htmlFor="to_date">To Date</Label>
                 <div className="relative">
+
                   <DatePicker
-                    value={searchFilters.to_date || new Date().toISOString().split('T')[0]}
+                    value={searchFilters.to_date || ''}
                     onChange={(date) => handleDateChange('to_date', date)}
                     className=""
                     dateFormat="yyyy-MM-dd"
                   />
+
                 </div>
               </div>
             </div>
+
+            {/* Contact Information */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="col-span-1">
+                <Label htmlFor="full_name">Full Name</Label>
+                <Input
+                  id="full_name"
+                  type="text"
+                  placeholder="Enter full name"
+                  value={searchFilters.full_name || ''}
+                  onChange={(e) => handleFilterChange('full_name', e.target.value)}
+                />
+              </div>
+              <div className="col-span-1">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter email address"
+                  value={searchFilters.email || ''}
+                  onChange={(e) => handleFilterChange('email', e.target.value)}
+                />
+              </div>
+              <div className="col-span-1">
+                <Label htmlFor="phone">Phone</Label>
+                <Input
+                  id="phone"
+                  type="text"
+                  placeholder="Enter phone number"
+                  value={searchFilters.phone || ''}
+                  onChange={(e) => handleFilterChange('phone', e.target.value)}
+                />
+              </div>
+              <div className="col-span-1">
+                <Label htmlFor="lead_source">Lead Source</Label>
+                <Select
+
+                  value={searchFilters.lead_source || undefined}
+                  onValueChange={(value) => handleFilterChange('lead_source', value === 'all' ? '' : value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select lead source" />
+                  </SelectTrigger>
+                  <SelectContent>
+
+                    {leadSources.map((source) => (
+                      <SelectItem key={source} value={source}>
+                        {source.charAt(0).toUpperCase() + source.slice(1).replace('_', ' ')}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="col-span-1">
+                <Label htmlFor="tag">Lead Priority</Label>
+                <Select
+                  value={searchFilters.tag || undefined}
+                  onValueChange={(value) => handleFilterChange('tag', value === 'all' ? '' : value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select tag" />
+                  </SelectTrigger>
+                  <SelectContent>
+
+                    {tags.map((tag) => (
+                      <SelectItem key={tag} value={tag}>
+                        {tag.charAt(0).toUpperCase() + tag.slice(1).replace('_', ' ')}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="col-span-1">
+                <Label htmlFor="address">Address</Label>
+                <Input
+                  id="address"
+                  type="text"
+                  placeholder="Enter address"
+                  value={searchFilters.address || ''}
+                  onChange={(e) => handleFilterChange('address', e.target.value)}
+                />
+              </div>
+            </div>
+
+
+            <div className="flex gap-3 pt-2 justify-end">
+              <Button onClick={handleSearch} className="flex items-center gap-2 bg-[#0c559f] text-white">
+                <SearchIcon className="h-4 w-6" />
+                Search
+              </Button>
+              <Button variant="outline" onClick={handleReset} className="flex items-center gap-2">
+                <RefreshCwIcon className="h-4 w-4" />
+                Reset
+              </Button>
+            </div>
           </div>
+        )}
+        {Object.keys(activeFilters).length > 0 && (
+          <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-sm font-medium">Active Filters:</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {Object.entries(activeFilters).map(([key, value]) => {
+                if (!value) return null;
+                return (
+                  <span
+                    key={key}
+                    className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 text-xs rounded-md"
+                  >
+                    <span className="font-medium">{key.replace('_', ' ')}:</span>
+                    <span>{value}</span>
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+      {/* search end  */}
 
-
-        </div>
-
+      <div className='p-4 rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] '>
+        <h3 className="text-base font-medium text-gray-800 dark:text-white/90">Leads</h3>
         <div className="relative overflow-x-auto mb-5 mt-4" >
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -232,14 +377,32 @@ const FollowUpLeads = () => {
                   </td>
                   <th
                     scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    className="capitalize px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
                     {lead.full_name}
                   </th>
-                  <td className="px-6 py-4">{lead.phone}</td>
-                  <td className="px-6 py-4 capitalize">{lead.status}</td>
+                  <td className="px-6 py-4 ">{lead.phone}</td>
+                    <td className="px-6 py-4 capitalize">{lead.status}</td>
 
+                  {/* <td className="px-6 py-4">
+                    <Select
+                      value={lead.status}
+                      onValueChange={(value) => updateLeadStatus(lead.id, value)}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent className='bg-white'>
+                        <SelectItem value="new">New</SelectItem>
+                        <SelectItem value="followUp">Follow Up</SelectItem>
+                        <SelectItem value="interested">Interested</SelectItem>
+                        <SelectItem value="converted">Converted</SelectItem>
+                        <SelectItem value="notInterested">Not Interested</SelectItem>
+                        <SelectItem value="canceled">NCanceled</SelectItem>
+                      </SelectContent>
+                    </Select>
 
+                  </td> */}
 
                   <td className="flex items-center px-6 py-4 space-x-3">
                     <Action lead={lead} />
@@ -300,6 +463,10 @@ const FollowUpLeads = () => {
 }
 
 export default FollowUpLeads
+
+
+
+
 
 
 

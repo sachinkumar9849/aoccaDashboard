@@ -1,19 +1,11 @@
 "use client";
-import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Edit, Eye } from 'lucide-react';
 import { apiClient } from '@/api/client';
 import Link from 'next/link';
-import DeleteConfirmationDialog from '@/components/common/DeleteConfirmationDialog';
 import Button from '@/components/ui/button/Button';
 
-type CAFoundation = 'news' | 'blogs';
-
-interface SEO {
-  meta_title: string;
-  meta_description: string;
-  meta_keywords: string[];
-}
 
 interface NewsBlog {
   id: string; // Changed from number to string to match API response
@@ -28,7 +20,7 @@ interface NewsBlog {
   created_at: string;
   updated_at: string;
   deleted_at: string | null; // Added deleted_at from API
-  seo?: SEO; // Made optional since API doesn't return this
+
   sort_order?: number; // Made optional since API doesn't return this
 }
 
@@ -44,41 +36,16 @@ interface ApiResponse {
 }
 
 const CaFoundationList: React.FC = () => {
-  const [activeTab] = useState<'all' | CAFoundation>('all');
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [itemToDelete] = useState<string | null>(null); // Changed to string
-  const queryClient = useQueryClient();
+
 
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
     queryKey: ['routine-ca-final-list'],
     queryFn: async () => {
-      const response = await apiClient.request<ApiResponse>('/classes?=CA-Final');
-      return response.data; // Extract the data array from the response
+      const response = await apiClient.request<ApiResponse>('/classes?type=CA-Final');
+      console.log("sachin", response)
+      return response.data;
     }
   });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => // Changed to string
-      apiClient.request(`/classes/${id}`, { // Fixed URL structure
-        method: 'DELETE'
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['routine-ca-final-list'] });
-    }
-  });
-
-
-
-  const handleConfirmDelete = () => {
-    if (itemToDelete) {
-      deleteMutation.mutate(itemToDelete);
-    }
-    setIsDeleteDialogOpen(false);
-  };
-
-  const handleCloseDeleteDialog = () => {
-    setIsDeleteDialogOpen(false);
-  };
 
 
   const getStatusBadge = (status: boolean): string => { // Changed to boolean
@@ -87,9 +54,6 @@ const CaFoundationList: React.FC = () => {
       : 'text-orange-600 bg-orange-100';
   };
 
-  const filteredItems = data?.filter(item =>
-    activeTab === 'all' || item.type === activeTab
-  );
 
   if (isLoading) {
     return (
@@ -117,7 +81,7 @@ const CaFoundationList: React.FC = () => {
           <Button>Add</Button>
         </Link>
       </div>
-      
+
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
@@ -129,8 +93,8 @@ const CaFoundationList: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredItems && filteredItems.length > 0 ? (
-              filteredItems.map((item) => (
+            {data && data.length > 0 ? (
+              data.map((item) => (
                 <tr key={item.id} className="border-b hover:bg-gray-50">
                   <td className="py-3 px-6 w-[300px]">
                     <div className="flex items-center gap-3">
@@ -154,7 +118,7 @@ const CaFoundationList: React.FC = () => {
                       <Link href={`/routine-ca-final/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
                         <Edit size={18} />
                       </Link>
-                     
+
                       <button className="p-1 text-green-500 hover:text-green-700" title="View">
                         <Eye size={18} />
                       </button>
@@ -173,11 +137,7 @@ const CaFoundationList: React.FC = () => {
         </table>
       </div>
 
-      <DeleteConfirmationDialog 
-        isOpen={isDeleteDialogOpen} 
-        onClose={handleCloseDeleteDialog} 
-        onConfirm={handleConfirmDelete}
-      />
+
     </div>
   );
 };
