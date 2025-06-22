@@ -59,6 +59,7 @@ interface SearchFilters {
   full_name: string;
   lead_source: string;
   tag: string;
+  amount: string;
   address: string;
 }
 

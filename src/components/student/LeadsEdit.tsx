@@ -44,6 +44,7 @@ interface Lead {
     lead_source?: string;
     inquiry?: string;
     class_routine?: string;
+    amount: number;
 }
 
 interface LeadsEditProps {
@@ -124,6 +125,7 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
             email: lead.email,
             address: lead.address,
             status: lead.status,
+            amount: lead.amount,
             tag: lead.tag || '',
             inquiry: lead.inquiry || '',
             lead_source: lead.lead_source || '',
@@ -318,6 +320,16 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
                                     {formik.errors.lead_source}
                                 </p>
                             )}
+                        </div>
+                         <div className="col-span-1">
+                            <Label htmlFor="amount">Amount</Label>
+                            <Input
+                                id="amount"
+                                name="amount"
+                                type="text"
+                                onChange={formik.handleChange}
+                                value={formik.values.amount}
+                            />
                         </div>
                         <div className="col-span-1">
                             <SelectField
