@@ -56,7 +56,7 @@ const NotesAdd: React.FC<NotesAddProps> = ({ isOpen, onOpenChange, lead }) => {
         }
 
         const response = await axios.post(
-            `http://156.67.104.182:8081/api/v1/leads/${lead.id}/notes`,
+            `${process.env.NEXT_PUBLIC_URL}/leads/${lead.id}/notes`,
             noteData,
             {
                 headers: {

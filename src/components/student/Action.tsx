@@ -21,6 +21,7 @@ interface Lead {
     phone: string;
     email: string;
     status: string;
+    amount: number;
 
 }
 
