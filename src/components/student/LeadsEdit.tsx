@@ -152,7 +152,7 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
                     const inquiryType = formik.values.inquiry;
 
                     const response = await fetch(
-                        `http://156.67.104.182:8081/api/v1/classes?status=true&type=${inquiryType}`,
+                        `${process.env.NEXT_PUBLIC_URL}/classes?status=true&type=${inquiryType}`,
                         {
                             headers: {
                                 'Authorization': `Bearer ${token}`,

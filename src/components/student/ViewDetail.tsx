@@ -46,7 +46,7 @@ interface ViewDetailProps {
 const fetchNotes = async (leadId: string) => {
     const token = localStorage.getItem('authToken') || '';
     const response = await axios.get(
-        `http://156.67.104.182:8081/api/v1/leads/${leadId}/notes`,
+        `${process.env.NEXT_PUBLIC_URL}/leads/${leadId}/notes`,
         {
             headers: {
                 'Authorization': `Bearer ${token}`,
