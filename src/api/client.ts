@@ -27,9 +27,10 @@ export const apiClient = {
       // Clear authentication data
       localStorage.removeItem("authToken");
       localStorage.removeItem("user");
-      
-      // Redirect to signup page
-      window.location.href = "/signin";
+
+      // Use window.location.replace instead of href for better redirect
+      // This prevents the page from being added to browser history
+      window.location.replace("/signin");
     }
   },
 
@@ -37,11 +38,11 @@ export const apiClient = {
    * Make an authenticated API request
    */
   async request<T>(
-    endpoint: string, 
+    endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
     const token = this.getToken();
-    
+
     if (!token) {
       this.handleTokenExpiration();
       throw new Error("Authentication token is required. Please log in.");
@@ -65,14 +66,12 @@ export const apiClient = {
       }
 
       if (!response.ok) {
-        const error = await response.json();
+        const error = await response.json().catch(() => ({ message: null }));
         throw new Error(error.message || `API request failed with status ${response.status}`);
       }
 
       return response.json();
     } catch (error) {
-      // If error is from fetch (network error), we may need to check if it's
-      // related to authentication. For now, we'll re-throw the error.
       throw error;
     }
   },
@@ -86,7 +85,7 @@ export const apiClient = {
       body: formData,
     });
   },
-  
+
   createNewsBlog: async (formData: FormData) => {
     return apiClient.request("/create-news-blog", {
       method: "POST",
@@ -99,33 +98,31 @@ export const apiClient = {
       method: "GET",
     });
   },
-  
+
   updateNewsBlog: async (id: string | string[], formData: FormData) => {
     return apiClient.request(`/update-news-blog/${id}`, {
       method: "PATCH",
       body: formData,
     });
   },
-  
+
   createTeam: async (formData: FormData) => {
     return apiClient.request("/create-toper-testimonial-team", {
       method: "POST",
       body: formData,
     });
   },
- 
+
   getToperTestimonialTeamById: async (newsId: string | string[]) => {
     return apiClient.request(`/toper-testimonial-team/${newsId}`, {
       method: "GET",
     });
   },
-  
+
   updateToperTestimonialTeamById: async (id: string | string[], formData: FormData) => {
     return apiClient.request(`/update-toper-testimonial-team/${id}`, {
       method: "PATCH",
       body: formData,
     });
   },
-
-  // Add more API methods as needed...
 };
