@@ -14,17 +14,19 @@ interface SelectFieldProps {
   className?: string;
   isDisabled?: boolean;
   isLoading?: boolean;
+  direction?: 'up' | 'down';
 }
 
 export const SelectField: React.FC<SelectFieldProps> = ({
-  options=[],
+  options = [],
   placeholder = "Select an option",
   label,
   onChange,
   value,
   className = '',
-   isDisabled = false,
+  isDisabled = false,
   isLoading = false,
+  direction = 'down',
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -79,15 +81,14 @@ export const SelectField: React.FC<SelectFieldProps> = ({
         </label>
       )}
 
-      <div ref={dropdownRef} className="w-full">
+      <div ref={dropdownRef} className="w-full relative">
         {/* Selection display */}
-     <button
+        <button
           type="button"
           onClick={toggleDropdown}
           disabled={isDisabled || isLoading}
-          className={`relative w-full flex items-center justify-between bg-white border border-gray-300 rounded-md py-2 px-3 text-left cursor-pointer focus:outline-none ${
-            isDisabled || isLoading ? 'opacity-70 cursor-not-allowed' : ''
-          }`}
+          className={`relative w-full flex items-center justify-between bg-white border border-gray-300 rounded-md py-2 px-3 text-left cursor-pointer focus:outline-none ${isDisabled || isLoading ? 'opacity-70 cursor-not-allowed' : ''
+            }`}
         >
           <span className={`block truncate ${!selectedOption ? 'text-gray-500' : ''}`}>
             {isLoading ? 'Loading...' : (selectedOption ? selectedOption.label : placeholder)}
@@ -108,7 +109,8 @@ export const SelectField: React.FC<SelectFieldProps> = ({
 
         {/* Dropdown */}
         {isOpen && (
-          <div className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md overflow-hidden border border-gray-300">
+          <div className={`absolute z-10 w-full bg-white shadow-lg max-h-60 rounded-md overflow-hidden border border-gray-300 ${direction === 'up' ? 'bottom-full mb-1' : 'mt-1'
+            }`}>
             {/* Search input */}
             <div className="p-2 border-b border-gray-300">
               <input
