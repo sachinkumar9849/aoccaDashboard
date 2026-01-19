@@ -14,14 +14,17 @@ const axiosInstance = axios.create({
 // Request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
-    // Get token from localStorage
-    const token = localStorage.getItem('authToken');
-    
-    // If token exists, add to headers
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+    // Check if we are in the browser environment
+    if (typeof window !== 'undefined') {
+      // Get token from localStorage
+      const token = localStorage.getItem('authToken');
+
+      // If token exists, add to headers
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
     }
-    
+
     return config;
   },
   (error) => {
@@ -37,14 +40,16 @@ axiosInstance.interceptors.response.use(
   (error) => {
     // Handle 401 unauthorized errors
     if (error.response && error.response.status === 401) {
-      // Clear local storage
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
-      
-      // Redirect to login page (using window.location in interceptor since we're outside React context)
-      window.location.href = '/signin';
+      if (typeof window !== 'undefined') {
+        // Clear local storage
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+
+        // Redirect to login page
+        window.location.href = '/signin';
+      }
     }
-    
+
     return Promise.reject(error);
   }
 );
