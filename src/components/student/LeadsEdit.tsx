@@ -59,7 +59,7 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
     const [isLoadingRoutines, setIsLoadingRoutines] = React.useState(false);
     const queryClient = useQueryClient();
     const router = useRouter();
-    
+
     const previous_qualification = [
         { value: "ssc", label: "Secondary School Certificate" },
         { value: "hsc", label: "Higher Secondary Certificate (HSC)" },
@@ -228,7 +228,7 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
                 </DialogHeader>
                 <form onSubmit={formik.handleSubmit} className=" ">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ">
-                         <div className="col-span-1">
+                        <div className="col-span-1">
                             <Label htmlFor="full_name">Full Name</Label>
                             <Input
                                 id="full_name"
@@ -321,7 +321,7 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
                                 </p>
                             )}
                         </div>
-                         <div className="col-span-1">
+                        <div className="col-span-1">
                             <Label htmlFor="amount">Amount</Label>
                             <Input
                                 id="amount"
@@ -338,6 +338,7 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
                                 onChange={(value) => formik.setFieldValue("inquiry", value)}
                                 label="Inquiry Type"
                                 placeholder="Choose inquiry type"
+                                direction="up"
                             />
                             {formik.touched.inquiry && formik.errors.inquiry && (
                                 <p className="mt-1 text-sm text-red-600">
@@ -360,7 +361,7 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
                                 <option value="cold">Cold</option>
                             </select>
                         </div>
-                      
+
                         <div className="col-span-1">
                             <SelectField
                                 options={status}
@@ -368,6 +369,7 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
                                 onChange={(value) => formik.setFieldValue("status", value)}
                                 label="Status"
                                 placeholder="Choose a status"
+                                direction="up"
                             />
                             {formik.touched.status && formik.errors.status && (
                                 <p className="mt-1 text-sm text-red-600">
@@ -383,6 +385,7 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
                                     value={formik.values.class_routine}
                                     onChange={(value) => formik.setFieldValue("class_routine", value)}
                                     label="Class Routine"
+                                    direction="up"
                                     placeholder={
                                         isLoadingRoutines
                                             ? "Loading..."

@@ -41,7 +41,7 @@ interface FormValues {
 }
 
 const LeadsCreate = () => {
-const [classRoutines, setClassRoutines] = React.useState<{value: string, label: string}[]>([]);
+  const [classRoutines, setClassRoutines] = React.useState<{ value: string, label: string }[]>([]);
   const [isLoadingRoutines, setIsLoadingRoutines] = React.useState(false);
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -128,65 +128,65 @@ const [classRoutines, setClassRoutines] = React.useState<{value: string, label: 
     },
   });
 
-useEffect(() => {
-  const fetchClassRoutines = async () => {
-    if (formik.values.status === 'converted' && formik.values.inquiry) {
-      try {
-        setIsLoadingRoutines(true);
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-          throw new Error('No authentication token found');
-        }
+  useEffect(() => {
+    const fetchClassRoutines = async () => {
+      if (formik.values.status === 'converted' && formik.values.inquiry) {
+        try {
+          setIsLoadingRoutines(true);
+          const token = localStorage.getItem('authToken');
+          if (!token) {
+            throw new Error('No authentication token found');
+          }
 
-        const inquiryType = formik.values.inquiry;
-        
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_URL}/classes?status=true&type=${inquiryType}`,
-          {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
+          const inquiryType = formik.values.inquiry;
+
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_URL}/classes?status=true&type=${inquiryType}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              }
             }
-          }
-        );
-        
-        if (!response.ok) {
-          if (response.status === 401) {
-            throw new Error('Session expired. Please login again.');
-          }
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data: ApiResponse<ClassRoutine> = await response.json();
-        
-        if (!data || !Array.isArray(data.data)) {
-          throw new Error('Invalid data format received from API');
-        }
-        
-        const routines = data.data.map((classItem: ClassRoutine) => ({
-          value: classItem.id,
-          label: classItem.session || `Class ${classItem.id}`
-        }));
-        
-        setClassRoutines(routines);
-      } catch (error) {
-        console.error('Error fetching class routines:', error);
-        toast.error(error instanceof Error ? error.message : 'Failed to load class routines');
-        setClassRoutines([]);
-        
-        if (error instanceof Error && error.message.includes('Session expired')) {
-          router.push('/signin');
-        }
-      } finally {
-        setIsLoadingRoutines(false);
-      }
-    } else {
-      setClassRoutines([]);
-    }
-  };
+          );
 
-  fetchClassRoutines();
-}, [formik.values.inquiry, formik.values.status, router]);
+          if (!response.ok) {
+            if (response.status === 401) {
+              throw new Error('Session expired. Please login again.');
+            }
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data: ApiResponse<ClassRoutine> = await response.json();
+
+          if (!data || !Array.isArray(data.data)) {
+            throw new Error('Invalid data format received from API');
+          }
+
+          const routines = data.data.map((classItem: ClassRoutine) => ({
+            value: classItem.id,
+            label: classItem.session || `Class ${classItem.id}`
+          }));
+
+          setClassRoutines(routines);
+        } catch (error) {
+          console.error('Error fetching class routines:', error);
+          toast.error(error instanceof Error ? error.message : 'Failed to load class routines');
+          setClassRoutines([]);
+
+          if (error instanceof Error && error.message.includes('Session expired')) {
+            router.push('/signin');
+          }
+        } finally {
+          setIsLoadingRoutines(false);
+        }
+      } else {
+        setClassRoutines([]);
+      }
+    };
+
+    fetchClassRoutines();
+  }, [formik.values.inquiry, formik.values.status, router]);
   const previous_qualification = [
     { value: "ssc", label: "Secondary School Certificate" },
     { value: "hsc", label: "Higher Secondary Certificate (HSC)" },
@@ -345,6 +345,7 @@ useEffect(() => {
                 onChange={(value) => formik.setFieldValue("lead_source", value)}
                 label="Lead Source"
                 placeholder="Choose source"
+                direction="up"
               />
               {formik.touched.lead_source && formik.errors.lead_source && (
                 <p className="mt-1 text-sm text-red-600">
@@ -359,6 +360,7 @@ useEffect(() => {
                 onChange={(value) => formik.setFieldValue("inquiry", value)}
                 label="Inquiry Type"
                 placeholder="Choose inquiry type"
+                direction="up"
               />
               {formik.touched.inquiry && formik.errors.inquiry && (
                 <p className="mt-1 text-sm text-red-600">
@@ -378,50 +380,52 @@ useEffect(() => {
                 error={!!(formik.touched.amount && formik.errors.amount)}
               />
             </div>
-           <div className="col-span-1">
-  <SelectField
-    options={status}
-    value={formik.values.status}
-    onChange={(value) => formik.setFieldValue("status", value)}
-    label="Status"
-    placeholder="Choose a status"
-  />
-  {formik.touched.status && formik.errors.status && (
-    <p className="mt-1 text-sm text-red-600">
-      {formik.errors.status}
-    </p>
-  )}
-</div>
+            <div className="col-span-1">
+              <SelectField
+                options={status}
+                value={formik.values.status}
+                onChange={(value) => formik.setFieldValue("status", value)}
+                label="Status"
+                placeholder="Choose a status"
+                direction="up"
+              />
+              {formik.touched.status && formik.errors.status && (
+                <p className="mt-1 text-sm text-red-600">
+                  {formik.errors.status}
+                </p>
+              )}
+            </div>
 
-{formik.values.status === 'converted' && (
-  <div className="col-span-1">
-    <SelectField
-      options={classRoutines}
-      value={formik.values.class_routine}
-      onChange={(value) => formik.setFieldValue("class_routine", value)}
-      label="Class Routine"
-      placeholder={
-        isLoadingRoutines 
-          ? "Loading..." 
-          : formik.values.inquiry 
-            ? classRoutines.length > 0 
-              ? "Select class routine" 
-              : "No routines available"
-            : "Select inquiry type first"
-      }
-      isDisabled={isLoadingRoutines || !formik.values.inquiry || classRoutines.length === 0}
-      isLoading={isLoadingRoutines}
-    />
-    {formik.touched.class_routine && formik.errors.class_routine && (
-      <p className="mt-1 text-sm text-red-600">
-        {formik.errors.class_routine}
-      </p>
-    )}
-  </div>
-)}
+            {formik.values.status === 'converted' && (
+              <div className="col-span-1">
+                <SelectField
+                  options={classRoutines}
+                  value={formik.values.class_routine}
+                  onChange={(value) => formik.setFieldValue("class_routine", value)}
+                  label="Class Routine"
+                  direction="up"
+                  placeholder={
+                    isLoadingRoutines
+                      ? "Loading..."
+                      : formik.values.inquiry
+                        ? classRoutines.length > 0
+                          ? "Select class routine"
+                          : "No routines available"
+                        : "Select inquiry type first"
+                  }
+                  isDisabled={isLoadingRoutines || !formik.values.inquiry || classRoutines.length === 0}
+                  isLoading={isLoadingRoutines}
+                />
+                {formik.touched.class_routine && formik.errors.class_routine && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {formik.errors.class_routine}
+                  </p>
+                )}
+              </div>
+            )}
 
 
-           
+
             <div className="col-span-1">
               <SelectField
                 options={tag}
@@ -429,6 +433,7 @@ useEffect(() => {
                 onChange={(value) => formik.setFieldValue("tag", value)}
                 label="Lead Priority"
                 placeholder="Select Lead Priority"
+                direction="up"
               />
               {formik.touched.tag && formik.errors.tag && (
                 <p className="mt-1 text-sm text-red-600">
@@ -447,6 +452,7 @@ useEffect(() => {
                     minDate={new Date()}
                     className=""
                     dateFormat="yyyy-MM-dd"
+
                   />
                   {formik.touched.follow_up_date && formik.errors.follow_up_date && (
                     <p className="mt-1 text-sm text-red-600">
