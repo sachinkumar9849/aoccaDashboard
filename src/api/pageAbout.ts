@@ -10,17 +10,25 @@ export const createPage = async (pageData: PageFormValues): Promise<PageResponse
       data: pageData
     };
 
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+    }
+
     const response = await axios.post<PageResponse>(
-      `${API_URL}/create-page`, 
-      formattedData, 
+      `${API_URL}/create-page`,
+      formattedData,
       {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        }
+        headers
       }
     );
-    console.log("sachin response",response)
+    console.log("sachin response", response)
     return response.data;
   } catch (err) {
     const error = err as AxiosError<ApiErrorResponse>;
