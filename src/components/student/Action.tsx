@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faEllipsisVertical,
     faPencil
-   
+
 } from "@fortawesome/free-solid-svg-icons";
 import {
     DropdownMenu,
@@ -88,13 +88,15 @@ const Action: React.FC<ActionProps> = ({ lead }) => {
                         </svg>
                         <span className="text-gray-700 font-medium"> Notes Add</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                        className="flex items-center gap-3 py-3 px-4 hover:bg-gray-100 cursor-pointer"
-                        onClick={handleEditClick}
-                    >
-                        <FontAwesomeIcon icon={faPencil} className="text-gray-600" />
-                        <span className="text-gray-700 font-medium">Edit</span>
-                    </DropdownMenuItem>
+                    {lead.status !== "converted" && (
+                        <DropdownMenuItem
+                            className="flex items-center gap-3 py-3 px-4 hover:bg-gray-100 cursor-pointer"
+                            onClick={handleEditClick}
+                        >
+                            <FontAwesomeIcon icon={faPencil} className="text-gray-600" />
+                            <span className="text-gray-700 font-medium">Edit</span>
+                        </DropdownMenuItem>
+                    )}
 
                 </DropdownMenuContent>
             </DropdownMenu>
