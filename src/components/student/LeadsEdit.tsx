@@ -384,7 +384,7 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
                                     options={classRoutines}
                                     value={formik.values.class_routine}
                                     onChange={(value) => formik.setFieldValue("class_routine", value)}
-                                    label="Class Routine"
+                                    label="Class"
                                     direction="up"
                                     placeholder={
                                         isLoadingRoutines
