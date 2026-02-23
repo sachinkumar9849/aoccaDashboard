@@ -158,9 +158,14 @@ const CaFoundationList: React.FC = () => {
                       <button className="p-1 text-green-500 hover:text-green-700" title="View">
                         <Eye size={18} />
                       </button>
-                      <button className="p-1 text-black hover:text-black" title="View">
+                      <Link
+                        style={{ lineHeight: "13px" }}
+                        href={`/student-class?session=${item.session}&type=${item.type}&classId=${item.id}`}
+                        className="bg-[#0d57a0] text-white rounded-md px-3 h-[21px] leading-[21px]  p-1 text-black hover:text-black text-[13px] btnClass"
+                        title="View"
+                      >
                         Go To Class
-                      </button>
+                      </Link>
                     </div>
 
                   </td>
