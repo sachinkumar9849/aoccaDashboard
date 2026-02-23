@@ -158,8 +158,13 @@ const CaFoundationList: React.FC = () => {
                       <button className="p-1 text-green-500 hover:text-green-700" title="View">
                         <Eye size={18} />
                       </button>
+                      <button className="p-1 text-black hover:text-black" title="View">
+                        Go To Class
+                      </button>
                     </div>
+
                   </td>
+
                 </tr>
               ))
             ) : (
