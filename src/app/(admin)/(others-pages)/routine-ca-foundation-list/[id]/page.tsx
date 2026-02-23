@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -71,23 +71,23 @@ const UpdateClassPage = () => {
     onMutate: async () => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries({ queryKey: ['routine-ca-foundation'] });
-      
+
       // Snapshot the previous value
       const previousClasses = queryClient.getQueryData(['routine-ca-foundation']);
 
       // Optimistically update to the new value
-     
+
       return { previousClasses };
     },
-    onSuccess: async () => {
+    onSuccess: async (responseData) => {
       toast.success("Class updated successfully!");
-      
+      queryClient.setQueryData(["class", id], responseData);
       // Invalidate and refetch both queries
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["class", id] }),
         queryClient.invalidateQueries({ queryKey: ["routine-ca-foundation"] })
       ]);
-      
+
       router.push("/routine-ca-foundation-list");
     },
     onError: (error: Error, variables, context) => {
@@ -101,9 +101,9 @@ const UpdateClassPage = () => {
 
   const formik = useFormik({
     initialValues: {
-      session: classData?.data.session || "",
-      total_student: classData?.data.total_student || 0,
-      status: classData?.data.status || false,
+      session: classData?.data?.session || "",
+      total_student: classData?.data?.total_student || 0,
+      status: Boolean(classData?.data?.status),
       type: "CA-Foundation",
     },
     validationSchema,
@@ -113,12 +113,24 @@ const UpdateClassPage = () => {
     },
   });
 
+  // Manual sync to ensure the form accurately reflects API data
+  useEffect(() => {
+    if (classData?.data) {
+      formik.setValues({
+        session: classData.data.session || "",
+        total_student: classData.data.total_student || 0,
+        status: Boolean(classData.data.status),
+        type: "CA-Foundation",
+      });
+    }
+  }, [classData?.data]);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <form onSubmit={formik.handleSubmit} className="space-y-6">
+    <form key={classData?.data?.id || "loading"} onSubmit={formik.handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 gap-5">
         <ComponentCard title="CA Foundation routine edit">
           <div className="grid grid-cols-2 gap-2">
@@ -131,7 +143,7 @@ const UpdateClassPage = () => {
                 value={formik.values.session}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-               
+
               />
             </div>
             <div className="col-span-1">
@@ -143,7 +155,7 @@ const UpdateClassPage = () => {
                 value={formik.values.total_student}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-               
+
               />
             </div>
             <div className="col-span-1">
@@ -152,6 +164,7 @@ const UpdateClassPage = () => {
                   <div className="col-span-1 mt-3 dd">
                     <Label htmlFor="status">Status</Label>
                     <Select
+                      key={String(formik.values.status)}
                       name="status"
                       value={formik.values.status ? "true" : "false"}
                       onValueChange={(value) =>

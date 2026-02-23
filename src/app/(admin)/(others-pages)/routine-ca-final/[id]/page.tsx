@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -101,9 +101,9 @@ const UpdateClassPage = () => {
 
   const formik = useFormik({
     initialValues: {
-      session: classData?.data.session || "",
-      total_student: classData?.data.total_student || 0,
-      status: classData?.data.status || false,
+      session: classData?.data?.session || "",
+      total_student: classData?.data?.total_student || 0,
+      status: classData?.data?.status === true || String(classData?.data?.status) === "true",
       type: "CA-Final",
     },
     validationSchema,
@@ -113,12 +113,24 @@ const UpdateClassPage = () => {
     },
   });
 
+  // Manual sync to ensure the form accurately reflects API data
+  useEffect(() => {
+    if (classData?.data) {
+      formik.setValues({
+        session: classData.data.session || "",
+        total_student: classData.data.total_student || 0,
+        status: Boolean(classData.data.status),
+        type: "CA-Final",
+      });
+    }
+  }, [classData?.data]);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <form onSubmit={formik.handleSubmit} className="space-y-6">
+    <form key={classData?.data?.id || "loading"} onSubmit={formik.handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 gap-5">
         <ComponentCard title="CA Intermediate routine update">
           <div className="grid grid-cols-2 gap-2">
@@ -152,6 +164,7 @@ const UpdateClassPage = () => {
                   <div className="col-span-1 mt-3 dd">
                     <Label htmlFor="status">Status</Label>
                     <Select
+                      key={String(formik.values.status)}
                       name="status"
                       value={formik.values.status ? "true" : "false"}
                       onValueChange={(value) =>

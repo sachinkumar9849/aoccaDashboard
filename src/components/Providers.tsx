@@ -15,7 +15,8 @@ export default function Providers({ children }: ProvidersProps) {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 60 * 1000, // 1 minute
+        staleTime: 0, // ✅ Always refetch when invalidated
+        refetchOnWindowFocus: false,
       },
     },
   }));
@@ -28,7 +29,7 @@ export default function Providers({ children }: ProvidersProps) {
         </ProtectedRoute>
       </AuthProvider>
       <Toaster position="top-right" />
-      
+
     </QueryClientProvider>
   );
 }
