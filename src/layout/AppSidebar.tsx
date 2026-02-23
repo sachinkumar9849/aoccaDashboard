@@ -46,6 +46,11 @@ const navItems: NavItem[] = [
     icon: <ListIcon />,
     subItems: [{ name: "CA Foundation ", path: "/routine-ca-foundation-list", pro: false }, { name: "CA Intermediate ", path: "/routine-ca-intermediate", pro: false }, { name: "CA Final ", path: "/routine-ca-final", pro: false }, { name: "CA Mandatory ", path: "/routine-ca-mandatory", pro: false }],
   },
+  {
+    name: "Subjects",
+    icon: <ListIcon />,
+    subItems: [{ name: "Subject List", path: "/subjects", pro: false }, { name: "Create Subject", path: "/subjects/create", pro: false }],
+  },
 
   // {
   //   name: "News",

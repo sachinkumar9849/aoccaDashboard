@@ -66,8 +66,10 @@ export const apiClient = {
       }
 
       if (!response.ok) {
-        const error = await response.json().catch(() => ({ message: null }));
-        throw new Error(error.message || `API request failed with status ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        // Backend could return {"error":"..."} or {"message":"..."} or a generic string
+        const errorMsg = errorData?.error || errorData?.message || `API request failed with status ${response.status}`;
+        throw new Error(errorMsg);
       }
 
       return response.json();
