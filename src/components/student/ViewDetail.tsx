@@ -40,6 +40,10 @@ interface ViewDetailProps {
         tag: string;
         created_at: string;
         updated_at: string;
+        class_management?: {
+            id: string;
+            session: string;
+        };
     };
 }
 
@@ -159,6 +163,12 @@ const ViewDetail: React.FC<ViewDetailProps> = ({ leadId, leadData }) => {
                                             <span className="w-32 text-gray-500 text-sm">Follow-up Date</span>
                                             <span className="font-medium text-gray-800 flex-1">{formatDate(leadData.follow_up_date)}</span>
                                         </div>
+                                        {leadData.class_management?.session && (
+                                            <div className="flex items-start">
+                                                <span className="w-32 text-gray-500 text-sm">Session</span>
+                                                <span className="font-medium text-gray-800 flex-1">{leadData.class_management.session}</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 

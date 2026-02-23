@@ -37,6 +37,11 @@ export interface Lead {
   tag: string;
   created_at: string;
   updated_at: string;
+  class_management_id?: string;
+  class_management?: {
+    id: string;
+    session: string;
+  };
 }
 
 export interface LeadsResponse {
@@ -353,6 +358,9 @@ const StudentTable = () => {
                   Current Status
                 </th>
                 <th scope="col" className="px-6 py-3">
+                  Session
+                </th>
+                <th scope="col" className="px-6 py-3">
                   Action
                 </th>
               </tr>
@@ -380,6 +388,7 @@ const StudentTable = () => {
                   </th>
                   <td className="px-6 py-4 ">{lead.phone}</td>
                   <td className="px-6 py-4 capitalize">{lead.status}</td>
+                  <td className="px-6 py-4 capitalize">{lead?.class_management?.session}</td>
 
                   {/* <td className="px-6 py-4">
                     <Select
@@ -420,7 +429,8 @@ const StudentTable = () => {
                         follow_up_date: lead.follow_up_date,
                         tag: lead.tag,
                         created_at: lead.created_at,
-                        updated_at: lead.updated_at
+                        updated_at: lead.updated_at,
+                        class_management: lead.class_management
                       }}
                     />
                     <NoteList leadId={lead.id} />

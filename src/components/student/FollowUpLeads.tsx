@@ -39,6 +39,11 @@ export interface Lead {
   tag: string;
   created_at: string;
   updated_at: string;
+  class_management_id?: string;
+  class_management?: {
+    id: string;
+    session: string;
+  };
 }
 
 export interface LeadsResponse {
@@ -73,7 +78,7 @@ const fetchLeads = async (page: number = 1, filters: Partial<SearchFilters> = {}
   const params = new URLSearchParams();
   params.append("page", page.toString());
   params.append("page_size", "10");
- params.append("status", "followUp");
+  params.append("status", "followUp");
   Object.entries(filters).forEach(([key, value]) => {
     if (value && value.trim() !== '') {
       params.append(key, value.trim());
@@ -110,7 +115,7 @@ const FollowUpLeads = () => {
   // });
 
 
-    const { data, isLoading, isError, error } = useQuery<LeadsResponse, Error>({
+  const { data, isLoading, isError, error } = useQuery<LeadsResponse, Error>({
     queryKey: ['followUpList', page, activeFilters],
     queryFn: () => fetchLeads(page, activeFilters),
   });
@@ -156,21 +161,21 @@ const FollowUpLeads = () => {
   const leadSources = ['phone', 'pyysicalVisit', 'website', 'whatsapp'];
   const tags = ['hot', 'warm', 'cold'];
   const handleDateChange = (field: keyof SearchFilters, date: string | Date | null) => {
-  let dateString = '';
+    let dateString = '';
 
-  if (date) {
-    if (typeof date === 'string') {
-      dateString = date;
-    } else if (date instanceof Date) {
-      // Use UTC methods to avoid timezone issues
-      dateString = new Date(
-        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-      ).toISOString().split('T')[0];
+    if (date) {
+      if (typeof date === 'string') {
+        dateString = date;
+      } else if (date instanceof Date) {
+        // Use UTC methods to avoid timezone issues
+        dateString = new Date(
+          Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+        ).toISOString().split('T')[0];
+      }
     }
-  }
 
-  handleFilterChange(field, dateString);
-};
+    handleFilterChange(field, dateString);
+  };
 
 
   return (
@@ -362,6 +367,9 @@ const FollowUpLeads = () => {
                   Current Status
                 </th>
                 <th scope="col" className="px-6 py-3">
+                  Session
+                </th>
+                <th scope="col" className="px-6 py-3">
                   Action
                 </th>
               </tr>
@@ -382,8 +390,9 @@ const FollowUpLeads = () => {
                   >
                     {lead.full_name}
                   </th>
-                  <td className="px-6 py-4 ">{lead.phone}</td>
-                    <td className="px-6 py-4 capitalize">{lead.status}</td>
+                  <td className="px-6 py-4 capitalize">{lead.phone}</td>
+                  <td className="px-6 py-4 capitalize">{lead.status}</td>
+                  <td className="px-6 py-4 capitalize">{lead?.class_management?.session}</td>
 
                   {/* <td className="px-6 py-4">
                     <Select
@@ -424,7 +433,8 @@ const FollowUpLeads = () => {
                         follow_up_date: lead.follow_up_date,
                         tag: lead.tag,
                         created_at: lead.created_at,
-                        updated_at: lead.updated_at
+                        updated_at: lead.updated_at,
+                        class_management: lead.class_management
                       }}
                     />
                     <NoteList leadId={lead.id} />

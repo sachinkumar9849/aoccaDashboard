@@ -45,6 +45,11 @@ interface Lead {
     inquiry?: string;
     class_routine?: string;
     amount: number;
+    class_management_id?: string;
+    class_management?: {
+        id: string;
+        session: string;
+    };
 }
 
 interface LeadsEditProps {
