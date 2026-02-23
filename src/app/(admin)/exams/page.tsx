@@ -5,6 +5,8 @@ import { apiClient } from '@/api/client';
 import Link from 'next/link';
 import Button from '@/components/ui/button/Button';
 
+import { Eye } from "lucide-react";
+
 interface ClassManagement {
     id: string;
     session: string;
@@ -171,6 +173,7 @@ const ExamList: React.FC = () => {
                                     <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Exam Type</th>
                                     <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Session</th>
                                     <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Conducted At</th>
+                                    <th className="py-3 px-6 text-right text-sm font-medium text-gray-600">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -191,11 +194,29 @@ const ExamList: React.FC = () => {
                                             <td className="py-3 px-6 text-gray-700">
                                                 {formatDate(item.conducted_at)}
                                             </td>
+                                            <td className="py-3 px-6 text-right">
+                                                <div className="flex justify-end pr-2 gap-2">
+                                                    <Link
+                                                        href={`/exams/${item.id}`}
+                                                        className="inline-flex items-center justify-center w-12 h-8 text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-800 rounded-md transition-colors text-xs font-medium"
+                                                        title="View Details"
+                                                    >
+                                                        View
+                                                    </Link>
+                                                    <Link
+                                                        href={`/exams/${item.id}/edit`}
+                                                        className="inline-flex items-center justify-center w-12 h-8 text-orange-600 bg-orange-50 hover:bg-orange-100 hover:text-orange-800 rounded-md transition-colors text-xs font-medium"
+                                                        title="Edit Exam"
+                                                    >
+                                                        Edit
+                                                    </Link>
+                                                </div>
+                                            </td>
                                         </tr>
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan={4} className="py-8 text-center text-gray-500">
+                                        <td colSpan={5} className="py-8 text-center text-gray-500">
                                             No exams found matching your criteria
                                         </td>
                                     </tr>
