@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/api/client';
 import Link from 'next/link';
 import Button from '@/components/ui/button/Button';
+import { Edit } from 'lucide-react';
 
 interface Subject {
     id: string;
@@ -82,6 +83,7 @@ const SubjectList: React.FC = () => {
                             <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Name</th>
                             <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Status</th>
                             <th className="py-3 px-6 text-left text-sm font-medium text-gray-600">Created At</th>
+                            <th className="py-3 px-6 text-right text-sm font-medium text-gray-600">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -102,11 +104,18 @@ const SubjectList: React.FC = () => {
                                     <td className="py-3 px-6 text-gray-700">
                                         {formatDate(item.created_at)}
                                     </td>
+                                    <td className="py-3 px-6 text-right">
+                                        <div className="flex justify-end gap-2">
+                                            <Link href={`/subjects/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
+                                                <Edit size={18} />
+                                            </Link>
+                                        </div>
+                                    </td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={4} className="py-8 text-center text-gray-500">
+                                <td colSpan={5} className="py-8 text-center text-gray-500">
                                     No subjects found
                                 </td>
                             </tr>
