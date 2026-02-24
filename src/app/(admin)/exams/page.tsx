@@ -5,7 +5,7 @@ import { apiClient } from '@/api/client';
 import Link from 'next/link';
 import Button from '@/components/ui/button/Button';
 
-import { Eye } from "lucide-react";
+import { Eye, Edit, FileText } from "lucide-react";
 
 interface ClassManagement {
     id: string;
@@ -209,6 +209,13 @@ const ExamList: React.FC = () => {
                                                         title="Edit Exam"
                                                     >
                                                         Edit
+                                                    </Link>
+                                                    <Link
+                                                        href={`/exams/${item.id}/results`}
+                                                        className="inline-flex items-center justify-center p-2 text-purple-600 bg-purple-50 hover:bg-purple-100 hover:text-purple-800 rounded-md transition-colors"
+                                                        title="Manage Results"
+                                                    >
+                                                        <FileText size={18} />
                                                     </Link>
                                                 </div>
                                             </td>

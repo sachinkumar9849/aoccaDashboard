@@ -79,9 +79,16 @@ export default function ExamDetailView() {
             {/* Header section */}
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-semibold text-gray-800">Exam Details</h2>
-                <Link href="/exams">
-                    <Button variant="outline">Back to List</Button>
-                </Link>
+                <div className="flex gap-3">
+                    <Link href={`/exams/${id}/results`}>
+                        <div className="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white transition-colors" style={{ backgroundColor: "#165dfc" }}>
+                            Manage Results
+                        </div>
+                    </Link>
+                    <Link href="/exams">
+                        <Button variant="outline">Back to List</Button>
+                    </Link>
+                </div>
             </div>
 
             {/* Top Details Card */}
