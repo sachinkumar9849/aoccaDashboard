@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/api/client";
 import Link from "next/link";
@@ -49,14 +49,29 @@ interface RoutineSlot {
 }
 
 interface RoutineDetailResponse {
-    class_management_id: string;
-    routine_date: string;
     data: RoutineSlot[];
+    total: number;
+}
+
+interface Subject {
+    id: string;
+    code: string;
+    name: string;
+}
+
+interface Teacher {
+    id: number;
+    name: string;
+    title: string;
+}
+
+interface SubjectsResponse {
+    data: Subject[];
 }
 
 const CLASS_TYPES = ["CA-Foundation", "CA-Intermediate", "CA-Final", "CA-Mandatory"];
 
-const RoutineListPage: React.FC = () => {
+const RoutineListPageContent: React.FC = () => {
     const searchParams = useSearchParams();
     const qClassId = searchParams.get("class_management_id") || "";
     const qRoutineDate = searchParams.get("routine_date") || null;
@@ -121,16 +136,16 @@ const RoutineListPage: React.FC = () => {
     const selectedClass = allClasses?.find((c) => c.id === selectedClassId);
 
     // Fetch subjects (for mapping names and Edit Modal)
-    const { data: subjectsData, isLoading: subjectsLoading } = useQuery<any>({
+    const { data: subjectsData, isLoading: subjectsLoading } = useQuery<SubjectsResponse>({
         queryKey: ["subjects-for-routine-edit"],
-        queryFn: () => apiClient.request<any>("/subjects?page=1&limit=100"),
+        queryFn: () => apiClient.request<SubjectsResponse>("/subjects?page=1&limit=100"),
     });
 
     // Fetch teachers (for mapping names and Edit Modal)
-    const { data: teachers, isLoading: teachersLoading } = useQuery<any[]>({
+    const { data: teachers, isLoading: teachersLoading } = useQuery<Teacher[]>({
         queryKey: ["teachers-for-routine-edit"],
         queryFn: () =>
-            apiClient.request<any[]>("/toper-testimonial-team?type=teamTwo&status=published"),
+            apiClient.request<Teacher[]>("/toper-testimonial-team?type=teamTwo&status=published"),
     });
 
     // Mutations
@@ -405,7 +420,7 @@ const RoutineListPage: React.FC = () => {
                                                                     </td>
                                                                     <td className="py-2.5 px-4 text-gray-700">
                                                                         {slot.subject_name ||
-                                                                            subjectsData?.data?.find((s: any) => s.id === slot.subject_id)?.name ||
+                                                                            subjectsData?.data?.find((s: Subject) => s.id === slot.subject_id)?.name ||
                                                                             slot.subject_id}
                                                                     </td>
                                                                     <td className="py-2.5 px-4 text-gray-700">
@@ -479,7 +494,7 @@ const RoutineListPage: React.FC = () => {
                         >
                             <option value="">Select a subject</option>
                             {subjectsLoading && <option disabled>Loading...</option>}
-                            {subjectsData?.data?.map((sub: any) => (
+                            {subjectsData?.data?.map((sub: Subject) => (
                                 <option key={sub.id} value={sub.id}>
                                     {sub.name} ({sub.code})
                                 </option>
@@ -497,7 +512,7 @@ const RoutineListPage: React.FC = () => {
                         >
                             <option value="">Select a teacher</option>
                             {teachersLoading && <option disabled>Loading...</option>}
-                            {teachers?.map((t: any) => (
+                            {teachers?.map((t: Teacher) => (
                                 <option key={t.id} value={t.id}>
                                     {t.name} — {t.title}
                                 </option>
@@ -525,6 +540,14 @@ const RoutineListPage: React.FC = () => {
                 </div>
             </Modal>
         </div>
+    );
+};
+
+const RoutineListPage: React.FC = () => {
+    return (
+        <Suspense fallback={<div className="p-12 text-center text-gray-500">Loading routine data...</div>}>
+            <RoutineListPageContent />
+        </Suspense>
     );
 };
 

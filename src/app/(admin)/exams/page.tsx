@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/api/client';
@@ -42,7 +42,7 @@ const inquiryTypes = [
     { value: "CA-mandatory", label: "Mandatory Training" },
 ];
 
-const ExamList: React.FC = () => {
+const ExamListContent: React.FC = () => {
     const searchParams = useSearchParams();
     const urlType = searchParams.get('type');
     const urlClassId = searchParams.get('classId');
@@ -275,6 +275,14 @@ const ExamList: React.FC = () => {
                 </>
             )}
         </div>
+    );
+};
+
+const ExamList: React.FC = () => {
+    return (
+        <Suspense fallback={<div className="p-8 text-center text-gray-500">Loading exam data...</div>}>
+            <ExamListContent />
+        </Suspense>
     );
 };
 

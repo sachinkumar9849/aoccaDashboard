@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/api/client';
 import toast from 'react-hot-toast';
@@ -28,7 +28,6 @@ const inquiryTypes = [
 ];
 
 export default function CreateExam() {
-    const router = useRouter();
     const queryClient = useQueryClient();
 
     // Selectors for cascading dropdowns
