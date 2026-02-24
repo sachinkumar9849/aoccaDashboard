@@ -56,6 +56,11 @@ const navItems: NavItem[] = [
     icon: <ListIcon />,
     subItems: [{ name: "Exam List", path: "/exams", pro: false }, { name: "Create Exam", path: "/exams/create", pro: false }],
   },
+  {
+    name: "Routine",
+    icon: <ListIcon />,
+    subItems: [{ name: "Routine List", path: "/routine", pro: false }, { name: "Create Routine", path: "/routine/create", pro: false }],
+  },
 
   // {
   //   name: "News",
