@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Edit,Eye } from 'lucide-react';
+import { Edit, Eye } from 'lucide-react';
 import { apiClient } from '@/api/client';
 import Link from 'next/link';
 import DeleteConfirmationDialog from '@/components/common/DeleteConfirmationDialog';
@@ -117,7 +117,7 @@ const CaFoundationList: React.FC = () => {
           <Button>Add</Button>
         </Link>
       </div>
-      
+
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
@@ -154,12 +154,22 @@ const CaFoundationList: React.FC = () => {
                       <Link href={`/routine-ca-foundation-list/${item.id}`} className="p-1 text-blue-500 hover:text-blue-700" title="Edit">
                         <Edit size={18} />
                       </Link>
-                      
+
                       <button className="p-1 text-green-500 hover:text-green-700" title="View">
                         <Eye size={18} />
                       </button>
+                      <Link
+                        style={{ lineHeight: "13px" }}
+                        href={`/student-class?session=${item.session}&type=${item.type}&classId=${item.id}`}
+                        className="bg-[#0d57a0] text-white rounded-md px-3 h-[21px] leading-[21px]  p-1 text-black hover:text-black text-[13px] btnClass"
+                        title="View"
+                      >
+                        Go To Class
+                      </Link>
                     </div>
+
                   </td>
+
                 </tr>
               ))
             ) : (
@@ -173,9 +183,9 @@ const CaFoundationList: React.FC = () => {
         </table>
       </div>
 
-      <DeleteConfirmationDialog 
-        isOpen={isDeleteDialogOpen} 
-        onClose={handleCloseDeleteDialog} 
+      <DeleteConfirmationDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
         onConfirm={handleConfirmDelete}
       />
     </div>

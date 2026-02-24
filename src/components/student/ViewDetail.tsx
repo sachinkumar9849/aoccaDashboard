@@ -40,6 +40,10 @@ interface ViewDetailProps {
         tag: string;
         created_at: string;
         updated_at: string;
+        class_management?: {
+            id: string;
+            session: string;
+        };
     };
 }
 
@@ -64,10 +68,7 @@ const formatDate = (dateString: string | null) => {
 };
 
 const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-    }).format(amount);
+    return `Rs ${new Intl.NumberFormat('en-NP').format(amount)}`;
 };
 
 const ViewDetail: React.FC<ViewDetailProps> = ({ leadId, leadData }) => {
@@ -88,17 +89,30 @@ const ViewDetail: React.FC<ViewDetailProps> = ({ leadId, leadData }) => {
                 <DialogHeader>
                     <DialogDescription className='bg-white'>
                         <div className="bg-white">
-                            <div className="flex items-center space-x-4 mb-6">
-                                <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-                                    <span className="text-xl text-white font-bold">
-                                        {leadData.full_name.split(' ').map(n => n[0]).join('').toUpperCase()}
-                                    </span>
+                            <div className="flex items-center justify-between space-x-4 mb-6">
+                                <div className="flex items-center">
+                                    <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <span className="text-xl text-white font-bold">
+                                            {leadData.full_name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                                        </span>
+                                    </div>
+                                    <div className='ml-2'>
+                                        <DialogTitle>{leadData.full_name}</DialogTitle>
+                                        <p className="text-sm text-gray-600">Lead Status: <span className="font-semibold capitalize">{leadData.status}</span></p>
+                                        <p className="text-sm text-gray-600">Tag: <span className="font-semibold capitalize">{leadData.tag || 'None'}</span></p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <DialogTitle>{leadData.full_name}</DialogTitle>
-                                    <p className="text-sm text-gray-600">Lead Status: <span className="font-semibold capitalize">{leadData.status}</span></p>
-                                    <p className="text-sm text-gray-600">Tag: <span className="font-semibold capitalize">{leadData.tag || 'None'}</span></p>
-                                </div>
+                                <div className="flex items-start">
+                                    <span className="w-32 text-gray-500 text-sm text-right mr-2">Created At:-</span>
+                                    <span className="font-bold text-gray-800 flex-1">
+                                        {new Date(leadData.created_at).toLocaleDateString('en-US', {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                        })}
+                                    </span>                                </div>
                             </div>
 
                             <div className="border-t border-gray-200 pt-4">
@@ -121,10 +135,12 @@ const ViewDetail: React.FC<ViewDetailProps> = ({ leadId, leadData }) => {
                                             <span className="w-32 text-gray-500 text-sm">Address</span>
                                             <span className="font-medium text-gray-800 flex-1">{leadData.address}</span>
                                         </div>
+
                                         <div className="flex items-start">
                                             <span className="w-32 text-gray-500 text-sm">Previous Qualification</span>
                                             <span className="font-medium text-gray-800 flex-1">{leadData.previous_qualification}</span>
                                         </div>
+
                                     </div>
                                     <div className="space-y-3">
                                         <div className="flex items-start">
@@ -147,6 +163,12 @@ const ViewDetail: React.FC<ViewDetailProps> = ({ leadId, leadData }) => {
                                             <span className="w-32 text-gray-500 text-sm">Follow-up Date</span>
                                             <span className="font-medium text-gray-800 flex-1">{formatDate(leadData.follow_up_date)}</span>
                                         </div>
+                                        {leadData.class_management?.session && (
+                                            <div className="flex items-start">
+                                                <span className="w-32 text-gray-500 text-sm">Session</span>
+                                                <span className="font-medium text-gray-800 flex-1">{leadData.class_management.session}</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 

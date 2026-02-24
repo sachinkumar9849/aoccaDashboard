@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import axiosInstance from "@/lib/axios";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -343,10 +344,14 @@ function PromoteModal({ selectedCount, selectedStudentIds, onClose, onSuccess }:
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
-export default function StudentClassPage() {
+function StudentClassContent() {
+    const searchParams = useSearchParams();
+    const urlType = searchParams.get("type");
+    const urlClassId = searchParams.get("classId");
+
     // Filter state
-    const [selectedType, setSelectedType] = useState("CA-Final");
-    const [selectedClassId, setSelectedClassId] = useState("");
+    const [selectedType, setSelectedType] = useState(urlType || "CA-Final");
+    const [selectedClassId, setSelectedClassId] = useState(urlClassId || "");
     const [searchQuery, setSearchQuery] = useState("");
 
     // Data state
@@ -381,15 +386,19 @@ export default function StudentClassPage() {
             setSessionsLoading(true);
             setSessionsError("");
             setSessions([]);
-            setSelectedClassId("");
+            // Don't clear selectedClassId if it was provided in the URL on initial mount
+            if (!urlClassId) {
+                setSelectedClassId("");
+            }
             try {
                 const res = await axiosInstance.get<ClassesResponse>(
                     `${BASE_URL}/classes?status=true&type=${selectedType}`
                 );
                 const data = res.data.data ?? [];
                 setSessions(data);
-                // Auto-select first session → triggers auto-fetch useEffect
-                if (data.length > 0) {
+
+                // Auto-select first session ONLY if no classId was provided in the URL
+                if (data.length > 0 && !urlClassId) {
                     setSelectedClassId(data[0].id);
                 }
             } catch {
@@ -399,7 +408,7 @@ export default function StudentClassPage() {
             }
         };
         fetchSessions();
-    }, [selectedType]);
+    }, [selectedType, urlClassId]);
 
     // ── Auto-fetch students when a classId is available ─────────────────────────
     useEffect(() => {
@@ -740,5 +749,17 @@ export default function StudentClassPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function StudentClassPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center p-6">
+                <div className="text-gray-500">Loading student class...</div>
+            </div>
+        }>
+            <StudentClassContent />
+        </Suspense>
     );
 }

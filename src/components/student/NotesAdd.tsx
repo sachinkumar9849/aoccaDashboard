@@ -22,6 +22,11 @@ interface Lead {
     previous_qualification?: string;
     tag?: string;
     follow_up_date?: string;
+    class_management_id?: string;
+    class_management?: {
+        id: string;
+        session: string;
+    };
 }
 
 interface NotesAddProps {
@@ -50,7 +55,7 @@ const NotesAdd: React.FC<NotesAddProps> = ({ isOpen, onOpenChange, lead }) => {
     const addNote = async (noteData: NoteData) => {
         // Get the auth token - replace this with your actual token retrieval method
         const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-        
+
         if (!token) {
             throw new Error('No authentication token found. Please log in again.');
         }
@@ -73,7 +78,7 @@ const NotesAdd: React.FC<NotesAddProps> = ({ isOpen, onOpenChange, lead }) => {
         mutationFn: addNote,
         onSuccess: async () => {
             toast.success('Note added successfully!');
-            
+
             // Immediately refetch the notes query
             await Promise.all([
                 queryClient.invalidateQueries({ queryKey: ['notes', lead.id] }),
@@ -83,11 +88,11 @@ const NotesAdd: React.FC<NotesAddProps> = ({ isOpen, onOpenChange, lead }) => {
                 queryClient.refetchQueries({ queryKey: ['notes', lead.id] }),
                 queryClient.refetchQueries({ queryKey: ['lead-notes', lead.id] }),
             ]);
-            
+
             formik.resetForm();
             onOpenChange(false);
         },
-       
+
     });
 
     // Formik setup
@@ -100,7 +105,7 @@ const NotesAdd: React.FC<NotesAddProps> = ({ isOpen, onOpenChange, lead }) => {
             // You'll need to get the actual user ID from your auth context/state
             // Replace this with the actual logged-in user ID
             const userId = "ae4c46fa-ff56-45d9-8c3d-bb2101076256"; // This should come from your auth context
-            
+
             addNoteMutation.mutate({
                 content: values.content,
                 added_by: userId,
@@ -157,11 +162,10 @@ const NotesAdd: React.FC<NotesAddProps> = ({ isOpen, onOpenChange, lead }) => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             placeholder="Add a note about this lead..."
-                            className={`w-full p-3 border rounded-lg resize-none focus:outline-none ${
-                                formik.touched.content && formik.errors.content
+                            className={`w-full p-3 border rounded-lg resize-none focus:outline-none ${formik.touched.content && formik.errors.content
                                     ? 'border-red-500 focus:ring-red-500'
                                     : 'border-gray-300'
-                            }`}
+                                }`}
                             rows={4}
                             disabled={addNoteMutation.isPending}
                         />

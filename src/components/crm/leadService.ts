@@ -17,13 +17,18 @@ export interface Lead {
   tag: string;
   created_at?: string;
   updated_at?: string;
+  class_management_id?: string;
+  class_management?: {
+    id: string;
+    session: string;
+  };
 }
 
 export const createLead = async (leadData: Omit<Lead, 'id' | 'created_at' | 'updated_at'>): Promise<Lead> => {
   try {
     // Clone the data to avoid mutating the original
     const payload = { ...leadData };
-    
+
     // Remove empty follow_up_date
     if (payload.follow_up_date === "") {
       delete payload.follow_up_date;
@@ -33,7 +38,7 @@ export const createLead = async (leadData: Omit<Lead, 'id' | 'created_at' | 'upd
     return response.data;
   } catch (error) {
     const axiosError = error as AxiosError<{ error?: string; message?: string }>;
-   
+
     throw axiosError;
   }
 };

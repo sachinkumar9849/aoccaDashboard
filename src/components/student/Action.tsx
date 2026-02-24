@@ -22,7 +22,11 @@ interface Lead {
     email: string;
     status: string;
     amount: number;
-
+    class_management_id?: string;
+    class_management?: {
+        id: string;
+        session: string;
+    };
 }
 
 interface ActionProps {
