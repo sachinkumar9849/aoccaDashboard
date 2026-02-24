@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/api/client';
 import Link from 'next/link';
@@ -41,15 +42,33 @@ const inquiryTypes = [
     { value: "CA-mandatory", label: "Mandatory Training" },
 ];
 
-const ExamList: React.FC = () => {
+const ExamListContent: React.FC = () => {
+    const searchParams = useSearchParams();
+    const urlType = searchParams.get('type');
+    const urlClassId = searchParams.get('classId');
+
     const [page, setPage] = useState(1);
     const limit = 10;
 
-    // Filters
-    const [selectedType, setSelectedType] = useState(inquiryTypes[0].value);
-    const [selectedClassId, setSelectedClassId] = useState("");
+    // Filters — initialize from URL params if present
+    const [selectedType, setSelectedType] = useState(
+        urlType && inquiryTypes.some(t => t.value === urlType) ? urlType : inquiryTypes[0].value
+    );
+    const [selectedClassId, setSelectedClassId] = useState(urlClassId || "");
     const [selectedExamType, setSelectedExamType] = useState("");
     const [sessions, setSessions] = useState<ClassManagement[]>([]);
+    const initialClassIdApplied = useRef(false);
+
+    // Sync URL params to state on client-side navigation
+    useEffect(() => {
+        if (urlType && inquiryTypes.some(t => t.value === urlType)) {
+            setSelectedType(urlType);
+        }
+        if (urlClassId) {
+            setSelectedClassId(urlClassId);
+            initialClassIdApplied.current = false; // reset so fetch effect uses the new classId
+        }
+    }, [urlType, urlClassId]);
 
     useEffect(() => {
         if (!selectedType) {
@@ -63,7 +82,13 @@ const ExamList: React.FC = () => {
                     `/classes?status=true&type=${selectedType}`
                 );
                 setSessions(res.data || []);
-                if (res.data && res.data.length > 0) {
+
+                // If we have a classId from URL and haven't applied it yet, use it
+                if (urlClassId && !initialClassIdApplied.current) {
+                    const match = res.data?.find(s => s.id === urlClassId);
+                    setSelectedClassId(match ? urlClassId : res.data?.[0]?.id || "");
+                    initialClassIdApplied.current = true;
+                } else if (res.data && res.data.length > 0) {
                     setSelectedClassId(res.data[0].id);
                 } else {
                     setSelectedClassId("");
@@ -196,13 +221,7 @@ const ExamList: React.FC = () => {
                                             </td>
                                             <td className="py-3 px-6 text-right">
                                                 <div className="flex justify-end pr-2 gap-2">
-                                                    <Link
-                                                        href={`/exams/${item.id}`}
-                                                        className="inline-flex items-center justify-center w-12 h-8 text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-800 rounded-md transition-colors text-xs font-medium"
-                                                        title="View Details"
-                                                    >
-                                                        View
-                                                    </Link>
+
                                                     <Link
                                                         href={`/exams/${item.id}/edit`}
                                                         className="inline-flex items-center justify-center w-12 h-8 text-orange-600 bg-orange-50 hover:bg-orange-100 hover:text-orange-800 rounded-md transition-colors text-xs font-medium"
@@ -256,6 +275,14 @@ const ExamList: React.FC = () => {
                 </>
             )}
         </div>
+    );
+};
+
+const ExamList: React.FC = () => {
+    return (
+        <Suspense fallback={<div className="p-8 text-center text-gray-500">Loading exam data...</div>}>
+            <ExamListContent />
+        </Suspense>
     );
 };
 
