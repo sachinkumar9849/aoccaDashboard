@@ -66,6 +66,7 @@ export default function ExamResultsPage() {
 
     const [editingState, setEditingState] = useState<Record<string, EditingResult>>({});
     const [isSaving, setIsSaving] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
     // Fetch Exam Detail to get columns (Subjects)
     const { data: exam, isLoading: isLoadingExam } = useQuery<ExamDetail>({
@@ -81,6 +82,16 @@ export default function ExamResultsPage() {
 
     const results = resultsResponse?.data || [];
     const subjects = exam?.exam_subjects || [];
+
+    // Filter results based on search query
+    const filteredResults = results.filter(res => {
+        if (!searchQuery.trim()) return true;
+        const query = searchQuery.toLowerCase();
+        return (
+            res.student.full_name.toLowerCase().includes(query) ||
+            res.student.email.toLowerCase().includes(query)
+        );
+    });
 
     // Initialize editing state when results load
     useEffect(() => {
@@ -246,11 +257,33 @@ export default function ExamResultsPage() {
                     >
                         {isSaving ? 'Saving...' : 'Save Bulk Results'}
                     </Button>
-                    <Link href={`/exams/${id}`}>
+                    <Link href="/exams">
                         <Button variant="outline">Back to Details</Button>
                     </Link>
                 </div>
             </div>
+
+            {/* Search Input */}
+            {results.length > 0 && (
+                <div className="relative">
+                    <svg
+                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input
+                        type="text"
+                        placeholder="Search student by name or email..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full max-w-sm pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-shadow"
+                    />
+                </div>
+            )}
 
             {results.length === 0 ? (
                 <div className="text-center py-16 border rounded-lg bg-gray-50 border-gray-100">
@@ -282,7 +315,7 @@ export default function ExamResultsPage() {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {results.map((res) => {
+                            {filteredResults.map((res) => {
                                 const editingRow = editingState[res.student_id];
                                 return (
                                     <tr key={res.id} className="hover:bg-gray-50 group">
