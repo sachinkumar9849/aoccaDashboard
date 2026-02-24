@@ -25,7 +25,7 @@ export default function CreateSubject() {
             queryClient.invalidateQueries({ queryKey: ['subjects'] });
             router.push('/subjects');
         },
-        onError: (error: any) => {
+        onError: (error: Error) => {
             toast.error(error?.message || 'Failed to create subject');
         },
     });

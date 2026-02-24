@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import axiosInstance from "@/lib/axios";
 
@@ -344,7 +344,7 @@ function PromoteModal({ selectedCount, selectedStudentIds, onClose, onSuccess }:
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
-export default function StudentClassPage() {
+function StudentClassContent() {
     const searchParams = useSearchParams();
     const urlType = searchParams.get("type");
     const urlClassId = searchParams.get("classId");
@@ -749,5 +749,17 @@ export default function StudentClassPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function StudentClassPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center p-6">
+                <div className="text-gray-500">Loading student class...</div>
+            </div>
+        }>
+            <StudentClassContent />
+        </Suspense>
     );
 }

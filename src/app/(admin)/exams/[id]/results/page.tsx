@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/api/client';
 import toast from 'react-hot-toast';
 import Button from '@/components/ui/button/Button';
@@ -145,8 +145,8 @@ export default function ExamResultsPage() {
             });
             toast.success('Bulk save completed successfully!');
             queryClient.invalidateQueries({ queryKey: ['examResults', id] });
-        } catch (error: any) {
-            toast.error(error?.message || 'Failed to save results bulk');
+        } catch (error: unknown) {
+            toast.error((error as Error)?.message || 'Failed to save results bulk');
         } finally {
             setIsSaving(false);
         }
@@ -170,7 +170,7 @@ export default function ExamResultsPage() {
             a.click();
             window.URL.revokeObjectURL(url);
             document.body.removeChild(a);
-        } catch (error: any) {
+        } catch {
             toast.error("Template download failed.");
         }
     };
@@ -201,8 +201,8 @@ export default function ExamResultsPage() {
 
             toast.success('Results imported successfully!', { id: toastId });
             queryClient.invalidateQueries({ queryKey: ['examResults', id] });
-        } catch (error: any) {
-            toast.error(error.message || 'Import failed', { id: toastId });
+        } catch (error: unknown) {
+            toast.error((error as Error).message || 'Import failed', { id: toastId });
         } finally {
             e.target.value = ''; // Reset input
         }

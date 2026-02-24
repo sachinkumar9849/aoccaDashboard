@@ -1,0 +1,182 @@
+
+> free-nextjs-admin-dashboard@2.0.1 build
+> next build
+
+   ▲ Next.js 15.1.3
+   - Environments: .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+
+./src/app/(admin)/(others-pages)/routine-ca-final/[id]/page.tsx
+126:6  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/(admin)/(others-pages)/routine-ca-foundation-list/[id]/page.tsx
+126:6  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/(admin)/(others-pages)/routine-ca-intermediate/[id]/page.tsx
+126:6  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/(admin)/(others-pages)/routine-ca-mandatory/[id]/page.tsx
+126:6  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/(admin)/exams/[id]/results/page.tsx
+82:11  Warning: The 'results' logical expression could make the dependencies of useEffect Hook (at line 104) change on every render. To fix this, wrap the initialization of 'results' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+83:11  Warning: The 'subjects' logical expression could make the dependencies of useEffect Hook (at line 104) change on every render. To fix this, wrap the initialization of 'subjects' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+
+./src/components/CaCourse/CaFinal.tsx
+112:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/CaCourse/CaFoundation.tsx
+112:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/CaCourse/CaIntermediate.tsx
+111:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/CaCourse/MandatoryTraining.tsx
+111:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/ImageUploader.tsx
+131:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/crm/DatePickerDemo.tsx
+70:6  Warning: React Hook useEffect has a missing dependency: 'formatDate'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/AboutEdit.tsx
+224:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/AlumniEdit.tsx
+235:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/AlumniList.tsx
+133:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+139:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/BlogAdd.tsx
+122:9  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/BlogEdit.tsx
+232:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+248:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/BlogList.tsx
+278:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+284:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/CaFinalEdit.tsx
+220:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+235:12  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/CaFoundationEdit.tsx
+220:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+234:12  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/CaIntermediateEdit.tsx
+222:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+237:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/CapiEdit.tsx
+228:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/CapiiEdit.tsx
+228:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/CapiiiEdit.tsx
+227:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/FaqEdit.tsx
+233:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/GalleryEdit.tsx
+222:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/GalleryList.tsx
+134:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+140:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/HighlightEdit.tsx
+234:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/HighlightList.tsx
+132:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+138:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/IcaiEdit.tsx
+226:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/MandatoryTrainingEdit.tsx
+220:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+233:12  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/NewsAdd.tsx
+122:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/NewsBlogList.tsx
+129:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+135:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/NewsEdit.tsx
+240:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+253:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/SliderEdit.tsx
+229:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/SliderList.tsx
+266:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+272:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/TeamEdit.tsx
+239:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/TeamEditTwo.tsx
+239:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/TeamList.tsx
+137:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+143:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/TeamListTow.tsx
+133:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+139:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/TestimonialEdit.tsx
+237:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/TestimonialList.tsx
+431:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+437:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/TopperStudent.tsx
+118:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/TopperStudentEdit.tsx
+238:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/TopperStudentList.tsx
+281:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+287:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/tables/BasicTableOne.tsx
+88:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/84) ...
+   Generating static pages (21/84) 
+   Generating static pages (42/84) 
+ ⨯ useSearchParams() should be wrapped in a suspense boundary at page "/student-class". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+    at o (/Users/sachin/nextJsProject/aoccaDashboard/.next/server/chunks/5642.js:1:6612)
+    at f (/Users/sachin/nextJsProject/aoccaDashboard/.next/server/chunks/5642.js:1:23208)
+    at m (/Users/sachin/nextJsProject/aoccaDashboard/.next/server/app/(admin)/(others-pages)/student-class/page.js:1:11406)
+    at nO (/Users/sachin/nextJsProject/aoccaDashboard/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:20:45959)
+    at nI (/Users/sachin/nextJsProject/aoccaDashboard/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:20:47734)
+    at nL (/Users/sachin/nextJsProject/aoccaDashboard/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:20:65533)
+    at nN (/Users/sachin/nextJsProject/aoccaDashboard/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:20:63164)
+    at n$ (/Users/sachin/nextJsProject/aoccaDashboard/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:20:46311)
+    at nI (/Users/sachin/nextJsProject/aoccaDashboard/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:20:47780)
+    at nI (/Users/sachin/nextJsProject/aoccaDashboard/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:20:62515)
+Error occurred prerendering page "/student-class". Read more: https://nextjs.org/docs/messages/prerender-error
+Export encountered an error on /(admin)/(others-pages)/student-class/page: /student-class, exiting the build.
+ ⨯ Static worker exited with code: 1 and signal: null

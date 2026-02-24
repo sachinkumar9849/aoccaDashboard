@@ -5,7 +5,7 @@ import { apiClient } from '@/api/client';
 import Link from 'next/link';
 import Button from '@/components/ui/button/Button';
 
-import { Eye, Edit, FileText } from "lucide-react";
+import { FileText } from "lucide-react";
 
 interface ClassManagement {
     id: string;

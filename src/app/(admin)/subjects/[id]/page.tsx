@@ -18,7 +18,7 @@ export default function EditSubject() {
 
     const { data: subject, isLoading, isError } = useQuery({
         queryKey: ['subject', id],
-        queryFn: () => apiClient.request<any>(`/subjects/${id}`),
+        queryFn: () => apiClient.request<{ code: string; name: string; status: boolean }>(`/subjects/${id}`),
     });
 
     useEffect(() => {
@@ -43,7 +43,7 @@ export default function EditSubject() {
             queryClient.invalidateQueries({ queryKey: ['subject', id] });
             router.push('/subjects');
         },
-        onError: (error: any) => {
+        onError: (error: Error) => {
             toast.error(error?.message || 'Failed to update subject');
         },
     });

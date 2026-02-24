@@ -1,0 +1,291 @@
+
+> free-nextjs-admin-dashboard@2.0.1 build
+> next build
+
+   ▲ Next.js 15.1.3
+   - Environments: .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+
+./src/app/(admin)/(others-pages)/routine-ca-final/[id]/page.tsx
+126:6  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/(admin)/(others-pages)/routine-ca-foundation-list/[id]/page.tsx
+126:6  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/(admin)/(others-pages)/routine-ca-intermediate/[id]/page.tsx
+126:6  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/(admin)/(others-pages)/routine-ca-mandatory/[id]/page.tsx
+126:6  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/(admin)/exams/[id]/results/page.tsx
+82:11  Warning: The 'results' logical expression could make the dependencies of useEffect Hook (at line 104) change on every render. To fix this, wrap the initialization of 'results' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+83:11  Warning: The 'subjects' logical expression could make the dependencies of useEffect Hook (at line 104) change on every render. To fix this, wrap the initialization of 'subjects' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+
+./src/components/CaCourse/CaFinal.tsx
+112:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/CaCourse/CaFoundation.tsx
+112:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/CaCourse/CaIntermediate.tsx
+111:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/CaCourse/MandatoryTraining.tsx
+111:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/ImageUploader.tsx
+131:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/crm/DatePickerDemo.tsx
+70:6  Warning: React Hook useEffect has a missing dependency: 'formatDate'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/AboutEdit.tsx
+224:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/AlumniEdit.tsx
+235:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/AlumniList.tsx
+133:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+139:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/BlogAdd.tsx
+122:9  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/BlogEdit.tsx
+232:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+248:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/BlogList.tsx
+278:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+284:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/CaFinalEdit.tsx
+220:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+235:12  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/CaFoundationEdit.tsx
+220:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+234:12  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/CaIntermediateEdit.tsx
+222:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+237:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/CapiEdit.tsx
+228:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/CapiiEdit.tsx
+228:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/CapiiiEdit.tsx
+227:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/FaqEdit.tsx
+233:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/GalleryEdit.tsx
+222:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/GalleryList.tsx
+134:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+140:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/HighlightEdit.tsx
+234:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/HighlightList.tsx
+132:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+138:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/IcaiEdit.tsx
+226:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/MandatoryTrainingEdit.tsx
+220:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+233:12  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/NewsAdd.tsx
+122:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/NewsBlogList.tsx
+129:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+135:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/NewsEdit.tsx
+240:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+253:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/SliderEdit.tsx
+229:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/SliderList.tsx
+266:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+272:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/TeamEdit.tsx
+239:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/TeamEditTwo.tsx
+239:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/TeamList.tsx
+137:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+143:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/TeamListTow.tsx
+133:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+139:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/TestimonialEdit.tsx
+237:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/TestimonialList.tsx
+431:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+437:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/pageComponent/TopperStudent.tsx
+118:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/TopperStudentEdit.tsx
+238:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/pageComponent/TopperStudentList.tsx
+281:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+287:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/tables/BasicTableOne.tsx
+88:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/84) ...
+   Generating static pages (21/84) 
+   Generating static pages (42/84) 
+   Generating static pages (63/84) 
+ ✓ Generating static pages (84/84)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    942 B           115 kB
+├ ○ /_not-found                          149 B           107 kB
+├ ○ /about                               1.3 kB          108 kB
+├ ○ /alerts                              176 B           111 kB
+├ ○ /alumni-add                          1.29 kB         108 kB
+├ ○ /alumni-list                         3.63 kB         146 kB
+├ ƒ /alumni-list/[id]                    1.29 kB         108 kB
+├ ○ /avatars                             199 B           116 kB
+├ ○ /badge                               420 B           118 kB
+├ ○ /bar-chart                           1.75 kB         112 kB
+├ ○ /basic-tables                        184 B           111 kB
+├ ○ /blank                               184 B           111 kB
+├ ○ /blog-add                            1.29 kB         108 kB
+├ ○ /blog-list                           3.67 kB         146 kB
+├ ƒ /blog-list/[id]                      1.29 kB         108 kB
+├ ○ /buttons                             420 B           118 kB
+├ ○ /ca-final                            5.39 kB         180 kB
+├ ○ /ca-final-routine                    3.38 kB         178 kB
+├ ○ /ca-foundation                       5.38 kB         180 kB
+├ ○ /ca-foundation-list                  3.78 kB         146 kB
+├ ƒ /ca-foundation-list/[id]             1.29 kB         108 kB
+├ ○ /ca-Intermediate                     5.41 kB         180 kB
+├ ○ /ca-Intermediate-list                3.79 kB         146 kB
+├ ƒ /ca-Intermediate-list/[id]           1.29 kB         108 kB
+├ ○ /ca-intermediate-routine             3.38 kB         178 kB
+├ ○ /ca-mandatory-routine                3.39 kB         178 kB
+├ ○ /cacourse-ii                         3.76 kB         146 kB
+├ ƒ /cacourse-ii/[id]                    1.29 kB         108 kB
+├ ○ /cafinal-list                        3.77 kB         146 kB
+├ ƒ /cafinal-list/[id]                   1.29 kB         108 kB
+├ ○ /cap-i                               5.42 kB         180 kB
+├ ○ /cap-ii                              4.99 kB         180 kB
+├ ○ /cap-iii                             4.03 kB         179 kB
+├ ○ /capi-list                           3.74 kB         146 kB
+├ ƒ /capi-list/[id]                      1.29 kB         108 kB
+├ ○ /capiii-list                         3.74 kB         146 kB
+├ ƒ /capiii-list/[id]                    1.29 kB         108 kB
+├ ○ /error-404                           199 B           116 kB
+├ ○ /exams                               3.54 kB         122 kB
+├ ƒ /exams/[id]                          2.58 kB         121 kB
+├ ƒ /exams/[id]/edit                     4.65 kB         129 kB
+├ ƒ /exams/[id]/results                  3.71 kB         128 kB
+├ ○ /exams/create                        4.75 kB         129 kB
+├ ○ /faq-add                             5.21 kB         180 kB
+├ ○ /faq-list                            3.47 kB         146 kB
+├ ƒ /faq-list/[id]                       1.29 kB         108 kB
+├ ○ /follow-up-leads                     2.84 kB         245 kB
+├ ○ /form-elements                       23.5 kB         148 kB
+├ ○ /form-layout                         21 kB           145 kB
+├ ○ /gallery                             1.46 kB         180 kB
+├ ○ /gallery-list                        3.62 kB         146 kB
+├ ƒ /gallery-list/[id]                   2.27 kB         186 kB
+├ ○ /highlight-add                       1.44 kB         180 kB
+├ ○ /highlight-list                      3.62 kB         146 kB
+├ ƒ /highlight-list/[id]                 2.42 kB         186 kB
+├ ○ /icai                                4.02 kB         179 kB
+├ ○ /icai-list                           3.74 kB         146 kB
+├ ƒ /icai-list/[id]                      1.29 kB         108 kB
+├ ○ /images                              199 B           116 kB
+├ ○ /lead-tracking                       2.19 kB         116 kB
+├ ○ /leads                               2.88 kB         245 kB
+├ ○ /leads-create                        3.37 kB         174 kB
+├ ○ /line-chart                          1.84 kB         112 kB
+├ ○ /management-team-add                 1.29 kB         108 kB
+├ ○ /management-team-list                3.64 kB         146 kB
+├ ƒ /management-team-list/[id]           3.94 kB         188 kB
+├ ○ /mandatory-training                  5.39 kB         180 kB
+├ ○ /mandatory-training-list             3.79 kB         146 kB
+├ ƒ /mandatory-training-list/[id]        1.29 kB         108 kB
+├ ○ /modals                              5.19 kB         122 kB
+├ ○ /news                                149 B           107 kB
+├ ○ /news-add                            1.29 kB         108 kB
+├ ○ /news-list                           3.82 kB         146 kB
+├ ƒ /news-list/[id]                      1.29 kB         108 kB
+├ ○ /profile                             3.98 kB         117 kB
+├ ○ /routine-ca-final                    2.89 kB         122 kB
+├ ƒ /routine-ca-final/[id]               4.05 kB         184 kB
+├ ○ /routine-ca-foundation               3.38 kB         178 kB
+├ ○ /routine-ca-foundation-list          3.56 kB         146 kB
+├ ƒ /routine-ca-foundation-list/[id]     4.03 kB         184 kB
+├ ○ /routine-ca-intermediate             3.57 kB         146 kB
+├ ƒ /routine-ca-intermediate/[id]        4.05 kB         184 kB
+├ ○ /routine-ca-mandatory                3.58 kB         146 kB
+├ ƒ /routine-ca-mandatory/[id]           4.05 kB         184 kB
+├ ○ /routine-foundation                  2.5 kB          144 kB
+├ ○ /services-add                        1.23 kB         115 kB
+├ ○ /signin                              3.74 kB         162 kB
+├ ○ /signup                              4.87 kB         191 kB
+├ ○ /slider-add                          1.52 kB         180 kB
+├ ○ /slider-list                         3.62 kB         146 kB
+├ ƒ /slider-list/[id]                    2.43 kB         186 kB
+├ ○ /Staff-list                          2.17 kB         109 kB
+├ ○ /student-class                       5.08 kB         133 kB
+├ ○ /subjects                            2.81 kB         122 kB
+├ ƒ /subjects/[id]                       4.03 kB         128 kB
+├ ○ /subjects/create                     3.73 kB         123 kB
+├ ○ /team-add                            1.28 kB         108 kB
+├ ○ /team-list                           3.63 kB         146 kB
+├ ƒ /team-list/[id]                      2.45 kB         186 kB
+├ ○ /testimonial-add                     1.29 kB         108 kB
+├ ○ /testimonial-list                    3.69 kB         146 kB
+├ ƒ /testimonial-list/[id]               1.3 kB          108 kB
+├ ○ /topper-list                         3.64 kB         146 kB
+├ ƒ /topper-list/[id]                    1.29 kB         108 kB
+├ ○ /topper-student                      1.29 kB         108 kB
+├ ○ /video-add                           1.2 kB          115 kB
+├ ○ /video-list                          2.17 kB         109 kB
+└ ○ /videos                              184 B           111 kB
++ First Load JS shared by all            107 kB
+  ├ chunks/1517-800d9cac0f8c70ab.js      50.7 kB
+  ├ chunks/4bd1b696-b1284f392a4612ba.js  53 kB
+  └ other shared chunks (total)          3.16 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -90,7 +90,7 @@ export default function CreateExam() {
             queryClient.invalidateQueries({ queryKey: ['exams'] });
             router.push('/exams');
         },
-        onError: (error: any) => {
+        onError: (error: Error) => {
             toast.error(error?.message || 'Failed to create exam');
         },
     });

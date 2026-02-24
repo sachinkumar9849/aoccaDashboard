@@ -90,7 +90,7 @@ export default function EditExam() {
             queryClient.invalidateQueries({ queryKey: ['exam', id] });
             router.push('/exams');
         },
-        onError: (error: any) => {
+        onError: (error: Error) => {
             toast.error(error?.message || 'Failed to update exam');
         },
     });
