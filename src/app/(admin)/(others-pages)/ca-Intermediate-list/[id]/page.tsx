@@ -3,7 +3,7 @@
 
 import dynamic from "next/dynamic";
 
-const CaIntermediateEdit = dynamic(() => import('@/components/pageComponent/CaIntermediateEdit'), {
+const CaIntermediateEdit = dynamic(() => import('@/components/pageComponent/CaIntermediateEdit').then(mod => mod.default), {
   ssr: false,
 });
 

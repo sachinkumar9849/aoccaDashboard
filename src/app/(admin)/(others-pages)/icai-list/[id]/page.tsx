@@ -4,7 +4,7 @@
 
 import dynamic from "next/dynamic";
 
-const IcaiEdit = dynamic(() => import('@/components/pageComponent/IcaiEdit'), {
+const IcaiEdit = dynamic(() => import('@/components/pageComponent/IcaiEdit').then(mod => mod.default), {
   ssr: false,
 });
 

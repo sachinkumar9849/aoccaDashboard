@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
     });
     return config;
   },
+  experimental: {
+    // turbopack is not experimental in Next 16
+  },
+  turbopack: {} // put it at root level per next 16 docs
 };
 
 export default nextConfig;

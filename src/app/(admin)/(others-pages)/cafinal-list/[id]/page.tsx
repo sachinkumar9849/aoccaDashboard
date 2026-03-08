@@ -4,7 +4,7 @@
 
 import dynamic from "next/dynamic";
 
-const CaFinalEdit = dynamic(() => import('@/components/pageComponent/CaFinalEdit'), {
+const CaFinalEdit = dynamic(() => import('@/components/pageComponent/CaFinalEdit').then(mod => mod.default), {
   ssr: false,
 });
 
