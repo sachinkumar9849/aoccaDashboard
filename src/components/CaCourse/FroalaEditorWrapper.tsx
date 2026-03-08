@@ -129,7 +129,7 @@ import 'suneditor/dist/css/suneditor.min.css';
 import SunEditorCore from 'suneditor/src/lib/core';
 
 // Dynamically import SunEditor with noSSR
-const SunEditor = dynamic(() => import('suneditor-react'), {
+const SunEditor = dynamic(() => import('suneditor-react').then(mod => mod.default), {
   ssr: false,
   loading: () => <div className="h-48 border border-gray-300 rounded flex items-center justify-center">Loading editor...</div>
 });

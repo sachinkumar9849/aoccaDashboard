@@ -5,7 +5,7 @@
 
 import dynamic from "next/dynamic";
 
-const TeamAdd = dynamic(() => import('@/components/pageComponent/TeamAdd'), {
+const TeamAdd = dynamic(() => import('@/components/pageComponent/TeamAdd').then(mod => mod.default), {
   ssr: false,
 });
 

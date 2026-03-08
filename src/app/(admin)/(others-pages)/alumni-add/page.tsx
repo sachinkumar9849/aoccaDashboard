@@ -4,7 +4,7 @@
 
 import dynamic from "next/dynamic";
 
-const AlumniAdd = dynamic(() => import('@/components/pageComponent/AlumniAdd'), {
+const AlumniAdd = dynamic(() => import('@/components/pageComponent/AlumniAdd').then(mod => mod.default), {
   ssr: false,
 });
 

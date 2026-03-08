@@ -21,7 +21,7 @@ import { useRouter } from "next/navigation";
 import dynamic from 'next/dynamic';
 
 // Dynamic import for the Editor component to avoid SSR issues
-const Editor = dynamic(() => import('../common/Editor'), {
+const Editor = dynamic(() => import('../common/Editor').then(mod => mod.default), {
   ssr: false,
   loading: () => <div className="h-48 border border-gray-300 rounded">Loading editor...</div>
 });

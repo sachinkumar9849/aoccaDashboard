@@ -3,7 +3,7 @@
 
 import dynamic from "next/dynamic";
 
-const FaqEdit = dynamic(() => import('@/components/pageComponent/FaqEdit'), {
+const FaqEdit = dynamic(() => import('@/components/pageComponent/FaqEdit').then(mod => mod.default), {
   ssr: false,
 });
 

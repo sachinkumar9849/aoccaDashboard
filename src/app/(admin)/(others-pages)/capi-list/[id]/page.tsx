@@ -3,7 +3,7 @@
 
 import dynamic from "next/dynamic";
 
-const CapiEdit = dynamic(() => import('@/components/pageComponent/CapiEdit'), {
+const CapiEdit = dynamic(() => import('@/components/pageComponent/CapiEdit').then(mod => mod.default), {
   ssr: false,
 });
 

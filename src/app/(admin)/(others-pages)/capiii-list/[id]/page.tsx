@@ -3,7 +3,7 @@
 
 // import dynamic from "next/dynamic";
 
-// const CapiiiEdit = dynamic(() => import('@/components/pageComponent/CapiiiEdit'), {
+// const CapiiiEdit = dynamic(() => import('@/components/pageComponent/CapiiiEdit').then(mod => mod.default), {
 //   ssr: false,
 // });
 
@@ -17,7 +17,7 @@
 
 import dynamic from "next/dynamic";
 
-const CapiiiEdit = dynamic(() => import('@/components/pageComponent/CapiiiEdit'), {
+const CapiiiEdit = dynamic(() => import('@/components/pageComponent/CapiiiEdit').then(mod => mod.default), {
   ssr: false,
 });
 
