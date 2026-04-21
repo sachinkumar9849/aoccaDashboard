@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
 import Button from "@/components/ui/button/Button";
 import { Calendar, ChevronDown, ChevronUp, Clock, Edit2, Trash2 } from "lucide-react";
+import { SelectField } from "@/components/common/SelectFieldDemo";
 import DatePicker from "@/components/crm/DatePickerDemo";
 import DeleteConfirmationDialog from "@/components/common/DeleteConfirmationDialog";
 import { Modal } from "@/components/ui/modal";
@@ -70,6 +71,12 @@ interface SubjectsResponse {
 }
 
 const CLASS_TYPES = ["CA-Foundation", "CA-Intermediate", "CA-Final", "CA-Mandatory"];
+const CLASS_TYPE_OPTIONS = [
+    { value: "CA-Foundation", label: "CA Foundation" },
+    { value: "CA-Intermediate", label: "CA Intermediate" },
+    { value: "CA-Final", label: "CA Final" },
+    { value: "CA-Mandatory", label: "Mandatory Training" },
+];
 
 const RoutineListPageContent: React.FC = () => {
     const searchParams = useSearchParams();
@@ -77,6 +84,8 @@ const RoutineListPageContent: React.FC = () => {
     const qRoutineDate = searchParams.get("routine_date") || null;
     const queryClient = useQueryClient();
 
+    const [selectedType, setSelectedType] = useState<string>("");
+    const [selectedSession, setSelectedSession] = useState<string>("");
     const [selectedClassId, setSelectedClassId] = useState<string>(qClassId);
     const [fromDate, setFromDate] = useState<string>("2025-01-01");
     const [toDate, setToDate] = useState<string>("2027-12-31");
@@ -90,28 +99,73 @@ const RoutineListPageContent: React.FC = () => {
     // Delete Slot State
     const [deletingSlotId, setDeletingSlotId] = useState<string | null>(null);
 
-    // Sync from URL params when they change (e.g. after redirect from create page)
-    useEffect(() => {
-        if (qClassId) {
-            setSelectedClassId(qClassId);
-        }
-        if (qRoutineDate) {
-            setExpandedDate(qRoutineDate);
-        }
-    }, [qClassId, qRoutineDate]);
-
     // Fetch all classes across all types
     const { data: allClasses, isLoading: classesLoading } = useQuery<ClassItem[]>({
         queryKey: ["all-classes-for-routine"],
         queryFn: async () => {
             const results = await Promise.all(
                 CLASS_TYPES.map((type) =>
-                    apiClient.request<ClassListResponse>(`/classes?type=${type}`)
+                    apiClient.request<ClassListResponse>(`/classes?type=${type}&status=true`)
                 )
             );
             return results.flatMap((r) => r.data);
         },
     });
+
+    // Sync from URL params and allClasses
+    useEffect(() => {
+        if (allClasses && qClassId) {
+            const cls = allClasses.find(c => c.id === qClassId);
+            if (cls) {
+                setSelectedType(cls.type);
+                setSelectedSession(cls.session);
+                setSelectedClassId(qClassId);
+            }
+        } else if (qClassId) {
+            setSelectedClassId(qClassId);
+        }
+        if (qRoutineDate) {
+            setExpandedDate(qRoutineDate);
+        }
+    }, [allClasses, qClassId, qRoutineDate]);
+
+    // Derived data for filters
+    const uniqueSessions = React.useMemo(() => {
+        if (!allClasses) return [];
+        const filteredByType = selectedType
+            ? allClasses.filter(cls => cls.type === selectedType)
+            : allClasses;
+        const sessions = Array.from(new Set(filteredByType.map((cls) => cls.session)));
+        return sessions.sort().map((s) => ({ value: s, label: s }));
+    }, [allClasses, selectedType]);
+
+    const filteredClasses = React.useMemo(() => {
+        if (!allClasses) return [];
+        return allClasses
+            .filter((cls) => !selectedType || cls.type === selectedType)
+            .filter((cls) => !selectedSession || cls.session === selectedSession)
+            .map((cls) => ({
+                value: cls.id,
+                label: `${cls.type} — ${cls.session} (${cls.total_student} students)`,
+            }));
+    }, [allClasses, selectedType, selectedSession]);
+
+    // Auto-select class if unique, or unset if filters change
+    useEffect(() => {
+        if (filteredClasses.length === 1) {
+            setSelectedClassId(filteredClasses[0].value);
+        } else if (filteredClasses.length === 0 || !filteredClasses.some(c => c.value === selectedClassId)) {
+            // Only clear if the current selected class is no longer in the filtered list
+            // But wait, if they specifically chose a class and then changed session, we should probably clear it.
+            // Actually, for simplicity on Management page:
+            if (!selectedType && !selectedSession) return; // Don't clear if all filters reset
+
+            const isMatch = filteredClasses.some(c => c.value === selectedClassId);
+            if (!isMatch) {
+                setSelectedClassId("");
+            }
+        }
+    }, [filteredClasses, selectedType, selectedSession]);
 
     // Fetch routine dates for selected class
     const { data: routineDates, isLoading: datesLoading } = useQuery<RoutineDatesResponse>({
@@ -234,32 +288,40 @@ const RoutineListPageContent: React.FC = () => {
             {/* Filters */}
             <div className="bg-white rounded-lg shadow-sm p-6">
                 <h2 className="text-sm font-medium text-gray-600 mb-4">Filter Routines</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Class selector */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    {/* Class Type Selector */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Select Class
-                        </label>
-                        <select
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-                            value={selectedClassId}
-                            onChange={(e) => {
-                                setSelectedClassId(e.target.value);
+                        <SelectField
+                            label="Class Type"
+                            placeholder="Select class type"
+                            options={CLASS_TYPE_OPTIONS}
+                            value={selectedType}
+                            onChange={(val) => {
+                                setSelectedType(val);
+                                setSelectedSession("");
                                 setExpandedDate(null);
                             }}
-                        >
-                            <option value="">-- Select a class --</option>
-                            {classesLoading && <option disabled>Loading classes...</option>}
-                            {allClasses?.map((cls) => (
-                                <option key={cls.id} value={cls.id}>
-                                    {cls.type} — {cls.session} ({cls.total_student} students)
-                                </option>
-                            ))}
-                        </select>
+                        />
+                    </div>
+
+                    {/* Session Selector */}
+                    <div>
+                        <SelectField
+                            label="Session"
+                            placeholder="Select session"
+                            options={uniqueSessions}
+                            value={selectedSession}
+                            onChange={(val) => {
+                                setSelectedSession(val);
+                                setExpandedDate(null);
+                            }}
+                            isDisabled={classesLoading || !selectedType}
+                            isLoading={classesLoading}
+                        />
                     </div>
 
                     {/* From Date */}
-                    <div>
+                    <div className="flex flex-col">
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             From Date
                         </label>
@@ -281,7 +343,7 @@ const RoutineListPageContent: React.FC = () => {
                     </div>
 
                     {/* To Date */}
-                    <div>
+                    <div className="flex flex-col">
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             To Date
                         </label>
@@ -484,40 +546,24 @@ const RoutineListPageContent: React.FC = () => {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Subject
-                        </label>
-                        <select
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        <SelectField
+                            label="Subject"
+                            placeholder="Select a subject"
+                            options={subjectsData?.data?.map(sub => ({ value: sub.id, label: `${sub.name} (${sub.code})` })) || []}
                             value={editSubjectId}
-                            onChange={(e) => setEditSubjectId(e.target.value)}
-                        >
-                            <option value="">Select a subject</option>
-                            {subjectsLoading && <option disabled>Loading...</option>}
-                            {subjectsData?.data?.map((sub: Subject) => (
-                                <option key={sub.id} value={sub.id}>
-                                    {sub.name} ({sub.code})
-                                </option>
-                            ))}
-                        </select>
+                            onChange={setEditSubjectId}
+                            isLoading={subjectsLoading}
+                        />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Teacher
-                        </label>
-                        <select
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
-                            value={editTeacherId}
-                            onChange={(e) => setEditTeacherId(Number(e.target.value))}
-                        >
-                            <option value="">Select a teacher</option>
-                            {teachersLoading && <option disabled>Loading...</option>}
-                            {teachers?.map((t: Teacher) => (
-                                <option key={t.id} value={t.id}>
-                                    {t.name} — {t.title}
-                                </option>
-                            ))}
-                        </select>
+                        <SelectField
+                            label="Teacher"
+                            placeholder="Select a teacher"
+                            options={teachers?.map(t => ({ value: t.id.toString(), label: `${t.name} — ${t.title}` })) || []}
+                            value={editTeacherId.toString()}
+                            onChange={(val) => setEditTeacherId(Number(val))}
+                            isLoading={teachersLoading}
+                        />
                     </div>
 
                     <div className="flex items-center gap-3 pt-4 mt-2 border-t">

@@ -37,7 +37,7 @@ interface FormValues {
   status: string;
   follow_up_date: string;
   tag: string;
-  class_routine: string;
+  class_management_id: string;
 }
 
 const LeadsCreate = () => {
@@ -120,7 +120,7 @@ const LeadsCreate = () => {
       status: "new",
       follow_up_date: "",
       tag: "",
-      class_routine: "",
+      class_management_id: "",
     },
     validationSchema: leadSchema,
     onSubmit: (values) => {
@@ -400,9 +400,9 @@ const LeadsCreate = () => {
               <div className="col-span-1">
                 <SelectField
                   options={classRoutines}
-                  value={formik.values.class_routine}
-                  onChange={(value) => formik.setFieldValue("class_routine", value)}
-                  label="Class Routine"
+                  value={formik.values.class_management_id}
+                  onChange={(value) => formik.setFieldValue("class_management_id", value)}
+                  label="Class Management"
                   direction="up"
                   placeholder={
                     isLoadingRoutines
@@ -416,9 +416,9 @@ const LeadsCreate = () => {
                   isDisabled={isLoadingRoutines || !formik.values.inquiry || classRoutines.length === 0}
                   isLoading={isLoadingRoutines}
                 />
-                {formik.touched.class_routine && formik.errors.class_routine && (
+                {formik.touched.class_management_id && formik.errors.class_management_id && (
                   <p className="mt-1 text-sm text-red-600">
-                    {formik.errors.class_routine}
+                    {formik.errors.class_management_id}
                   </p>
                 )}
               </div>
@@ -426,7 +426,7 @@ const LeadsCreate = () => {
 
 
 
-            <div className="col-span-1">
+            <div className="col-span-1 hidden">
               <SelectField
                 options={tag}
                 value={formik.values.tag}

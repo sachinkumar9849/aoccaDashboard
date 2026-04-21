@@ -268,7 +268,7 @@ const StudentTable = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="col-span-1">
+              <div className="col-span-1 hidden">
                 <Label htmlFor="tag">Lead Priority</Label>
                 <Select
                   value={searchFilters.tag || undefined}
