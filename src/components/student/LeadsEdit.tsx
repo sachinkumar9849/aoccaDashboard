@@ -351,7 +351,7 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
                             )}
                         </div>
 
-                        <div className="space-y-2">
+                        {/* <div className="space-y-2">
                             <Label htmlFor="status">Tag</Label>
                             <select
                                 id="tag"
@@ -364,7 +364,7 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
                                 <option value="warm">Warm</option>
                                 <option value="cold">Cold</option>
                             </select>
-                        </div>
+                        </div> */}
 
                         <div className="col-span-1">
                             <SelectField

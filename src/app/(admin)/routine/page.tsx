@@ -84,10 +84,11 @@ const RoutineListPageContent: React.FC = () => {
     const qRoutineDate = searchParams.get("routine_date") || null;
     const queryClient = useQueryClient();
 
+    const today = new Date().toISOString().split('T')[0];
     const [selectedType, setSelectedType] = useState<string>("");
     const [selectedSession, setSelectedSession] = useState<string>("");
     const [selectedClassId, setSelectedClassId] = useState<string>(qClassId);
-    const [fromDate, setFromDate] = useState<string>("2025-01-01");
+    const [fromDate, setFromDate] = useState<string>(today);
     const [toDate, setToDate] = useState<string>("2027-12-31");
     const [expandedDate, setExpandedDate] = useState<string | null>(qRoutineDate);
 
