@@ -52,7 +52,7 @@ const CaFoundationList: React.FC = () => {
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
     queryKey: ['routine-ca-foundation'],
     queryFn: async () => {
-      const response = await apiClient.request<ApiResponse>('/classes?type=CA-Foundation');
+      const response = await apiClient.request<ApiResponse>('/classes?type=CA-Foundation&status=true');
       return response.data; // Extract the data array from the response
     }
   });
@@ -112,7 +112,7 @@ const CaFoundationList: React.FC = () => {
   return (
     <div className="w-full p-4 bg-white rounded-lg shadow-sm">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-normal mb-4">CA Foundation routine list</h2>
+        <h2 className="text-lg font-normal mb-4">CA Foundation Classes List</h2>
         <Link href="/routine-ca-foundation">
           <Button>Add</Button>
         </Link>

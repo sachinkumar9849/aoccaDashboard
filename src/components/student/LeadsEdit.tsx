@@ -43,9 +43,8 @@ interface Lead {
     current_status?: string;
     lead_source?: string;
     inquiry?: string;
-    class_routine?: string;
-    amount: number;
     class_management_id?: string;
+    amount: number;
     class_management?: {
         id: string;
         session: string;
@@ -134,7 +133,7 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
             tag: lead.tag || '',
             inquiry: lead.inquiry || '',
             lead_source: lead.lead_source || '',
-            class_routine: lead.class_routine || '',
+            class_management_id: lead.class_management_id || '',
             previous_qualification: lead.previous_qualification || "",
             follow_up_date: lead.follow_up_date ? lead.follow_up_date.split('T')[0] : '',
         },
@@ -352,7 +351,7 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
                             )}
                         </div>
 
-                        <div className="space-y-2">
+                        {/* <div className="space-y-2">
                             <Label htmlFor="status">Tag</Label>
                             <select
                                 id="tag"
@@ -365,7 +364,7 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
                                 <option value="warm">Warm</option>
                                 <option value="cold">Cold</option>
                             </select>
-                        </div>
+                        </div> */}
 
                         <div className="col-span-1">
                             <SelectField
@@ -387,8 +386,8 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
                             <div className="col-span-1">
                                 <SelectField
                                     options={classRoutines}
-                                    value={formik.values.class_routine}
-                                    onChange={(value) => formik.setFieldValue("class_routine", value)}
+                                    value={formik.values.class_management_id}
+                                    onChange={(value) => formik.setFieldValue("class_management_id", value)}
                                     label="Class"
                                     direction="up"
                                     placeholder={
@@ -403,9 +402,9 @@ const LeadsEdit: React.FC<LeadsEditProps> = ({ isOpen, onOpenChange, lead }) => 
                                     isDisabled={isLoadingRoutines || !formik.values.inquiry || classRoutines.length === 0}
                                     isLoading={isLoadingRoutines}
                                 />
-                                {formik.touched.class_routine && formik.errors.class_routine && (
+                                {formik.touched.class_management_id && formik.errors.class_management_id && (
                                     <p className="mt-1 text-sm text-red-600">
-                                        {formik.errors.class_routine}
+                                        {formik.errors.class_management_id}
                                     </p>
                                 )}
                             </div>

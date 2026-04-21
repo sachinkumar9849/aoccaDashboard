@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
 import ComponentCard from "@/components/common/ComponentCard";
 import Label from "@/components/form/Label";
+import { SelectField } from "@/components/common/SelectFieldDemo";
 import DatePicker from "@/components/crm/DatePickerDemo";
 
 interface ClassItem {
@@ -57,9 +58,17 @@ interface SlotEntry {
 }
 
 const CLASS_TYPES = ["CA-Foundation", "CA-Intermediate", "CA-Final", "CA-Mandatory"];
+const CLASS_TYPE_OPTIONS = [
+    { value: "CA-Foundation", label: "CA Foundation" },
+    { value: "CA-Intermediate", label: "CA Intermediate" },
+    { value: "CA-Final", label: "CA Final" },
+    { value: "CA-Mandatory", label: "Mandatory Training" },
+];
 
 const CreateRoutinePage: React.FC = () => {
     const router = useRouter();
+    const [selectedType, setSelectedType] = useState<string>("");
+    const [selectedSession, setSelectedSession] = useState<string>("");
     const [classManagementId, setClassManagementId] = useState<string>("");
     const [routineDate, setRoutineDate] = useState<string>("");
     const [slots, setSlots] = useState<SlotEntry[]>([
@@ -72,12 +81,42 @@ const CreateRoutinePage: React.FC = () => {
         queryFn: async () => {
             const results = await Promise.all(
                 CLASS_TYPES.map((type) =>
-                    apiClient.request<ClassListResponse>(`/classes?type=${type}`)
+                    apiClient.request<ClassListResponse>(`/classes?type=${type}&status=true`)
                 )
             );
             return results.flatMap((r) => r.data);
         },
     });
+
+    // Derived data for filters
+    const uniqueSessions = React.useMemo(() => {
+        if (!allClasses) return [];
+        const filteredByType = selectedType 
+            ? allClasses.filter(cls => cls.type === selectedType)
+            : allClasses;
+        const sessions = Array.from(new Set(filteredByType.map((cls) => cls.session)));
+        return sessions.sort().map((s) => ({ value: s, label: s }));
+    }, [allClasses, selectedType]);
+
+    const filteredClasses = React.useMemo(() => {
+        if (!allClasses) return [];
+        return allClasses
+            .filter((cls) => !selectedType || cls.type === selectedType)
+            .filter((cls) => !selectedSession || cls.session === selectedSession)
+            .map((cls) => ({
+                value: cls.id,
+                label: `${cls.type} — ${cls.session} (${cls.total_student} students)`,
+            }));
+    }, [allClasses, selectedType, selectedSession]);
+
+    // Reset class when type or session changes, or auto-set if only one exists
+    React.useEffect(() => {
+        if (filteredClasses.length === 1) {
+            setClassManagementId(filteredClasses[0].value);
+        } else {
+            setClassManagementId("");
+        }
+    }, [filteredClasses]);
 
     // Fetch subjects
     const { data: subjectsData, isLoading: subjectsLoading } = useQuery<SubjectResponse>({
@@ -141,7 +180,7 @@ const CreateRoutinePage: React.FC = () => {
         e.preventDefault();
 
         if (!classManagementId) {
-            toast.error("Please select a class");
+            toast.error("No valid class found for selected Type and Session");
             return;
         }
         if (!routineDate) {
@@ -173,29 +212,34 @@ const CreateRoutinePage: React.FC = () => {
             </div>
 
             <ComponentCard title="Routine Details">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Class Selector */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Class Type Selector */}
                     <div>
-                        <Label htmlFor="class_management_id">Select Class</Label>
-                        <select
-                            id="class_management_id"
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent mt-1"
-                            value={classManagementId}
-                            onChange={(e) => setClassManagementId(e.target.value)}
-                        >
-                            <option value="">-- Select a class --</option>
-                            {classesLoading && <option disabled>Loading...</option>}
-                            {allClasses?.map((cls) => (
-                                <option key={cls.id} value={cls.id}>
-                                    {cls.type} — {cls.session} ({cls.total_student} students)
-                                </option>
-                            ))}
-                        </select>
+                        <SelectField
+                            label="Class Type"
+                            placeholder="Select class type"
+                            options={CLASS_TYPE_OPTIONS}
+                            value={selectedType}
+                            onChange={setSelectedType}
+                        />
+                    </div>
+
+                    {/* Session Selector */}
+                    <div>
+                        <SelectField
+                            label="Session"
+                            placeholder="Select session"
+                            options={uniqueSessions}
+                            value={selectedSession}
+                            onChange={setSelectedSession}
+                            isDisabled={classesLoading || !selectedType}
+                            isLoading={classesLoading}
+                        />
                     </div>
 
                     {/* Date Picker */}
-                    <div>
-                        <Label htmlFor="routine_date">Routine Date</Label>
+                    <div className="flex flex-col">
+                        <Label htmlFor="routine_date" className="mb-1">Routine Date</Label>
                         <DatePicker
                             value={routineDate || null}
                             onChange={(date) => {
@@ -237,42 +281,32 @@ const CreateRoutinePage: React.FC = () => {
 
                             {/* Subject dropdown */}
                             <div className="md:col-span-4">
-                                <Label htmlFor={`subject-${index}`}>Subject</Label>
-                                <select
-                                    id={`subject-${index}`}
-                                    className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent mt-1"
+                                <SelectField
+                                    label="Subject"
+                                    placeholder="Select Subject"
+                                    options={subjects.map(sub => ({
+                                        value: sub.id,
+                                        label: `${sub.name} (${sub.code})`
+                                    }))}
                                     value={slot.subject_id}
-                                    onChange={(e) => updateSlot(index, "subject_id", e.target.value)}
-                                >
-                                    <option value="">-- Select Subject --</option>
-                                    {subjectsLoading && <option disabled>Loading...</option>}
-                                    {subjects.map((sub) => (
-                                        <option key={sub.id} value={sub.id}>
-                                            {sub.name} ({sub.code})
-                                        </option>
-                                    ))}
-                                </select>
+                                    onChange={(value) => updateSlot(index, "subject_id", value)}
+                                    isLoading={subjectsLoading}
+                                />
                             </div>
 
                             {/* Teacher dropdown */}
                             <div className="md:col-span-4">
-                                <Label htmlFor={`teacher-${index}`}>Teacher</Label>
-                                <select
-                                    id={`teacher-${index}`}
-                                    className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent mt-1"
-                                    value={slot.teacher_id}
-                                    onChange={(e) =>
-                                        updateSlot(index, "teacher_id", Number(e.target.value))
-                                    }
-                                >
-                                    <option value="">-- Select Teacher --</option>
-                                    {teachersLoading && <option disabled>Loading...</option>}
-                                    {teachers?.map((t) => (
-                                        <option key={t.id} value={t.id}>
-                                            {t.name} — {t.title}
-                                        </option>
-                                    ))}
-                                </select>
+                                <SelectField
+                                    label="Teacher"
+                                    placeholder="Select Teacher"
+                                    options={teachers?.map(t => ({
+                                        value: t.id.toString(),
+                                        label: `${t.name} — ${t.title}`
+                                    })) || []}
+                                    value={slot.teacher_id.toString()}
+                                    onChange={(value) => updateSlot(index, "teacher_id", Number(value))}
+                                    isLoading={teachersLoading}
+                                />
                             </div>
 
                             {/* Remove button */}

@@ -103,9 +103,10 @@ const fetchLeads = async (page: number = 1, filters: Partial<SearchFilters> = {}
 };
 
 const FollowUpLeads = () => {
-  const [page, setPage] = useState(1);
-  const [searchFilters, setSearchFilters] = useState<Partial<SearchFilters>>({});
-  const [activeFilters, setActiveFilters] = useState<Partial<SearchFilters>>({});
+    const today = new Date().toISOString().split('T')[0];
+    const [page, setPage] = useState(1);
+    const [searchFilters, setSearchFilters] = useState<Partial<SearchFilters>>({ from_date: today });
+    const [activeFilters, setActiveFilters] = useState<Partial<SearchFilters>>({});
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
 
 
@@ -133,7 +134,7 @@ const FollowUpLeads = () => {
   };
 
   const handleReset = () => {
-    setSearchFilters({});
+    setSearchFilters({ from_date: today });
     setActiveFilters({});
     setPage(1);
   };
@@ -277,7 +278,7 @@ const FollowUpLeads = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="col-span-1">
+              <div className="col-span-1 hidden">
                 <Label htmlFor="tag">Lead Priority</Label>
                 <Select
                   value={searchFilters.tag || undefined}
@@ -328,7 +329,7 @@ const FollowUpLeads = () => {
             </div>
             <div className="flex flex-wrap gap-2">
               {Object.entries(activeFilters).map(([key, value]) => {
-                if (!value) return null;
+                if (!value || key === 'from_date') return null;
                 return (
                   <span
                     key={key}
