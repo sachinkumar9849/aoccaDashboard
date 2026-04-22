@@ -426,7 +426,7 @@ const LeadsCreate = () => {
 
 
 
-            <div className="col-span-1 hidden">
+            <div className="col-span-1">
               <SelectField
                 options={tag}
                 value={formik.values.tag}
