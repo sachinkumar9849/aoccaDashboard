@@ -53,7 +53,7 @@ const CaFoundationList: React.FC = () => {
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
     queryKey: ['ca-mandatory-training-list'],
     queryFn: async () => {
-      const response = await apiClient.request<ApiResponse>('/classes?type=CA-mandatory&status=true');
+      const response = await apiClient.request<ApiResponse>('/classes?type=CA-mandatory');
       return response.data; // Extract the data array from the response
     }
   });

@@ -41,7 +41,7 @@ const CaFoundationList: React.FC = () => {
   const { data, isLoading, isError, error } = useQuery<NewsBlog[]>({
     queryKey: ['routine-ca-final-list'],
     queryFn: async () => {
-      const response = await apiClient.request<ApiResponse>('/classes?type=CA-Final&status=true');
+      const response = await apiClient.request<ApiResponse>('/classes?type=CA-Final');
       console.log("sachin", response)
       return response.data;
     }
