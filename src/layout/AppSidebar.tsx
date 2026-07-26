@@ -154,6 +154,11 @@ const navItems: NavItem[] = [
     icon: <ListIcon />,
     subItems: [{ name: "About", path: "/about", pro: false }],
   },
+  {
+    name: "SEO",
+    icon: <ListIcon />,
+    subItems: [{ name: "Archive Pages SEO", path: "/seo-archive", pro: false }],
+  },
 
 
   // {

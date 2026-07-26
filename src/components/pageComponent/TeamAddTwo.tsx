@@ -8,8 +8,14 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import ImageUploader from "@/components/ImageUploader";
-import { PageFormValues, PageResponse } from "@/types";
+import { PageFormValues, PageResponse, SeoFormValues } from "@/types";
 import { apiClient } from "@/api/client";
+import SeoFields from "@/components/common/SeoFields";
+import {
+    appendSeoFields,
+    emptySeoValues,
+    seoValidationSchema,
+} from "@/lib/seo";
 import {
     Select,
     SelectContent,
@@ -49,6 +55,7 @@ const TeamAddTwo = () => {
 
     // Validation schema
     const validationSchema = Yup.object({
+        ...seoValidationSchema,
         title: Yup.string().required("Title is required"),
         name: Yup.string().required("Name is required"),
         status: Yup.string().required("Status is required"),
@@ -60,8 +67,9 @@ const TeamAddTwo = () => {
     };
 
     // Initialize formik
-    const formik = useFormik<TeamAddFormValues>({
+    const formik = useFormik<TeamAddFormValues & SeoFormValues>({
         initialValues: {
+            ...emptySeoValues,
             title: "",
             name: "",
             type: "teamTwo",
@@ -69,9 +77,6 @@ const TeamAddTwo = () => {
             description: "",
             linkedin: "",
             status: "published",
-            meta_title: "",
-            meta_description: "",
-            meta_keywords: "",
             subtitle: "",
             rating: "",
             sort_order: "",
@@ -94,6 +99,12 @@ const TeamAddTwo = () => {
             if (image) {
                 formData.append("image", image);
             }
+
+
+
+
+            appendSeoFields(formData, values);
+
 
 
 
@@ -210,19 +221,18 @@ const TeamAddTwo = () => {
                             </div>
                         </div>
 
-
-                        <div className="col-span-2">
-                            <button
-                                type="submit"
-                                disabled={createPageMutation.isPending}
-                                className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600 disabled:opacity-70"
-                            >
-                                {createPageMutation.isPending ? "Submitting..." : "Submit"}
-                            </button>
-                        </div>
-
                     </div>
                 </ComponentCard>
+
+                <SeoFields formik={formik} />
+
+                <button
+                    type="submit"
+                    disabled={createPageMutation.isPending}
+                    className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600 disabled:opacity-70"
+                >
+                    {createPageMutation.isPending ? "Submitting..." : "Submit"}
+                </button>
 
             </div>
         </form>
