@@ -8,8 +8,15 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import ImageUploader from "@/components/ImageUploader";
-import { PageFormValues } from "@/types";
+import SeoFields from "@/components/common/SeoFields";
+import { PageFormValues, SeoFormValues, SeoResponse } from "@/types";
 import { apiClient } from "@/api/client";
+import {
+    appendSeoFields,
+    emptySeoValues,
+    seoToFormValues,
+    seoValidationSchema,
+} from "@/lib/seo";
 import {
     Select,
     SelectContent,
@@ -33,11 +40,7 @@ interface NewsData {
     sort_order?: string;
     image_url?: string;
     video: string;
-    seo?: {
-        meta_title: string;
-        meta_description: string;
-        meta_keywords: string[];
-    };
+    seo?: SeoResponse;
 }
 
 // Define the API response type for update mutation
@@ -58,6 +61,7 @@ const BlogEdit = () => {
 
     // Validation schema
     const validationSchema = Yup.object({
+        ...seoValidationSchema,
         title: Yup.string().required("Title is required"),
         slug: Yup.string().required("Slug is required"),
         description: Yup.string().required("Description is required"),
@@ -67,16 +71,14 @@ const BlogEdit = () => {
     });
 
     // Initialize formik with default values
-    const formik = useFormik<PageFormValues>({
+    const formik = useFormik<PageFormValues & SeoFormValues>({
         initialValues: {
+            ...emptySeoValues,
             title: "",
-            type: "news",
+            type: "blogs",
             slug: "",
             description: "",
             status: "published",
-            meta_title: "",
-            meta_description: "",
-            meta_keywords: "",
             subtitle: "",
             name: "",
             linkedin: "",
@@ -92,8 +94,6 @@ const BlogEdit = () => {
             formData.append("slug", values.slug);
             formData.append("description", values.description);
             formData.append("type", values.type);
-            formData.append("meta_title", values.meta_title);
-            formData.append("meta_description", values.meta_description);
             formData.append("status", values.status || "published");
             // Add optional fields if they exist
             if (values.subtitle) formData.append("subtitle", values.subtitle);
@@ -107,11 +107,7 @@ const BlogEdit = () => {
                 formData.append("image", image);
             }
 
-            // Convert comma-separated keywords to array
-            const keywordsArray = values.meta_keywords
-                .split(",")
-                .map((keyword) => keyword.trim());
-            formData.append("meta_keywords", JSON.stringify(keywordsArray));
+            appendSeoFields(formData, values);
 
             updateNewsMutation.mutate(formData);
         },
@@ -183,37 +179,14 @@ const BlogEdit = () => {
     // Set form values when data is loaded
     useEffect(() => {
         if (data) {
-            console.log("Setting form values from data:", data);
-
-            // Convert meta_keywords from array format to string
-            let metaKeywords = "";
-            if (data.seo?.meta_keywords && Array.isArray(data.seo.meta_keywords) && data.seo.meta_keywords.length > 0) {
-                try {
-                    const keywordStr = data.seo.meta_keywords[0];
-                    // Try to parse if it looks like JSON
-                    if (keywordStr.includes('[') || keywordStr.includes('"')) {
-                        const parsedKeywords = JSON.parse(keywordStr.replace(/\\/g, ''));
-                        metaKeywords = Array.isArray(parsedKeywords) ? parsedKeywords.join(", ") : keywordStr;
-                    } else {
-                        metaKeywords = keywordStr;
-                    }
-                } catch (e) {
-                    console.error("Error parsing keywords:", e);
-                    // Fallback if parsing fails
-                    metaKeywords = data.seo.meta_keywords[0].replace(/[\[\]"\\]/g, '');
-                }
-            }
-
             // Set form values based on the API response structure
             formik.setValues({
+                ...seoToFormValues(data.seo),
                 title: data.title || "",
-                type: data.type || "news",
+                type: data.type || "blogs",
                 slug: data.slug || "",
                 description: data.description || "",
                 status: data.status || "published",
-                meta_title: data.seo?.meta_title || "",
-                meta_description: data.seo?.meta_description || "",
-                meta_keywords: metaKeywords,
                 subtitle: data.subtitle || "",
                 name: data.name || "",
                 linkedin: data.linkedin || "",
@@ -226,27 +199,14 @@ const BlogEdit = () => {
             if (data.image_url) {
                 setCurrentImageUrl(data.image_url);
             }
-
-            console.log("Form values after setting:", formik.values);
         }
     }, [data]);
 
+    // NOTE: the slug is deliberately NOT regenerated from the title on edit.
+    // Doing so silently changed the URL of already-published posts on every
+    // keystroke, and now also desyncs the separately-stored canonical_url.
 
 
-    const generateSlug = (title: string) => {
-        return title
-            .toLowerCase()
-            .replace(/[^\w\s]/gi, "")
-            .replace(/\s+/g, "-");
-    };
-    // Auto-generate slug when title changes
-    useEffect(() => {
-        if (formik.values.title) {
-            const slug = generateSlug(formik.values.title);
-            formik.setFieldValue("slug", slug);
-        }
-    }, [formik.values.title]);
-    
     if (error) {
         return <div className="text-red-500">Error loading news: {(error as Error).message}</div>;
     }
@@ -346,69 +306,24 @@ const BlogEdit = () => {
                         </div>
                     </div>
                 </ComponentCard>
-                <ComponentCard title="Seo">
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="col-span-1">
-                            <Label htmlFor="meta_title">Meta Title</Label>
-                            <Input
-                                id="meta_title"
-                                name="meta_title"
-                                type="text"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.meta_title}
-                            />
-                            {formik.touched.meta_title && formik.errors.meta_title && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.meta_title}</div>
-                            )}
-                        </div>
-                        <div className="col-span-1">
-                            <Label htmlFor="meta_keywords">Meta Keywords</Label>
-                            <Input
-                                id="meta_keywords"
-                                name="meta_keywords"
-                                type="text"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.meta_keywords}
-                                placeholder="keyword1, keyword2, keyword3"
-                            />
-                            {formik.touched.meta_keywords && formik.errors.meta_keywords && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.meta_keywords}</div>
-                            )}
-                        </div>
-                        <div className="col-span-2">
-                            <Label htmlFor="meta_description">Meta Description</Label>
-                            <textarea
-                                id="meta_description"
-                                name="meta_description"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.meta_description}
-                                className="w-full h-[200px] px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-brand-500 text-sm"
-                            />
-                            {formik.touched.meta_description && formik.errors.meta_description && (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.meta_description}</div>
-                            )}
-                        </div>
-                        <div className="col-span-2 flex gap-4">
-                            <button
-                                type="submit"
-                                disabled={updateNewsMutation.isPending}
-                                className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600 disabled:opacity-70"
-                            >
-                                {updateNewsMutation.isPending ? "Updating..." : "Update"}
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => router.push("/blog-list")}
-                                className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </ComponentCard>
+                <SeoFields formik={formik} />
+
+                <div className="flex gap-4">
+                    <button
+                        type="submit"
+                        disabled={updateNewsMutation.isPending}
+                        className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600 disabled:opacity-70"
+                    >
+                        {updateNewsMutation.isPending ? "Updating..." : "Update"}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => router.push("/blog-list")}
+                        className="w-full flex items-center justify-center p-3 font-medium text-gray-600 rounded-lg bg-gray-200 text-theme-sm hover:bg-gray-300"
+                    >
+                        Cancel
+                    </button>
+                </div>
             </div>
         </form>
     );

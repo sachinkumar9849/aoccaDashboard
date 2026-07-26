@@ -8,8 +8,15 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import ImageUploader from "@/components/ImageUploader";
-import { PageFormValues } from "@/types";
+import { PageFormValues, SeoFormValues, SeoResponse } from "@/types";
 import { apiClient } from "@/api/client";
+import SeoFields from "@/components/common/SeoFields";
+import {
+    appendSeoFields,
+    emptySeoValues,
+    seoToFormValues,
+    seoValidationSchema,
+} from "@/lib/seo";
 import {
     Select,
     SelectContent,
@@ -23,6 +30,7 @@ import Editor from "../common/Editor";
 interface NewsData {
     title: string;
     type: string;
+    team_type?: string;
     slug: string;
     description: string;
     status: string;
@@ -33,11 +41,7 @@ interface NewsData {
     sort_order?: string;
     image_url?: string;
     video?:string;
-    seo?: {
-        meta_title: string;
-        meta_description: string;
-        meta_keywords: string[];
-    };
+    seo?: SeoResponse;
 }
 
 // Define the API response type for update mutation
@@ -58,6 +62,7 @@ const TopperStudentEdit = () => {
 
     // Validation schema
     const validationSchema = Yup.object({
+        ...seoValidationSchema,
         title: Yup.string().required("Title is required"),
       
         description: Yup.string().required("Description is required"),
@@ -67,16 +72,14 @@ const TopperStudentEdit = () => {
     });
 
     // Initialize formik with default values
-    const formik = useFormik<PageFormValues>({
+    const formik = useFormik<PageFormValues & SeoFormValues>({
         initialValues: {
+            ...emptySeoValues,
             title: "",
             type: "topper",
             slug: "",
             description: "",
             status: "published",
-            meta_title: "",
-            meta_description: "",
-            meta_keywords: "",
             subtitle: "",
             name: "",
             linkedin: "",
@@ -92,8 +95,6 @@ const TopperStudentEdit = () => {
             formData.append("slug", values.slug);
             formData.append("description", values.description);
             formData.append("type", values.type);
-            formData.append("meta_title", values.meta_title);
-            formData.append("meta_description", values.meta_description);
             formData.append("status", values.status || "published");
             // Add optional fields if they exist
             if (values.subtitle) formData.append("subtitle", values.subtitle);
@@ -107,11 +108,7 @@ const TopperStudentEdit = () => {
                 formData.append("image", image);
             }
 
-            // Convert comma-separated keywords to array
-            const keywordsArray = values.meta_keywords
-                .split(",")
-                .map((keyword) => keyword.trim());
-            formData.append("meta_keywords", JSON.stringify(keywordsArray));
+            appendSeoFields(formData, values);
 
             updateNewsMutation.mutate(formData);
         },
@@ -191,35 +188,14 @@ const TopperStudentEdit = () => {
         if (data) {
             console.log("Setting form values from data:", data);
 
-            // Convert meta_keywords from array format to string
-            let metaKeywords = "";
-            if (data.seo?.meta_keywords && Array.isArray(data.seo.meta_keywords) && data.seo.meta_keywords.length > 0) {
-                try {
-                    const keywordStr = data.seo.meta_keywords[0];
-                    // Try to parse if it looks like JSON
-                    if (keywordStr.includes('[') || keywordStr.includes('"')) {
-                        const parsedKeywords = JSON.parse(keywordStr.replace(/\\/g, ''));
-                        metaKeywords = Array.isArray(parsedKeywords) ? parsedKeywords.join(", ") : keywordStr;
-                    } else {
-                        metaKeywords = keywordStr;
-                    }
-                } catch (e) {
-                    console.error("Error parsing keywords:", e);
-                    // Fallback if parsing fails
-                    metaKeywords = data.seo.meta_keywords[0].replace(/[\[\]"\\]/g, '');
-                }
-            }
-
             // Set form values based on the API response structure
             formik.setValues({
+                ...seoToFormValues(data.seo),
                 title: data.title || "",
-                type: data.type || "news",
+                type: data.team_type || data.type || "news",
                 slug: data.slug || "",
                 description: data.description || "",
                 status: data.status || "published",
-                meta_title: data.seo?.meta_title || "",
-                meta_description: data.seo?.meta_description || "",
-                meta_keywords: metaKeywords,
                 subtitle: data.subtitle || "",
                 name: data.name || "",
                 linkedin: data.linkedin || "",
@@ -360,7 +336,12 @@ const TopperStudentEdit = () => {
                             />
                          
                         </div>
-                        <div className="col-span-2 flex gap-4">
+                    </div>
+                </ComponentCard>
+
+                <SeoFields formik={formik} />
+
+                <div className="flex gap-4">
                             <button
                                 type="submit"
                                 disabled={updateNewsMutation.isPending}
@@ -375,9 +356,7 @@ const TopperStudentEdit = () => {
                             >
                                 Cancel
                             </button>
-                        </div>
-                    </div>
-                </ComponentCard>
+                </div>
              
             </div>
         </form>

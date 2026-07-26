@@ -79,12 +79,44 @@ export const apiClient = {
   },
 
   /**
-   * Create a new page 
+   * Create a new page
    */
   createPage: async (formData: FormData) => {
     return apiClient.request("/create-page", {
       method: "POST",
       body: formData,
+    });
+  },
+
+  updatePage: async (id: string | string[], formData: FormData) => {
+    return apiClient.request(`/update-page/${id}`, {
+      method: "PATCH",
+      body: formData,
+    });
+  },
+
+  getPages: async (status?: string) => {
+    const query = status ? `?status=${status}` : "";
+    return apiClient.request(`/pages${query}`, {
+      method: "GET",
+    });
+  },
+
+  getPageById: async (id: string | string[]) => {
+    return apiClient.request(`/page-by-id/${id}`, {
+      method: "GET",
+    });
+  },
+
+  getPageBySlug: async (slug: string) => {
+    return apiClient.request(`/page/${slug}`, {
+      method: "GET",
+    });
+  },
+
+  deletePage: async (id: string | number) => {
+    return apiClient.request(`/delete-page/${id}`, {
+      method: "DELETE",
     });
   },
 
@@ -97,6 +129,12 @@ export const apiClient = {
 
   getNewsBlogById: async (newsId: string | string[]) => {
     return apiClient.request(`/news-blog-id/${newsId}`, {
+      method: "GET",
+    });
+  },
+
+  getNewsBlogBySlug: async (slug: string) => {
+    return apiClient.request(`/news-blog/${slug}`, {
       method: "GET",
     });
   },
@@ -115,14 +153,51 @@ export const apiClient = {
     });
   },
 
+  /** Fetch by numeric id. Note the `-by-id` suffix: `/toper-testimonial-team/:slug` is the slug route. */
   getToperTestimonialTeamById: async (newsId: string | string[]) => {
-    return apiClient.request(`/toper-testimonial-team/${newsId}`, {
+    return apiClient.request(`/toper-testimonial-team-by-id/${newsId}`, {
+      method: "GET",
+    });
+  },
+
+  getToperTestimonialTeamBySlug: async (slug: string) => {
+    return apiClient.request(`/toper-testimonial-team/${slug}`, {
       method: "GET",
     });
   },
 
   updateToperTestimonialTeamById: async (id: string | string[], formData: FormData) => {
     return apiClient.request(`/update-toper-testimonial-team/${id}`, {
+      method: "PATCH",
+      body: formData,
+    });
+  },
+
+  /* ---------------------------------------------------------------- */
+  /* SEO archive pages — listing pages with no content row of their own */
+  /* ---------------------------------------------------------------- */
+
+  /** All configured archive rows. Slugs never saved yet are simply absent. */
+  getArchiveSeoList: async () => {
+    return apiClient.request("/seo/archive", {
+      method: "GET",
+    });
+  },
+
+  /**
+   * A single archive row. The API 404s for slugs that have never been saved,
+   * which `request()` surfaces as a thrown Error — callers should treat that as
+   * "not configured yet" rather than a failure.
+   */
+  getArchiveSeoBySlug: async (slug: string) => {
+    return apiClient.request(`/seo/archive/${slug}`, {
+      method: "GET",
+    });
+  },
+
+  /** Upsert: creates the row if missing, otherwise patches the submitted fields. */
+  upsertArchiveSeo: async (slug: string, formData: FormData) => {
+    return apiClient.request(`/seo/archive/${slug}`, {
       method: "PATCH",
       body: formData,
     });

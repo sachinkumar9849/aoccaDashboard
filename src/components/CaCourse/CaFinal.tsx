@@ -7,8 +7,14 @@ import { toast } from "react-hot-toast";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
-import { PageFormValues, PageResponse } from "@/types";
+import { PageFormValues, PageResponse, SeoFormValues } from "@/types";
 import { apiClient } from "@/api/client";
+import SeoFields from "@/components/common/SeoFields";
+import {
+    appendSeoFields,
+    emptySeoValues,
+    seoValidationSchema,
+} from "@/lib/seo";
 
 import {
     Select,
@@ -44,6 +50,7 @@ const CaFinal = () => {
     });
 
     const validationSchema = Yup.object({
+        ...seoValidationSchema,
         title: Yup.string().required("Title is required"),
         slug: Yup.string().required("Slug is required"),
         description: Yup.string().required("Description is required"),
@@ -52,16 +59,14 @@ const CaFinal = () => {
         sort_order: Yup.string().required("Sort order is required"),
     });
 
-    const formik = useFormik<PageFormValues>({
+    const formik = useFormik<PageFormValues & SeoFormValues>({
         initialValues: {
+            ...emptySeoValues,
             title: "",
             type: "ca-final",
             slug: "",
             description: "",
             status: "",
-            meta_title: "",
-            meta_description: "",
-            meta_keywords: "",
             subtitle: "",
             name: "",
             linkedin: "",
@@ -80,18 +85,13 @@ const CaFinal = () => {
             formData.append("slug", values.slug);
             formData.append("status", values.status);
             formData.append("type", values.type);
-            formData.append("meta_title", values.meta_title);
-            formData.append("meta_description", values.meta_description);
             formData.append("sort_order", values.sort_order);
 
             if (image) {
                 formData.append("image", image);
             }
 
-            const keywordsArray = values.meta_keywords
-                .split(",")
-                .map((keyword) => keyword.trim());
-            formData.append("meta_keywords", JSON.stringify(keywordsArray));
+            appendSeoFields(formData, values);
 
             createPageMutation.mutate(formData);
         },
@@ -204,17 +204,18 @@ const CaFinal = () => {
                                 )}
                             </div>
                         </div>
-                        <div className="col-span-2 mt-4">
-                            <button
-                                type="submit"
-                                disabled={createPageMutation.isPending}
-                                className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600 disabled:opacity-70"
-                            >
-                                {createPageMutation.isPending ? "Submitting..." : "Submit"}
-                            </button>
-                        </div>
                     </div>
                 </ComponentCard>
+
+                <SeoFields formik={formik} />
+
+                <button
+                    type="submit"
+                    disabled={createPageMutation.isPending}
+                    className="w-full flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600 disabled:opacity-70"
+                >
+                    {createPageMutation.isPending ? "Submitting..." : "Submit"}
+                </button>
             </div>
         </form>
     );
