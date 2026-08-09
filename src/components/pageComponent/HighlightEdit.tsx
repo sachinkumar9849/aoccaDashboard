@@ -8,15 +8,8 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import ImageUploader from "@/components/ImageUploader";
-import { PageFormValues, SeoFormValues, SeoResponse } from "@/types";
+import { PageFormValues } from "@/types";
 import { apiClient } from "@/api/client";
-import SeoFields from "@/components/common/SeoFields";
-import {
-    appendSeoFields,
-    emptySeoValues,
-    seoToFormValues,
-    seoValidationSchema,
-} from "@/lib/seo";
 import {
     Select,
     SelectContent,
@@ -40,7 +33,6 @@ interface NewsData {
     sort_order?: string;
     image_url?: string;
     video?:string;
-    seo?: SeoResponse;
 }
 
 // Define the API response type for update mutation
@@ -61,10 +53,7 @@ const HighlightEdit = () => {
 
     // Validation schema
     const validationSchema = Yup.object({
-      
-  
 
-        ...seoValidationSchema,
       
   
 
@@ -74,9 +63,8 @@ const HighlightEdit = () => {
     });
 
     // Initialize formik with default values
-    const formik = useFormik<PageFormValues & SeoFormValues>({
+    const formik = useFormik<PageFormValues>({
         initialValues: {
-            ...emptySeoValues,
             title: "",
             type: "slider",
             slug: "",
@@ -111,10 +99,6 @@ const HighlightEdit = () => {
             if (image) {
                 formData.append("image", image);
             }
-
-            appendSeoFields(formData, values);
-
-           
 
             updateNewsMutation.mutate(formData);
         },
@@ -196,7 +180,6 @@ const HighlightEdit = () => {
 
             // Set form values based on the API response structure
             formik.setValues({
-                ...seoToFormValues(data.seo),
                 title: data.title || "",
                 type: data.team_type || data.type || "team",
                 slug: data.slug || "",
@@ -310,7 +293,6 @@ const HighlightEdit = () => {
                     </div>
                 </ComponentCard>
 
-                <SeoFields formik={formik} variant="basic" />
 
                 <div className="col-span-2 flex gap-4">
                             <button

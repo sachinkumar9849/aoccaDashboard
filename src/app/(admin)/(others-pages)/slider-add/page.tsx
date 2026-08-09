@@ -8,14 +8,8 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import ImageUploader from "@/components/ImageUploader";
-import { PageFormValues, PageResponse, SeoFormValues } from "@/types";
+import { PageFormValues, PageResponse } from "@/types";
 import { apiClient } from "@/api/client";
-import SeoFields from "@/components/common/SeoFields";
-import {
-    appendSeoFields,
-    emptySeoValues,
-    seoValidationSchema,
-} from "@/lib/seo";
 import {
     Select,
     SelectContent,
@@ -49,7 +43,6 @@ const NewsBlog = () => {
 
     // Validation schema
     const validationSchema = Yup.object({
-        ...seoValidationSchema,
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
     });
@@ -60,9 +53,8 @@ const NewsBlog = () => {
     };
 
     // Initialize formik
-    const formik = useFormik<PageFormValues & SeoFormValues>({
+    const formik = useFormik<PageFormValues>({
         initialValues: {
-            ...emptySeoValues,
             title: "",
             subtitle: "",
             type: "slider",
@@ -92,10 +84,6 @@ const NewsBlog = () => {
             if (image) {
                 formData.append("image", image);
             }
-
-            appendSeoFields(formData, values);
-
-
 
             createPageMutation.mutate(formData);
         },
@@ -188,7 +176,6 @@ const NewsBlog = () => {
 </div>
                 </ComponentCard>
 
-                <SeoFields formik={formik} variant="basic" />
 
                 <button
                     type="submit"

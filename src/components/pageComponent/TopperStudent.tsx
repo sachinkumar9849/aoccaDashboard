@@ -8,10 +8,8 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import ImageUploader from "@/components/ImageUploader";
-import SeoFields from "@/components/common/SeoFields";
-import { PageFormValues, PageResponse, SeoFormValues } from "@/types";
+import { PageFormValues, PageResponse } from "@/types";
 import { apiClient } from "@/api/client";
-import { appendSeoFields, emptySeoValues, seoValidationSchema } from "@/lib/seo";
 import {
   Select,
   SelectContent,
@@ -45,7 +43,6 @@ const router = useRouter();
 
   // Validation schema
   const validationSchema = Yup.object({
-    ...seoValidationSchema,
     title: Yup.string().required("Title is required"),
     description: Yup.string().required("Description is required"),
     slug: Yup.string().required("Slug is required"),
@@ -59,9 +56,8 @@ const router = useRouter();
   };
 
   // Initialize formik
-  const formik = useFormik<PageFormValues & SeoFormValues>({
+  const formik = useFormik<PageFormValues>({
     initialValues: {
-      ...emptySeoValues,
       title: "",
       type: "topper",
       slug: "",
@@ -92,7 +88,6 @@ const router = useRouter();
         formData.append("image", image);
       }
 
-      appendSeoFields(formData, values);
 
       createPageMutation.mutate(formData);
     },
@@ -226,7 +221,6 @@ const router = useRouter();
 
           </div>
         </ComponentCard>
-        <SeoFields formik={formik} />
 
         <button
           type="submit"

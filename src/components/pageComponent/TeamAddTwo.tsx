@@ -8,14 +8,8 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import ImageUploader from "@/components/ImageUploader";
-import { PageFormValues, PageResponse, SeoFormValues } from "@/types";
+import { PageFormValues, PageResponse } from "@/types";
 import { apiClient } from "@/api/client";
-import SeoFields from "@/components/common/SeoFields";
-import {
-    appendSeoFields,
-    emptySeoValues,
-    seoValidationSchema,
-} from "@/lib/seo";
 import {
     Select,
     SelectContent,
@@ -33,8 +27,6 @@ const TeamAddTwo = () => {
     const [image, setImage] = useState<File | null>(null);
     const queryClient = useQueryClient();
     const router = useRouter();
-
-
 
     // Create page mutation
     const createPageMutation = useMutation({
@@ -55,7 +47,6 @@ const TeamAddTwo = () => {
 
     // Validation schema
     const validationSchema = Yup.object({
-        ...seoValidationSchema,
         title: Yup.string().required("Title is required"),
         name: Yup.string().required("Name is required"),
         status: Yup.string().required("Status is required"),
@@ -67,9 +58,8 @@ const TeamAddTwo = () => {
     };
 
     // Initialize formik
-    const formik = useFormik<TeamAddFormValues & SeoFormValues>({
+    const formik = useFormik<TeamAddFormValues>({
         initialValues: {
-            ...emptySeoValues,
             title: "",
             name: "",
             type: "teamTwo",
@@ -100,15 +90,6 @@ const TeamAddTwo = () => {
                 formData.append("image", image);
             }
 
-
-
-
-            appendSeoFields(formData, values);
-
-
-
-
-
             createPageMutation.mutate(formData);
         },
     });
@@ -136,8 +117,6 @@ const TeamAddTwo = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
                             )}
                         </div>
-
-
 
                         <div className="col-span-1">
                             <Label htmlFor="title">Title</Label>
@@ -169,9 +148,6 @@ const TeamAddTwo = () => {
                             />
 
                         </div>
-
-
-
 
                         <div className="col-span-1">
                             <Label htmlFor="sort_order">Sort order</Label>
@@ -224,7 +200,6 @@ const TeamAddTwo = () => {
                     </div>
                 </ComponentCard>
 
-                <SeoFields formik={formik} />
 
                 <button
                     type="submit"

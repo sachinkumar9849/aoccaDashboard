@@ -8,14 +8,8 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import ImageUploader from "@/components/ImageUploader";
-import { PageFormValues, PageResponse, SeoFormValues } from "@/types";
+import { PageFormValues, PageResponse } from "@/types";
 import { apiClient } from "@/api/client";
-import SeoFields from "@/components/common/SeoFields";
-import {
-    appendSeoFields,
-    emptySeoValues,
-    seoValidationSchema,
-} from "@/lib/seo";
 import {
     Select,
     SelectContent,
@@ -31,9 +25,6 @@ const TestimonialAdd = () => {
     const [image, setImage] = useState<File | null>(null);
     const router = useRouter();
     const queryClient = useQueryClient();
-
-
-   
 
     // Create page mutation
     const createPageMutation = useMutation({
@@ -54,7 +45,6 @@ const TestimonialAdd = () => {
 
     // Validation schema
     const validationSchema = Yup.object({
-        ...seoValidationSchema,
         title: Yup.string().required("Title is required"),
         name: Yup.string().required("Name is required"),
         description: Yup.string().required("Description is required"),
@@ -69,9 +59,8 @@ const TestimonialAdd = () => {
     };
 
     // Initialize formik
-    const formik = useFormik<PageFormValues & SeoFormValues>({
+    const formik = useFormik<PageFormValues>({
         initialValues: {
-            ...emptySeoValues,
             title: "",
             type: "testimonial",
             slug: "",
@@ -102,10 +91,6 @@ const TestimonialAdd = () => {
             if (image) {
                 formData.append("image", image);
             }
-
-            appendSeoFields(formData, values);
-
-
 
             createPageMutation.mutate(formData);
         },
@@ -170,8 +155,6 @@ const TestimonialAdd = () => {
                             )}
                         </div>
 
-
-
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
                                 <div className="col-span-1">
@@ -228,7 +211,6 @@ const TestimonialAdd = () => {
                     </div>
                 </ComponentCard>
 
-                <SeoFields formik={formik} variant="basic" />
 
                 <button
                     type="submit"

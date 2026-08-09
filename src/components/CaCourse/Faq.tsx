@@ -7,14 +7,8 @@ import { toast } from "react-hot-toast";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
-import { PageFormValues, PageResponse, SeoFormValues } from "@/types";
+import { PageFormValues, PageResponse } from "@/types";
 import { apiClient } from "@/api/client";
-import SeoFields from "@/components/common/SeoFields";
-import {
-    appendSeoFields,
-    emptySeoValues,
-    seoValidationSchema,
-} from "@/lib/seo";
 import {
     Select,
     SelectContent,
@@ -24,8 +18,6 @@ import {
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import Editor from "../common/Editor";
-
-
 
 const Faq = () => {
     const [image, setImage] = useState<File | null>(null);
@@ -50,7 +42,6 @@ const Faq = () => {
     });
 
     const validationSchema = Yup.object({
-        ...seoValidationSchema,
         title: Yup.string().required("Title is required"),
         description: Yup.string().required("Description is required"),
         status: Yup.string().required("Status is required"),
@@ -58,9 +49,8 @@ const Faq = () => {
        
     });
 
-    const formik = useFormik<PageFormValues & SeoFormValues>({
+    const formik = useFormik<PageFormValues>({
         initialValues: {
-            ...emptySeoValues,
             title: "",
             type: "faq",
             slug: "",
@@ -92,13 +82,10 @@ const Faq = () => {
                 formData.append("image", image);
             }
 
-            appendSeoFields(formData, values);
 
             createPageMutation.mutate(formData);
         },
     });
-
-
 
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
@@ -177,7 +164,6 @@ const Faq = () => {
                     </div>
                 </ComponentCard>
 
-                <SeoFields formik={formik} variant="basic" />
 
                 <button
                     type="submit"
