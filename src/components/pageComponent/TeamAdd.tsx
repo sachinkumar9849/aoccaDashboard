@@ -8,14 +8,8 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import ImageUploader from "@/components/ImageUploader";
-import { PageFormValues, PageResponse, SeoFormValues } from "@/types";
+import { PageFormValues, PageResponse } from "@/types";
 import { apiClient } from "@/api/client";
-import SeoFields from "@/components/common/SeoFields";
-import {
-    appendSeoFields,
-    emptySeoValues,
-    seoValidationSchema,
-} from "@/lib/seo";
 import {
     Select,
     SelectContent,
@@ -34,8 +28,6 @@ const TeamAdd = () => {
     const [image, setImage] = useState<File | null>(null);
     const queryClient = useQueryClient();
     const router = useRouter();
-
-
 
     // Create page mutation
     const createPageMutation = useMutation({
@@ -56,7 +48,6 @@ const TeamAdd = () => {
 
     // Validation schema
     const validationSchema = Yup.object({
-        ...seoValidationSchema,
         title: Yup.string().required("Title is required"),
         name: Yup.string().required("Name is required"),
         status: Yup.string().required("Status is required"),
@@ -68,9 +59,8 @@ const TeamAdd = () => {
     };
 
     // Initialize formik
-    const formik = useFormik<TeamAddFormValues & SeoFormValues>({
+    const formik = useFormik<TeamAddFormValues>({
         initialValues: {
-            ...emptySeoValues,
             title: "",
             name: "",
             type: "management",
@@ -100,15 +90,6 @@ const TeamAdd = () => {
             if (image) {
                 formData.append("image", image);
             }
-
-
-
-
-            appendSeoFields(formData, values);
-
-
-
-
 
             createPageMutation.mutate(formData);
         },
@@ -204,8 +185,6 @@ const TeamAdd = () => {
 
                         </div>
 
-
-
                         <div className="col-span-1">
                             <div className="grid grid-cols-1">
 
@@ -256,7 +235,6 @@ const TeamAdd = () => {
                     </div>
                 </ComponentCard>
 
-                <SeoFields formik={formik} />
 
                 <button
                     type="submit"

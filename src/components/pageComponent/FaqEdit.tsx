@@ -7,15 +7,8 @@ import { toast } from "react-hot-toast";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
-import { PageFormValues, SeoFormValues, SeoResponse } from "@/types";
+import { PageFormValues } from "@/types";
 import { apiClient } from "@/api/client";
-import SeoFields from "@/components/common/SeoFields";
-import {
-    appendSeoFields,
-    emptySeoValues,
-    seoToFormValues,
-    seoValidationSchema,
-} from "@/lib/seo";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     Select,
@@ -41,7 +34,6 @@ interface NewsData {
     sort_order: string;
     image_url?: string;
     video?: string;
-    seo?: SeoResponse;
 }
 
 // Define the API response type for update mutation
@@ -58,7 +50,6 @@ const FaqEdit = () => {
 
     // Validation schema
     const validationSchema = Yup.object({
-        ...seoValidationSchema,
         title: Yup.string().required("Title is required"),
 
         description: Yup.string().required("Description is required"),
@@ -68,9 +59,8 @@ const FaqEdit = () => {
     });
 
     // Initialize formik with default values
-    const formik = useFormik<PageFormValues & SeoFormValues>({
+    const formik = useFormik<PageFormValues>({
         initialValues: {
-            ...emptySeoValues,
             title: "",
             type: "faq",
             slug: "",
@@ -100,12 +90,7 @@ const FaqEdit = () => {
             if (values.linkedin) formData.append("linkedin", values.linkedin);
             if (values.rating) formData.append("rating", values.rating);
 
-          
-
             // Add image to formData if available
-
-            appendSeoFields(formData, values);
-
 
             updateNewsMutation.mutate(formData);
         },
@@ -156,8 +141,6 @@ const FaqEdit = () => {
         },
     });
 
-
-
     // Generate slug from title
     const generateSlug = () => {
         const slug = formik.values.title
@@ -187,7 +170,6 @@ const FaqEdit = () => {
 
             // Set form values based on the API response structure
             formik.setValues({
-                ...seoToFormValues(data.seo),
                 title: data.title || "",
                 type: data.team_type || data.type || "faq",
                 slug: data.slug || "",
@@ -297,7 +279,6 @@ const FaqEdit = () => {
                     </div>
                 </ComponentCard>
 
-                <SeoFields formik={formik} variant="basic" />
 
                 <div className="flex gap-4">
                             <button

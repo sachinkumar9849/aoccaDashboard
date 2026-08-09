@@ -34,9 +34,11 @@ export interface PageFormValues{
   type: string;
   video: string;
   status: string;
-  meta_title: string;
-  meta_description: string;
-  meta_keywords: string;
+  // Only present on the forms that still render the SEO panel, where this type
+  // is intersected with SeoFormValues (which requires them).
+  meta_title?: string;
+  meta_description?: string;
+  meta_keywords?: string;
   image_url?: File | null;
   name:string;
   linkedin: string;

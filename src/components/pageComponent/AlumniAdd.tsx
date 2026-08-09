@@ -8,14 +8,8 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import ImageUploader from "@/components/ImageUploader";
-import { PageFormValues, PageResponse, SeoFormValues } from "@/types";
+import { PageFormValues, PageResponse } from "@/types";
 import { apiClient } from "@/api/client";
-import SeoFields from "@/components/common/SeoFields";
-import {
-    appendSeoFields,
-    emptySeoValues,
-    seoValidationSchema,
-} from "@/lib/seo";
 import {
   Select,
   SelectContent,
@@ -48,7 +42,6 @@ const AlumniAdd = () => {
 
   // Validation schema
   const validationSchema = Yup.object({
-    ...seoValidationSchema,
     title: Yup.string().required("Title is required"),
    
   });
@@ -59,9 +52,8 @@ const AlumniAdd = () => {
   };
 
   // Initialize formik
-  const formik = useFormik<PageFormValues & SeoFormValues>({
+  const formik = useFormik<PageFormValues>({
     initialValues: {
-      ...emptySeoValues,
       title: "",
       type: "alumni",
       slug: "",
@@ -91,7 +83,6 @@ const AlumniAdd = () => {
         formData.append("image", image);
       }
 
-      appendSeoFields(formData, values);
 
       createPageMutation.mutate(formData);
     },
@@ -148,8 +139,6 @@ const AlumniAdd = () => {
               />
               
             </div>
-        
-          
 
             <div className="col-span-2">
               <Label htmlFor="image">Featured Image</Label>
@@ -194,7 +183,6 @@ const AlumniAdd = () => {
           </div>
         </ComponentCard>
 
-        <SeoFields formik={formik} />
 
         <button
             type="submit"

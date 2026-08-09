@@ -8,15 +8,8 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import ComponentCard from "@/components/common/ComponentCard";
 import ImageUploader from "@/components/ImageUploader";
-import { PageFormValues, SeoFormValues, SeoResponse } from "@/types";
+import { PageFormValues } from "@/types";
 import { apiClient } from "@/api/client";
-import SeoFields from "@/components/common/SeoFields";
-import {
-    appendSeoFields,
-    emptySeoValues,
-    seoToFormValues,
-    seoValidationSchema,
-} from "@/lib/seo";
 import {
     Select,
     SelectContent,
@@ -45,7 +38,6 @@ interface NewsData {
     sort_order?: string;
     image_url?: string;
     video?: string;
-    seo?: SeoResponse;
 }
 
 // Define the API response type for update mutation
@@ -66,7 +58,6 @@ const TeamEditTwo = () => {
 
     // Validation schema
     const validationSchema = Yup.object({
-        ...seoValidationSchema,
         title: Yup.string().required("Title is required"),
         status: Yup.string().required("Status is required"),
         type: Yup.string().required("Type is required"),
@@ -74,9 +65,8 @@ const TeamEditTwo = () => {
     });
 
     // Initialize formik with default values
-    const formik = useFormik<TeamAddFormValues & SeoFormValues>({
+    const formik = useFormik<TeamAddFormValues>({
         initialValues: {
-            ...emptySeoValues,
             title: "",
             type: "teamTwo",
             designation:"",
@@ -105,8 +95,6 @@ const TeamEditTwo = () => {
             formData.append("linkedin", values.linkedin);
             // Add optional fields if they exist
 
-
-
             if (values.rating) formData.append("rating", values.rating);
             if (values.sort_order) formData.append("sort_order", values.sort_order);
 
@@ -114,10 +102,6 @@ const TeamEditTwo = () => {
             if (image) {
                 formData.append("image", image);
             }
-
-            appendSeoFields(formData, values);
-
-
 
             updateNewsMutation.mutate(formData);
             console.log("Form values on submit two=>", values)
@@ -195,7 +179,6 @@ const TeamEditTwo = () => {
 
             // Set form values based on the API response structure designation
             formik.setValues({
-                ...seoToFormValues(data.seo),
                 title: data.title || "",
                 designation: data.designation || "",
                 name: data.name || "",
@@ -262,8 +245,6 @@ const TeamEditTwo = () => {
                             )}
                         </div>
 
-                    
-                     
                         
                         <div className="col-span-1">
                             <Label htmlFor="linkedin">Linkedin</Label>
@@ -334,7 +315,6 @@ const TeamEditTwo = () => {
                     </div>
                 </ComponentCard>
 
-                <SeoFields formik={formik} />
 
                 <div className="col-span-2 flex gap-4">
                     <button
