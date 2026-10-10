@@ -9,7 +9,6 @@ import {
   GridIcon,
   HorizontaLDots,
   ListIcon,
-  PlugInIcon,
   UserCircleIcon,
 } from "../icons/index";
 import SidebarWidget from "./SidebarWidget";
@@ -205,25 +204,6 @@ const othersItems: NavItem[] = [
   //     { name: "Videos", path: "/videos", pro: false },
   //   ],
   // },
-  {
-    icon: <PlugInIcon />,
-    name: "Setting",
-    subItems: [
-      { name: "Sign In", path: "/signin", pro: false },
-      { name: "Sign Up", path: "/signup", pro: false },
-    ],
-  },
-  {
-    icon: <PlugInIcon />,
-    name: "Site Setting",
-    subItems: [
-      { name: "Seo Details", path: "/seo-details", pro: false },
-      { name: "Social Media Link", path: "/social-media", pro: false },
-      { name: "Site Setting", path: "/site-setting", pro: false },
-      { name: "Home Page Setting", path: "/home-page-setting", pro: false },
-      { name: "Site Images", path: "/site-images", pro: false },
-    ],
-  },
   {
     icon: <UserCircleIcon />,
     name: "User Profile",
@@ -489,7 +469,7 @@ const AppSidebar: React.FC = () => {
                   }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  "Setting"
+                  "Others"
                 ) : (
                   <HorizontaLDots />
                 )}
