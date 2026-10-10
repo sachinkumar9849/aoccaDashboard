@@ -66,6 +66,14 @@ export const apiClient = {
       }
 
       if (!response.ok) {
+        if (response.status === 413) {
+          const errorData = await response.json().catch(() => ({}));
+          const errorMsg =
+            errorData?.error ||
+            errorData?.message ||
+            "The uploaded file or request is too large (413). Please upload an image under 1MB or compress it before submitting.";
+          throw new Error(errorMsg);
+        }
         const errorData = await response.json().catch(() => ({}));
         // Backend could return {"error":"..."} or {"message":"..."} or a generic string
         const errorMsg = errorData?.error || errorData?.message || `API request failed with status ${response.status}`;
