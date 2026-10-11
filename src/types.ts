@@ -20,7 +20,31 @@ export interface User {
   user_type: string;
   created_at: string;
   updated_at: string;
-  token: string;
+  token?: string;
+}
+
+export interface CreateUserPayload {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  user_type: string;
+  is_active?: boolean;
+  is_blacklisted?: boolean;
+}
+
+export interface UpdateUserPayload {
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  user_type?: string;
+  is_active?: boolean;
+  is_blacklisted?: boolean;
+}
+
+export interface ResetPasswordPayload {
+  password?: string;
+  new_password?: string;
 }
 
 export interface ApiResponse {
