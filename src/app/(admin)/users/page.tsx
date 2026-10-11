@@ -143,7 +143,7 @@ export default function UserManagementPage() {
       });
       setShowCreatePassword(false);
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       toast.error(err?.message || "Failed to create user");
     },
   });
@@ -157,7 +157,7 @@ export default function UserManagementPage() {
       setIsEditOpen(false);
       setSelectedUser(null);
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       toast.error(err?.message || "Failed to update user");
     },
   });
@@ -173,7 +173,7 @@ export default function UserManagementPage() {
       setConfirmPassword("");
       setShowResetPassword(false);
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       toast.error(err?.message || "Failed to reset password");
     },
   });
@@ -186,7 +186,7 @@ export default function UserManagementPage() {
       setIsDeleteOpen(false);
       setSelectedUser(null);
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       toast.error(err?.message || "Failed to delete user");
     },
   });

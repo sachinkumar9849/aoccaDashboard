@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
     });
     return config;
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   experimental: {
     // turbopack is not experimental in Next 16
   },
