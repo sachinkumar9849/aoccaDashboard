@@ -7,7 +7,7 @@ export const apiClient = {
   /**
    * Base URL for API requests
    */
-  baseUrl: "https://api.aoc.edu.np/api/v1",
+  baseUrl: (process.env.NEXT_PUBLIC_URL || "https://api.aoc.edu.np/api/v1").replace(/"/g, "").trim(),
 
   /**
    * Get the authentication token from localStorage

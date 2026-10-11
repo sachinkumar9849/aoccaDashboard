@@ -1,17 +1,8 @@
 "use client";
+
 import React from "react";
+import UserManagementPage from "@/app/(admin)/users/page";
 
-import ComponentCard from "@/components/common/ComponentCard";
-
-import BasicTableOne from "@/components/tables/BasicTableOne";
-
-const StudentList = () => {
-
-  return (
-    <ComponentCard title="Blog List">
-          <BasicTableOne />
-        </ComponentCard>
-  )
+export default function StaffListPage() {
+  return <UserManagementPage />;
 }
-
-export default StudentList

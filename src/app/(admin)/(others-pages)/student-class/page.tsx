@@ -71,7 +71,7 @@ const inquiryTypes = [
     { value: "CA-mandatory", label: "Mandatory Training" },
 ];
 
-const BASE_URL = "https://api.aoc.edu.np/api/v1";
+const BASE_URL = (process.env.NEXT_PUBLIC_URL || "https://api.aoc.edu.np/api/v1").replace(/"/g, "").trim();
 
 // ─── Spinner ──────────────────────────────────────────────────────────────────
 

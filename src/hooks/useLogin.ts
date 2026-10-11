@@ -19,7 +19,9 @@ export const useLogin = (options?: UseLoginOptions) => {
       toast.dismiss();
       toast.success('Login successful!');
 
-      localStorage.setItem("authToken", data.token);
+      if (data.token) {
+        localStorage.setItem("authToken", data.token);
+      }
       localStorage.setItem('user', JSON.stringify({
         id: data.id,
         first_name: data.first_name,
