@@ -169,6 +169,21 @@ const navItems: NavItem[] = [
     icon: <ListIcon />,
     subItems: [{ name: "Archive Pages SEO", path: "/seo-archive", pro: false }],
   },
+  {
+    name: "Header Popup",
+    icon: <ListIcon />,
+    subItems: [
+      { name: "Popup List", path: "/popup-list", pro: false },
+      { name: "Popup Add", path: "/popup-add", pro: false },
+    ],
+  },
+  {
+    name: "Settings",
+    icon: <ListIcon />,
+    subItems: [
+      { name: "Company Settings", path: "/company-settings", pro: false },
+    ],
+  },
 
 
   // {

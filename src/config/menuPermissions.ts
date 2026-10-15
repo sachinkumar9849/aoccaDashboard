@@ -81,6 +81,9 @@ export const MENU_PERMISSIONS: Record<string, UserRole[]> = {
   "Highlight": ["admin"],
   "Pages": ["admin"],
   "SEO": ["admin"],
+  "Header Popup": ["admin"],
+  "Settings": ["admin"],
+  "Company Settings": ["admin"],
 
   // ==========================================
   // SUBMENU ITEMS (Granular Control)
@@ -173,6 +176,8 @@ export const MENU_PERMISSIONS: Record<string, UserRole[]> = {
 
   // SEO
   "Archive Pages SEO": ["admin"],
+  "Popup List": ["admin"],
+  "Popup Add": ["admin"],
 
   // ==========================================
   // OTHERS SECTION

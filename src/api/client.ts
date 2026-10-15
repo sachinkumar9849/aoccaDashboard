@@ -1,3 +1,4 @@
+import { PopupItem, CompanySetting } from "@/types";
 // src/api/client.ts
 
 /**
@@ -208,6 +209,73 @@ export const apiClient = {
     return apiClient.request(`/seo/archive/${slug}`, {
       method: "PATCH",
       body: formData,
+    });
+  },
+
+  /* ---------------------------------------------------------------- */
+  /* Popup Banner Images (Header Popup)                               */
+  /* ---------------------------------------------------------------- */
+
+  getPopups: async (status?: string) => {
+    const query = status ? `?status=${status}` : "";
+    return apiClient.request<PopupItem[]>(`/popups${query}`, {
+      method: "GET",
+    });
+  },
+
+  getPopupById: async (id: string | number) => {
+    return apiClient.request<PopupItem>(`/popups/${id}`, {
+      method: "GET",
+    });
+  },
+
+  createPopup: async (formData: FormData) => {
+    return apiClient.request<{ message: string; data: PopupItem }>("/popups", {
+      method: "POST",
+      body: formData,
+    });
+  },
+
+  updatePopup: async (id: string | number, formData: FormData) => {
+    return apiClient.request<{ message: string; data: PopupItem }>(`/popups/${id}`, {
+      method: "PATCH",
+      body: formData,
+    });
+  },
+
+  updatePopupJson: async (id: string | number, payload: Record<string, any>) => {
+    return apiClient.request<{ message: string; data: PopupItem }>(`/popups/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+  },
+
+  deletePopup: async (id: string | number) => {
+    return apiClient.request<{ message: string }>(`/popups/${id}`, {
+      method: "DELETE",
+    });
+  },
+
+  /* ---------------------------------------------------------------- */
+  /* Company Settings (Contact Info & Social Media Links)             */
+  /* ---------------------------------------------------------------- */
+
+  getCompanySettings: async () => {
+    return apiClient.request<CompanySetting>("/company-settings", {
+      method: "GET",
+    });
+  },
+
+  updateCompanySettings: async (payload: Partial<CompanySetting>) => {
+    return apiClient.request<{ message: string; data: CompanySetting }>("/company-settings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
     });
   },
 };

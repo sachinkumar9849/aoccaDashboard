@@ -149,3 +149,45 @@ export interface SeoArchivePage extends SeoResponse {
   created_at: string;
   updated_at: string;
 }
+
+export interface PopupItem {
+  id: number;
+  title: string;
+  image_url: string;
+  link_url?: string;
+  status: "active" | "inactive" | string;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PopupFormValues {
+  title: string;
+  link_url: string;
+  status: string;
+  display_order: number | string;
+}
+
+
+export interface CompanySetting {
+  id?: number;
+  company_name: string;
+  tagline?: string;
+  email: string;
+  secondary_email?: string;
+  phone: string;
+  secondary_phone?: string;
+  mobile?: string;
+  address: string;
+  opening_hours?: string;
+  google_map_url?: string;
+  facebook_url?: string;
+  twitter_url?: string;
+  instagram_url?: string;
+  linkedin_url?: string;
+  youtube_url?: string;
+  tiktok_url?: string;
+  whatsapp_number?: string;
+  created_at?: string;
+  updated_at?: string;
+}
